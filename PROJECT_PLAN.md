@@ -331,21 +331,21 @@ FIXO/
 
 ## 🚀 PRIORITNÍ ROADMAPA
 
-### FÁZE 1: MVP Vylepšení (Nejbližší kroky)
+### FÁZE 1: MVP Vylepšení ✅ HOTOVO
 - [x] Rozšířit databázi na 50+ reálných oprav ✅ (26 typů, 67 problémů)
-- [ ] Implementovat odhad nákladů u každé opravy
-- [ ] Přidat "úsporu peněz" kalkulačku
-- [ ] Affiliate odkazy na Alza/Mall
-- [ ] Vyhledávání v databázi oprav
-- [ ] Před-opravní checklist
+- [x] Implementovat odhad nákladů u každé opravy ✅ (materialCost/professionalCost)
+- [x] Přidat "úsporu peněz" kalkulačku ✅
+- [x] Affiliate odkazy na Alza/Mall ✅ (66 odkazů)
+- [x] Vyhledávání v databázi oprav ✅
+- [x] Před-opravní checklist ✅ (67 checklistů podle kategorie)
 
-### FÁZE 2: Monetizace (Měsíc 2-3)
+### FÁZE 2: Monetizace (Částečně hotovo)
 - [ ] Napojit OpenAI Vision API pro reálnou analýzu
-- [ ] Přidat video tutoriály (YouTube embeds)
-- [ ] Implementovat databázi řemeslníků
+- [x] Přidat video tutoriály ✅ (28 videí připraveno)
+- [x] Implementovat databázi řemeslníků ✅ (12 ověřených řemeslníků)
 - [ ] Spustit freemium model (FREE/PLUS/PRO)
 - [ ] Implementovat platební bránu (Stripe)
-- [ ] Offline režim (PWA)
+- [x] Offline režim (PWA) ✅ (Service Worker v2.0, push notifikace)
 
 ### FÁZE 3: Škálování (Měsíc 4-6)
 - [ ] B2B dashboard pro správce nemovitostí
@@ -363,10 +363,13 @@ FIXO/
 | Oblast | Aktuální stav | Doporučení |
 |--------|---------------|------------|
 | AI Backend | Simulace (náhodný výběr) | Napojit OpenAI Vision API (server.js připraven) |
-| Databáze oprav | 26 typů, 67 problémů | Rozšířit na 500+ s PostgreSQL |
+| Databáze oprav | ✅ 26 typů, 67 problémů s náklady | Rozšířit na 500+ s PostgreSQL |
 | Autentizace | Žádná | Firebase Auth / Supabase pro sync historie |
-| Vyhledávání | Žádné | Fulltextové hledání v databázi oprav |
-| Notifikace | Žádné | Push notifikace (PWA Web Push) |
+| Vyhledávání | ✅ Fulltextové v databázi | Přidat filtry podle nákladů/obtížnosti |
+| Notifikace | ✅ PWA Web Push připraveno | Implementovat backend pro odesílání |
+| Video tutoriály | ✅ 28 videí připraveno | Nahrát skutečná videa na YouTube |
+| Řemeslníci | ✅ 12 ověřených kontaktů | Rozšířit na 100+ s geolokací |
+| Affiliate | ✅ 66 odkazů Alza/Mall | Přidat tracking kódy pro provize |
 | Analytics | Žádné | Google Analytics 4 / Plausible |
 
 ### Technický dluh k řešení
