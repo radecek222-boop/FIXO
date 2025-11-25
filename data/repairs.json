@@ -9155,6 +9155,1290 @@
           }
         }
       ]
+    },
+    "kotel": {
+      "name": "Kotel",
+      "category": "vytapeni",
+      "icon": "🔥",
+      "issues": [
+        {
+          "id": "no-ignition",
+          "name": "Kotel nezapaluje",
+          "description": "Kotel se nespustí nebo nezapaluje plamen",
+          "riskScore": 7,
+          "difficulty": "Vysoká",
+          "timeEstimate": "Volejte odborníka",
+          "materialCost": {
+            "min": 0,
+            "max": 500,
+            "currency": "CZK"
+          },
+          "professionalCost": {
+            "min": 1500,
+            "max": 4000,
+            "currency": "CZK"
+          },
+          "tools": [
+            "Multimetr",
+            "Zkoušečka"
+          ],
+          "steps": [
+            {
+              "step": 1,
+              "action": "Zkontrolujte přívod plynu",
+              "time": "1 min",
+              "icon": "🔥",
+              "hint": "Ověřte, že hlavní uzávěr plynu je otevřený"
+            },
+            {
+              "step": 2,
+              "action": "Zkontrolujte tlak v systému",
+              "time": "1 min",
+              "icon": "📊",
+              "hint": "Tlak by měl být 1-2 bar"
+            },
+            {
+              "step": 3,
+              "action": "Resetujte kotel",
+              "time": "30 s",
+              "icon": "🔄",
+              "hint": "Stiskněte reset tlačítko na kotli"
+            },
+            {
+              "step": 4,
+              "action": "Volejte servis",
+              "time": "-",
+              "icon": "📞",
+              "hint": "Pokud problém přetrvává, kontaktujte autorizovaný servis"
+            }
+          ],
+          "safetyWarnings": [
+            "Nikdy neopravujte plynová zařízení sami",
+            "Při zápachu plynu opusťte prostor"
+          ],
+          "preRepairChecklist": [
+            {
+              "id": "heating-off",
+              "text": "Topení/kotel je vypnutý",
+              "critical": true
+            },
+            {
+              "id": "ventilation",
+              "text": "Místnost je větraná",
+              "critical": false
+            },
+            {
+              "id": "tools-ready",
+              "text": "Mám potřebné nástroje",
+              "critical": false
+            }
+          ],
+          "videoTutorial": {
+            "available": false,
+            "premium": true,
+            "comingSoon": true
+          },
+          "affiliateLinks": []
+        },
+        {
+          "id": "low-pressure",
+          "name": "Nízký tlak v kotli",
+          "description": "Manometr ukazuje nízký tlak",
+          "riskScore": 3,
+          "difficulty": "Nízká",
+          "timeEstimate": "10 min",
+          "materialCost": {
+            "min": 0,
+            "max": 0,
+            "currency": "CZK"
+          },
+          "professionalCost": {
+            "min": 500,
+            "max": 1200,
+            "currency": "CZK"
+          },
+          "tools": [
+            "Klíč na plnění"
+          ],
+          "steps": [
+            {
+              "step": 1,
+              "action": "Najděte plnící ventil",
+              "time": "1 min",
+              "icon": "🔍",
+              "hint": "Obvykle pod kotlem nebo na potrubí"
+            },
+            {
+              "step": 2,
+              "action": "Otevřete ventil pomalu",
+              "time": "2 min",
+              "icon": "🔧",
+              "hint": "Sledujte manometr"
+            },
+            {
+              "step": 3,
+              "action": "Doplňte na 1.5 bar",
+              "time": "3 min",
+              "icon": "📊",
+              "hint": "Nepřekračujte 2 bar"
+            },
+            {
+              "step": 4,
+              "action": "Uzavřete ventil",
+              "time": "30 s",
+              "icon": "✅"
+            }
+          ],
+          "safetyWarnings": [
+            "Nepřeplňujte systém",
+            "Při opakovaném poklesu volejte servis"
+          ],
+          "preRepairChecklist": [
+            {
+              "id": "heating-off",
+              "text": "Topení/kotel je vypnutý",
+              "critical": true
+            },
+            {
+              "id": "ventilation",
+              "text": "Místnost je větraná",
+              "critical": false
+            },
+            {
+              "id": "tools-ready",
+              "text": "Mám potřebné nástroje",
+              "critical": false
+            }
+          ],
+          "videoTutorial": {
+            "available": false,
+            "premium": true,
+            "comingSoon": true
+          },
+          "affiliateLinks": []
+        },
+        {
+          "id": "error-code",
+          "name": "Chybový kód na displeji",
+          "description": "Kotel zobrazuje chybový kód",
+          "riskScore": 5,
+          "difficulty": "Střední",
+          "timeEstimate": "Závisí na chybě",
+          "materialCost": {
+            "min": 0,
+            "max": 2000,
+            "currency": "CZK"
+          },
+          "professionalCost": {
+            "min": 1000,
+            "max": 3500,
+            "currency": "CZK"
+          },
+          "tools": [
+            "Návod ke kotli"
+          ],
+          "steps": [
+            {
+              "step": 1,
+              "action": "Poznamenejte si chybový kód",
+              "time": "30 s",
+              "icon": "📝"
+            },
+            {
+              "step": 2,
+              "action": "Vyhledejte kód v návodu",
+              "time": "2 min",
+              "icon": "📖"
+            },
+            {
+              "step": 3,
+              "action": "Zkuste reset kotle",
+              "time": "1 min",
+              "icon": "🔄"
+            },
+            {
+              "step": 4,
+              "action": "Kontaktujte servis s kódem chyby",
+              "time": "-",
+              "icon": "📞"
+            }
+          ],
+          "safetyWarnings": [
+            "Nepokoušejte se opravovat plynové komponenty"
+          ],
+          "preRepairChecklist": [
+            {
+              "id": "heating-off",
+              "text": "Topení/kotel je vypnutý",
+              "critical": true
+            },
+            {
+              "id": "ventilation",
+              "text": "Místnost je větraná",
+              "critical": false
+            },
+            {
+              "id": "tools-ready",
+              "text": "Mám potřebné nástroje",
+              "critical": false
+            }
+          ],
+          "videoTutorial": {
+            "available": false,
+            "premium": true,
+            "comingSoon": true
+          },
+          "affiliateLinks": []
+        }
+      ]
+    },
+    "klimatizace": {
+      "name": "Klimatizace",
+      "category": "ventilace",
+      "icon": "❄️",
+      "issues": [
+        {
+          "id": "not-cooling",
+          "name": "Klimatizace nechladí",
+          "description": "Jednotka běží, ale nechladí",
+          "riskScore": 3,
+          "difficulty": "Střední",
+          "timeEstimate": "30 min",
+          "materialCost": {
+            "min": 0,
+            "max": 200,
+            "currency": "CZK"
+          },
+          "professionalCost": {
+            "min": 1200,
+            "max": 3000,
+            "currency": "CZK"
+          },
+          "tools": [
+            "Čistící prostředek",
+            "Kartáč"
+          ],
+          "steps": [
+            {
+              "step": 1,
+              "action": "Zkontrolujte nastavení teploty",
+              "time": "1 min",
+              "icon": "🌡️"
+            },
+            {
+              "step": 2,
+              "action": "Vyčistěte filtry",
+              "time": "15 min",
+              "icon": "🧹",
+              "hint": "Filtry vyjměte a propláchněte vodou"
+            },
+            {
+              "step": 3,
+              "action": "Zkontrolujte venkovní jednotku",
+              "time": "5 min",
+              "icon": "🔍",
+              "hint": "Odstraňte nečistoty z mřížky"
+            },
+            {
+              "step": 4,
+              "action": "Počkejte 30 minut a znovu zapněte",
+              "time": "30 min",
+              "icon": "⏱️"
+            }
+          ],
+          "safetyWarnings": [
+            "Odpojte od elektřiny před čištěním"
+          ],
+          "preRepairChecklist": [
+            {
+              "id": "power-off",
+              "text": "Zařízení je odpojeno od elektřiny",
+              "critical": true
+            },
+            {
+              "id": "tools-ready",
+              "text": "Mám potřebné nástroje",
+              "critical": false
+            }
+          ],
+          "videoTutorial": {
+            "available": false,
+            "premium": true,
+            "comingSoon": true
+          },
+          "affiliateLinks": []
+        },
+        {
+          "id": "leaking-water",
+          "name": "Klimatizace kape",
+          "description": "Z vnitřní jednotky kape voda",
+          "riskScore": 4,
+          "difficulty": "Střední",
+          "timeEstimate": "20 min",
+          "materialCost": {
+            "min": 0,
+            "max": 100,
+            "currency": "CZK"
+          },
+          "professionalCost": {
+            "min": 800,
+            "max": 2000,
+            "currency": "CZK"
+          },
+          "tools": [
+            "Hadřík",
+            "Vysavač"
+          ],
+          "steps": [
+            {
+              "step": 1,
+              "action": "Vypněte klimatizaci",
+              "time": "30 s",
+              "icon": "🔌"
+            },
+            {
+              "step": 2,
+              "action": "Zkontrolujte odtokovou hadici",
+              "time": "5 min",
+              "icon": "🔍",
+              "hint": "Může být ucpaná"
+            },
+            {
+              "step": 3,
+              "action": "Vyčistěte odtokový kanálek",
+              "time": "10 min",
+              "icon": "🧹"
+            },
+            {
+              "step": 4,
+              "action": "Zkontrolujte těsnost",
+              "time": "5 min",
+              "icon": "✅"
+            }
+          ],
+          "safetyWarnings": [
+            "Dejte pozor na elektřinu při práci s vodou"
+          ],
+          "preRepairChecklist": [
+            {
+              "id": "power-off",
+              "text": "Zařízení je odpojeno od elektřiny",
+              "critical": true
+            },
+            {
+              "id": "tools-ready",
+              "text": "Mám potřebné nástroje",
+              "critical": false
+            }
+          ],
+          "videoTutorial": {
+            "available": false,
+            "premium": true,
+            "comingSoon": true
+          },
+          "affiliateLinks": []
+        },
+        {
+          "id": "bad-smell",
+          "name": "Zápach z klimatizace",
+          "description": "Z jednotky jde nepříjemný zápach",
+          "riskScore": 2,
+          "difficulty": "Nízká",
+          "timeEstimate": "30 min",
+          "materialCost": {
+            "min": 100,
+            "max": 300,
+            "currency": "CZK"
+          },
+          "professionalCost": {
+            "min": 600,
+            "max": 1500,
+            "currency": "CZK"
+          },
+          "tools": [
+            "Čistící sprej na klimatizace",
+            "Hadřík"
+          ],
+          "steps": [
+            {
+              "step": 1,
+              "action": "Vypněte jednotku a odpojte od proudu",
+              "time": "1 min",
+              "icon": "🔌"
+            },
+            {
+              "step": 2,
+              "action": "Vyjměte a vyčistěte filtry",
+              "time": "10 min",
+              "icon": "🧹"
+            },
+            {
+              "step": 3,
+              "action": "Nastříkejte čistící sprej do výparníku",
+              "time": "5 min",
+              "icon": "🧴"
+            },
+            {
+              "step": 4,
+              "action": "Nechte 15 minut působit a zapněte",
+              "time": "15 min",
+              "icon": "⏱️"
+            }
+          ],
+          "safetyWarnings": [
+            "Používejte sprej určený pro klimatizace"
+          ],
+          "preRepairChecklist": [
+            {
+              "id": "power-off",
+              "text": "Zařízení je odpojeno od elektřiny",
+              "critical": true
+            },
+            {
+              "id": "tools-ready",
+              "text": "Mám potřebné nástroje",
+              "critical": false
+            }
+          ],
+          "videoTutorial": {
+            "available": false,
+            "premium": true,
+            "comingSoon": true
+          },
+          "affiliateLinks": []
+        }
+      ]
+    },
+    "garaz": {
+      "name": "Garážová vrata",
+      "category": "dvere_okna",
+      "icon": "🚗",
+      "issues": [
+        {
+          "id": "not-opening",
+          "name": "Vrata se neotevírají",
+          "description": "Motor nereaguje na dálkové ovládání",
+          "riskScore": 3,
+          "difficulty": "Střední",
+          "timeEstimate": "30 min",
+          "materialCost": {
+            "min": 50,
+            "max": 500,
+            "currency": "CZK"
+          },
+          "professionalCost": {
+            "min": 800,
+            "max": 2500,
+            "currency": "CZK"
+          },
+          "tools": [
+            "Baterie",
+            "Šroubovák"
+          ],
+          "steps": [
+            {
+              "step": 1,
+              "action": "Vyměňte baterie v dálkovém ovládání",
+              "time": "2 min",
+              "icon": "🔋"
+            },
+            {
+              "step": 2,
+              "action": "Zkontrolujte napájení pohonu",
+              "time": "3 min",
+              "icon": "🔌"
+            },
+            {
+              "step": 3,
+              "action": "Zkuste manuální odemčení",
+              "time": "5 min",
+              "icon": "🔓",
+              "hint": "Najděte ruční uvolňovací mechanismus"
+            },
+            {
+              "step": 4,
+              "action": "Resetujte pohon",
+              "time": "5 min",
+              "icon": "🔄"
+            }
+          ],
+          "safetyWarnings": [
+            "Pozor na pohybující se části"
+          ],
+          "preRepairChecklist": [
+            {
+              "id": "area-clear",
+              "text": "Pracovní prostor je volný",
+              "critical": false
+            },
+            {
+              "id": "tools-ready",
+              "text": "Mám potřebné nástroje",
+              "critical": false
+            }
+          ],
+          "videoTutorial": {
+            "available": false,
+            "premium": true,
+            "comingSoon": true
+          },
+          "affiliateLinks": []
+        },
+        {
+          "id": "stuck-halfway",
+          "name": "Vrata se zasekla",
+          "description": "Vrata se zastaví uprostřed pohybu",
+          "riskScore": 4,
+          "difficulty": "Střední",
+          "timeEstimate": "30 min",
+          "materialCost": {
+            "min": 0,
+            "max": 300,
+            "currency": "CZK"
+          },
+          "professionalCost": {
+            "min": 1000,
+            "max": 2500,
+            "currency": "CZK"
+          },
+          "tools": [
+            "Mazivo",
+            "Hadřík"
+          ],
+          "steps": [
+            {
+              "step": 1,
+              "action": "Odpojte pohon od proudu",
+              "time": "1 min",
+              "icon": "🔌"
+            },
+            {
+              "step": 2,
+              "action": "Uvolněte vrata ručně",
+              "time": "5 min",
+              "icon": "🔓"
+            },
+            {
+              "step": 3,
+              "action": "Zkontrolujte vodicí lišty",
+              "time": "5 min",
+              "icon": "🔍",
+              "hint": "Hledejte nečistoty nebo poškození"
+            },
+            {
+              "step": 4,
+              "action": "Promažte vodicí lišty a kladky",
+              "time": "10 min",
+              "icon": "🛢️"
+            }
+          ],
+          "safetyWarnings": [
+            "Vrata mohou být těžká - buďte opatrní"
+          ],
+          "preRepairChecklist": [
+            {
+              "id": "area-clear",
+              "text": "Pracovní prostor je volný",
+              "critical": false
+            },
+            {
+              "id": "tools-ready",
+              "text": "Mám potřebné nástroje",
+              "critical": false
+            }
+          ],
+          "videoTutorial": {
+            "available": false,
+            "premium": true,
+            "comingSoon": true
+          },
+          "affiliateLinks": []
+        },
+        {
+          "id": "noisy-operation",
+          "name": "Hlučný chod vrat",
+          "description": "Vrata vydávají skřípání nebo rachot",
+          "riskScore": 2,
+          "difficulty": "Nízká",
+          "timeEstimate": "20 min",
+          "materialCost": {
+            "min": 100,
+            "max": 300,
+            "currency": "CZK"
+          },
+          "professionalCost": {
+            "min": 500,
+            "max": 1200,
+            "currency": "CZK"
+          },
+          "tools": [
+            "WD-40",
+            "Mazivo na vodicí lišty",
+            "Hadřík"
+          ],
+          "steps": [
+            {
+              "step": 1,
+              "action": "Vyčistěte vodicí lišty",
+              "time": "5 min",
+              "icon": "🧹"
+            },
+            {
+              "step": 2,
+              "action": "Namažte kladky a závěsy",
+              "time": "5 min",
+              "icon": "🛢️"
+            },
+            {
+              "step": 3,
+              "action": "Zkontrolujte utažení šroubů",
+              "time": "5 min",
+              "icon": "🔧"
+            },
+            {
+              "step": 4,
+              "action": "Namažte pružiny (pokud jsou)",
+              "time": "5 min",
+              "icon": "⚙️"
+            }
+          ],
+          "safetyWarnings": [
+            "Nikdy se nedotýkejte napjatých pružin"
+          ],
+          "preRepairChecklist": [
+            {
+              "id": "area-clear",
+              "text": "Pracovní prostor je volný",
+              "critical": false
+            },
+            {
+              "id": "tools-ready",
+              "text": "Mám potřebné nástroje",
+              "critical": false
+            }
+          ],
+          "videoTutorial": {
+            "available": false,
+            "premium": true,
+            "comingSoon": true
+          },
+          "affiliateLinks": []
+        }
+      ]
+    },
+    "susak": {
+      "name": "Sušička prádla",
+      "category": "spotrebice",
+      "icon": "🌀",
+      "issues": [
+        {
+          "id": "not-drying",
+          "name": "Sušička nesuší",
+          "description": "Prádlo zůstává mokré",
+          "riskScore": 2,
+          "difficulty": "Nízká",
+          "timeEstimate": "20 min",
+          "materialCost": {
+            "min": 0,
+            "max": 100,
+            "currency": "CZK"
+          },
+          "professionalCost": {
+            "min": 800,
+            "max": 2000,
+            "currency": "CZK"
+          },
+          "tools": [
+            "Vysavač",
+            "Kartáč"
+          ],
+          "steps": [
+            {
+              "step": 1,
+              "action": "Vyčistěte filtr na vlákna",
+              "time": "3 min",
+              "icon": "🧹",
+              "hint": "Čistěte po každém sušení"
+            },
+            {
+              "step": 2,
+              "action": "Zkontrolujte kondenzátor",
+              "time": "5 min",
+              "icon": "🔍"
+            },
+            {
+              "step": 3,
+              "action": "Vyčistěte odvod vzduchu",
+              "time": "10 min",
+              "icon": "💨"
+            },
+            {
+              "step": 4,
+              "action": "Zkontrolujte teplotu programu",
+              "time": "2 min",
+              "icon": "🌡️"
+            }
+          ],
+          "safetyWarnings": [
+            "Odpojte od elektřiny před čištěním"
+          ],
+          "preRepairChecklist": [
+            {
+              "id": "power-off",
+              "text": "Spotřebič je odpojený",
+              "critical": true
+            },
+            {
+              "id": "water-off",
+              "text": "Přívod vody je uzavřen",
+              "critical": true
+            },
+            {
+              "id": "tools-ready",
+              "text": "Mám potřebné nástroje",
+              "critical": false
+            }
+          ],
+          "videoTutorial": {
+            "available": false,
+            "premium": true,
+            "comingSoon": true
+          },
+          "affiliateLinks": []
+        },
+        {
+          "id": "not-starting",
+          "name": "Sušička se nespouští",
+          "description": "Motor se nezapne",
+          "riskScore": 3,
+          "difficulty": "Střední",
+          "timeEstimate": "15 min",
+          "materialCost": {
+            "min": 0,
+            "max": 200,
+            "currency": "CZK"
+          },
+          "professionalCost": {
+            "min": 800,
+            "max": 2500,
+            "currency": "CZK"
+          },
+          "tools": [
+            "Multimetr"
+          ],
+          "steps": [
+            {
+              "step": 1,
+              "action": "Zkontrolujte zavření dvířek",
+              "time": "1 min",
+              "icon": "🚪"
+            },
+            {
+              "step": 2,
+              "action": "Zkontrolujte zásuvku a jistič",
+              "time": "2 min",
+              "icon": "🔌"
+            },
+            {
+              "step": 3,
+              "action": "Zkontrolujte nádobu na kondenzát",
+              "time": "2 min",
+              "icon": "💧",
+              "hint": "Pokud je plná, sušička se nespustí"
+            },
+            {
+              "step": 4,
+              "action": "Zkuste reset - odpojte na 5 min",
+              "time": "5 min",
+              "icon": "🔄"
+            }
+          ],
+          "safetyWarnings": [
+            "Nepřetěžujte sušičku prádlem"
+          ],
+          "preRepairChecklist": [
+            {
+              "id": "power-off",
+              "text": "Spotřebič je odpojený",
+              "critical": true
+            },
+            {
+              "id": "water-off",
+              "text": "Přívod vody je uzavřen",
+              "critical": true
+            },
+            {
+              "id": "tools-ready",
+              "text": "Mám potřebné nástroje",
+              "critical": false
+            }
+          ],
+          "videoTutorial": {
+            "available": false,
+            "premium": true,
+            "comingSoon": true
+          },
+          "affiliateLinks": []
+        },
+        {
+          "id": "bad-smell",
+          "name": "Zápach ze sušičky",
+          "description": "Prádlo zapáchá po sušení",
+          "riskScore": 1,
+          "difficulty": "Nízká",
+          "timeEstimate": "30 min",
+          "materialCost": {
+            "min": 50,
+            "max": 200,
+            "currency": "CZK"
+          },
+          "professionalCost": {
+            "min": 500,
+            "max": 1200,
+            "currency": "CZK"
+          },
+          "tools": [
+            "Ocet",
+            "Hadřík"
+          ],
+          "steps": [
+            {
+              "step": 1,
+              "action": "Vyčistěte filtr na vlákna",
+              "time": "5 min",
+              "icon": "🧹"
+            },
+            {
+              "step": 2,
+              "action": "Otřete buben vlhkým hadříkem s octem",
+              "time": "10 min",
+              "icon": "🧽"
+            },
+            {
+              "step": 3,
+              "action": "Nechte dvířka otevřená pro odvětrání",
+              "time": "2 min",
+              "icon": "💨"
+            },
+            {
+              "step": 4,
+              "action": "Spusťte prázdný cyklus",
+              "time": "30 min",
+              "icon": "🔄"
+            }
+          ],
+          "safetyWarnings": [
+            "Nepoužívejte agresivní chemikálie"
+          ],
+          "preRepairChecklist": [
+            {
+              "id": "power-off",
+              "text": "Spotřebič je odpojený",
+              "critical": true
+            },
+            {
+              "id": "water-off",
+              "text": "Přívod vody je uzavřen",
+              "critical": true
+            },
+            {
+              "id": "tools-ready",
+              "text": "Mám potřebné nástroje",
+              "critical": false
+            }
+          ],
+          "videoTutorial": {
+            "available": false,
+            "premium": true,
+            "comingSoon": true
+          },
+          "affiliateLinks": []
+        }
+      ]
+    },
+    "zvonkova-soustava": {
+      "name": "Zvonková soustava",
+      "category": "elektro",
+      "icon": "🔔",
+      "issues": [
+        {
+          "id": "not-ringing",
+          "name": "Zvonek nezvoní",
+          "description": "Stisknutí tlačítka nemá efekt",
+          "riskScore": 2,
+          "difficulty": "Nízká",
+          "timeEstimate": "20 min",
+          "materialCost": {
+            "min": 50,
+            "max": 300,
+            "currency": "CZK"
+          },
+          "professionalCost": {
+            "min": 400,
+            "max": 1000,
+            "currency": "CZK"
+          },
+          "tools": [
+            "Šroubovák",
+            "Multimetr",
+            "Baterie"
+          ],
+          "steps": [
+            {
+              "step": 1,
+              "action": "Zkontrolujte baterie (pokud je bezdrátový)",
+              "time": "3 min",
+              "icon": "🔋"
+            },
+            {
+              "step": 2,
+              "action": "Zkontrolujte tlačítko u dveří",
+              "time": "5 min",
+              "icon": "🔍",
+              "hint": "Může být zoxidované nebo poškozené"
+            },
+            {
+              "step": 3,
+              "action": "Zkontrolujte připojení vodičů",
+              "time": "5 min",
+              "icon": "🔧"
+            },
+            {
+              "step": 4,
+              "action": "Otestujte transformátor/napájení",
+              "time": "5 min",
+              "icon": "⚡"
+            }
+          ],
+          "safetyWarnings": [
+            "Odpojte napájení před prací"
+          ],
+          "preRepairChecklist": [
+            {
+              "id": "power-off",
+              "text": "Elektřina je vypnutá",
+              "critical": true
+            },
+            {
+              "id": "voltage-test",
+              "text": "Ověřil/a jsem zkoušečkou",
+              "critical": true
+            },
+            {
+              "id": "tools-ready",
+              "text": "Mám potřebné nástroje",
+              "critical": false
+            }
+          ],
+          "videoTutorial": {
+            "available": false,
+            "premium": true,
+            "comingSoon": true
+          },
+          "affiliateLinks": []
+        },
+        {
+          "id": "weak-sound",
+          "name": "Slabý zvuk zvonku",
+          "description": "Zvonek je sotva slyšet",
+          "riskScore": 1,
+          "difficulty": "Nízká",
+          "timeEstimate": "15 min",
+          "materialCost": {
+            "min": 0,
+            "max": 200,
+            "currency": "CZK"
+          },
+          "professionalCost": {
+            "min": 300,
+            "max": 800,
+            "currency": "CZK"
+          },
+          "tools": [
+            "Šroubovák"
+          ],
+          "steps": [
+            {
+              "step": 1,
+              "action": "Zkontrolujte nastavení hlasitosti",
+              "time": "2 min",
+              "icon": "🔊"
+            },
+            {
+              "step": 2,
+              "action": "Vyměňte baterie",
+              "time": "3 min",
+              "icon": "🔋"
+            },
+            {
+              "step": 3,
+              "action": "Zkontrolujte umístění zvonku",
+              "time": "5 min",
+              "icon": "📍",
+              "hint": "Přesuňte na vhodnější místo"
+            },
+            {
+              "step": 4,
+              "action": "Vyčistěte reproduktor",
+              "time": "5 min",
+              "icon": "🧹"
+            }
+          ],
+          "safetyWarnings": [
+            "Při drátovém zvonku odpojte napájení"
+          ],
+          "preRepairChecklist": [
+            {
+              "id": "power-off",
+              "text": "Elektřina je vypnutá",
+              "critical": true
+            },
+            {
+              "id": "voltage-test",
+              "text": "Ověřil/a jsem zkoušečkou",
+              "critical": true
+            },
+            {
+              "id": "tools-ready",
+              "text": "Mám potřebné nástroje",
+              "critical": false
+            }
+          ],
+          "videoTutorial": {
+            "available": false,
+            "premium": true,
+            "comingSoon": true
+          },
+          "affiliateLinks": []
+        }
+      ]
+    },
+    "interkom": {
+      "name": "Interkom/Videozvonek",
+      "category": "elektro",
+      "icon": "📹",
+      "issues": [
+        {
+          "id": "no-video",
+          "name": "Nefunguje video",
+          "description": "Obraz se nezobrazuje",
+          "riskScore": 2,
+          "difficulty": "Střední",
+          "timeEstimate": "20 min",
+          "materialCost": {
+            "min": 0,
+            "max": 500,
+            "currency": "CZK"
+          },
+          "professionalCost": {
+            "min": 600,
+            "max": 1500,
+            "currency": "CZK"
+          },
+          "tools": [
+            "Hadřík",
+            "Šroubovák"
+          ],
+          "steps": [
+            {
+              "step": 1,
+              "action": "Vyčistěte objektiv kamery",
+              "time": "2 min",
+              "icon": "🧹"
+            },
+            {
+              "step": 2,
+              "action": "Zkontrolujte napájení",
+              "time": "3 min",
+              "icon": "🔌"
+            },
+            {
+              "step": 3,
+              "action": "Resetujte zařízení",
+              "time": "5 min",
+              "icon": "🔄"
+            },
+            {
+              "step": 4,
+              "action": "Zkontrolujte kabelové připojení",
+              "time": "10 min",
+              "icon": "🔧"
+            }
+          ],
+          "safetyWarnings": [
+            "Odpojte napájení před kontrolou kabelů"
+          ],
+          "preRepairChecklist": [
+            {
+              "id": "power-off",
+              "text": "Elektřina je vypnutá",
+              "critical": true
+            },
+            {
+              "id": "voltage-test",
+              "text": "Ověřil/a jsem zkoušečkou",
+              "critical": true
+            },
+            {
+              "id": "tools-ready",
+              "text": "Mám potřebné nástroje",
+              "critical": false
+            }
+          ],
+          "videoTutorial": {
+            "available": false,
+            "premium": true,
+            "comingSoon": true
+          },
+          "affiliateLinks": []
+        },
+        {
+          "id": "no-audio",
+          "name": "Nefunguje zvuk",
+          "description": "Není slyšet hlas návštěvníka",
+          "riskScore": 1,
+          "difficulty": "Nízká",
+          "timeEstimate": "15 min",
+          "materialCost": {
+            "min": 0,
+            "max": 200,
+            "currency": "CZK"
+          },
+          "professionalCost": {
+            "min": 400,
+            "max": 1000,
+            "currency": "CZK"
+          },
+          "tools": [
+            "Hadřík"
+          ],
+          "steps": [
+            {
+              "step": 1,
+              "action": "Zkontrolujte hlasitost",
+              "time": "1 min",
+              "icon": "🔊"
+            },
+            {
+              "step": 2,
+              "action": "Vyčistěte mikrofon a reproduktor",
+              "time": "5 min",
+              "icon": "🧹"
+            },
+            {
+              "step": 3,
+              "action": "Resetujte zařízení",
+              "time": "5 min",
+              "icon": "🔄"
+            },
+            {
+              "step": 4,
+              "action": "Zkontrolujte nastavení aplikace",
+              "time": "5 min",
+              "icon": "📱"
+            }
+          ],
+          "safetyWarnings": [
+            "Chraňte zařízení před vlhkostí"
+          ],
+          "preRepairChecklist": [
+            {
+              "id": "power-off",
+              "text": "Elektřina je vypnutá",
+              "critical": true
+            },
+            {
+              "id": "voltage-test",
+              "text": "Ověřil/a jsem zkoušečkou",
+              "critical": true
+            },
+            {
+              "id": "tools-ready",
+              "text": "Mám potřebné nástroje",
+              "critical": false
+            }
+          ],
+          "videoTutorial": {
+            "available": false,
+            "premium": true,
+            "comingSoon": true
+          },
+          "affiliateLinks": []
+        },
+        {
+          "id": "app-connection",
+          "name": "Aplikace se nepřipojuje",
+          "description": "Mobilní aplikace nefunguje",
+          "riskScore": 1,
+          "difficulty": "Nízká",
+          "timeEstimate": "15 min",
+          "materialCost": {
+            "min": 0,
+            "max": 0,
+            "currency": "CZK"
+          },
+          "professionalCost": {
+            "min": 300,
+            "max": 800,
+            "currency": "CZK"
+          },
+          "tools": [
+            "Smartphone"
+          ],
+          "steps": [
+            {
+              "step": 1,
+              "action": "Zkontrolujte WiFi připojení",
+              "time": "2 min",
+              "icon": "📶"
+            },
+            {
+              "step": 2,
+              "action": "Restartujte aplikaci",
+              "time": "1 min",
+              "icon": "🔄"
+            },
+            {
+              "step": 3,
+              "action": "Aktualizujte aplikaci",
+              "time": "5 min",
+              "icon": "📲"
+            },
+            {
+              "step": 4,
+              "action": "Resetujte připojení zařízení k WiFi",
+              "time": "10 min",
+              "icon": "🔧"
+            }
+          ],
+          "safetyWarnings": [
+            "Zapamatujte si přihlašovací údaje před resetem"
+          ],
+          "preRepairChecklist": [
+            {
+              "id": "power-off",
+              "text": "Elektřina je vypnutá",
+              "critical": true
+            },
+            {
+              "id": "voltage-test",
+              "text": "Ověřil/a jsem zkoušečkou",
+              "critical": true
+            },
+            {
+              "id": "tools-ready",
+              "text": "Mám potřebné nástroje",
+              "critical": false
+            }
+          ],
+          "videoTutorial": {
+            "available": false,
+            "premium": true,
+            "comingSoon": true
+          },
+          "affiliateLinks": []
+        }
+      ]
     }
   },
   "categories": [
