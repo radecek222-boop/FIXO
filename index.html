@@ -1263,6 +1263,12 @@
             const [selectedRepairDetail, setSelectedRepairDetail] = useState(null);
             const fileInputRef = useRef(null);
             const dropZoneRef = useRef(null);
+            const canvasRef = useRef(null);
+            const [isDrawingMode, setIsDrawingMode] = useState(false);
+            const [isDrawing, setIsDrawing] = useState(false);
+            const [brushColor, setBrushColor] = useState('#ff0000');
+            const [brushSize, setBrushSize] = useState(5);
+            const [annotatedImage, setAnnotatedImage] = useState(null);
 
             // Filtrovat historii podle stavu
             const getFilteredHistory = () => {
@@ -1541,6 +1547,89 @@
                 return icons[category] || '🔧';
             };
 
+            // === KRESLENÍ NA FOTKU ===
+            const initCanvas = () => {
+                const canvas = canvasRef.current;
+                if (!canvas || !selectedImage) return;
+
+                const img = new Image();
+                img.onload = () => {
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0);
+                };
+                img.src = selectedImage;
+            };
+
+            // Efekt pro inicializaci canvasu když se změní obrázek
+            useEffect(() => {
+                if (selectedImage && isDrawingMode) {
+                    initCanvas();
+                }
+            }, [selectedImage, isDrawingMode]);
+
+            const startDrawing = (e) => {
+                if (!isDrawingMode) return;
+                setIsDrawing(true);
+                draw(e);
+            };
+
+            const stopDrawing = () => {
+                setIsDrawing(false);
+                const canvas = canvasRef.current;
+                if (canvas) {
+                    const ctx = canvas.getContext('2d');
+                    ctx.beginPath();
+                }
+            };
+
+            const draw = (e) => {
+                if (!isDrawing || !isDrawingMode) return;
+                const canvas = canvasRef.current;
+                if (!canvas) return;
+
+                const ctx = canvas.getContext('2d');
+                const rect = canvas.getBoundingClientRect();
+                const scaleX = canvas.width / rect.width;
+                const scaleY = canvas.height / rect.height;
+
+                // Podpora pro touch i mouse
+                const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+                const x = (clientX - rect.left) * scaleX;
+                const y = (clientY - rect.top) * scaleY;
+
+                ctx.lineWidth = brushSize * 2;
+                ctx.lineCap = 'round';
+                ctx.strokeStyle = brushColor;
+                ctx.lineTo(x, y);
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.moveTo(x, y);
+            };
+
+            const clearCanvas = () => {
+                initCanvas();
+            };
+
+            const saveAnnotatedImage = () => {
+                const canvas = canvasRef.current;
+                if (canvas) {
+                    const dataUrl = canvas.toDataURL('image/jpeg', 0.8);
+                    setAnnotatedImage(dataUrl);
+                    setIsDrawingMode(false);
+                    return dataUrl;
+                }
+                return selectedImage;
+            };
+
+            const analyzeWithAnnotation = () => {
+                const imageToAnalyze = saveAnnotatedImage();
+                analyzeImage(imageToAnalyze);
+            };
+
             const handleImageUpload = (event) => {
                 const file = event.target.files[0];
                 if (file) {
@@ -1587,7 +1676,9 @@
                     // Komprimovat obrázek před odesláním
                     const compressedImage = await compressImage(file);
                     setSelectedImage(compressedImage);
-                    analyzeImage(compressedImage);
+                    setAnnotatedImage(null);
+                    setIsDrawingMode(false);
+                    setCurrentView('preview'); // Zobrazit náhled s možností kreslení
                 }
             };
 
@@ -1836,6 +1927,156 @@
                                             <div style={{fontSize: 'var(--text-sm)', color: 'var(--color-text-secondary)'}}>{item.name}</div>
                                         </div>
                                     ))}
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Preview View - Náhled s možností kreslení */}
+                        {currentView === 'preview' && selectedImage && (
+                            <div className="center-content">
+                                <div className="upload-card max-w-lg w-full">
+                                    <div className="text-center mb-4">
+                                        <h2 style={{fontSize: 'var(--text-xl)', fontWeight: 'var(--font-bold)', marginBottom: 'var(--space-2)'}}>
+                                            <i className="fas fa-edit mr-2"></i>
+                                            Označte problém na fotce
+                                        </h2>
+                                        <p className="text-secondary">
+                                            Nakreslete kruh nebo šipku k místu s problémem pro přesnější analýzu
+                                        </p>
+                                    </div>
+
+                                    {/* Canvas / Image container */}
+                                    <div style={{position: 'relative', marginBottom: 'var(--space-4)'}}>
+                                        {isDrawingMode ? (
+                                            <canvas
+                                                ref={canvasRef}
+                                                onMouseDown={startDrawing}
+                                                onMouseMove={draw}
+                                                onMouseUp={stopDrawing}
+                                                onMouseLeave={stopDrawing}
+                                                onTouchStart={startDrawing}
+                                                onTouchMove={draw}
+                                                onTouchEnd={stopDrawing}
+                                                style={{
+                                                    width: '100%',
+                                                    maxHeight: '400px',
+                                                    objectFit: 'contain',
+                                                    borderRadius: 'var(--radius-lg)',
+                                                    cursor: 'crosshair',
+                                                    touchAction: 'none'
+                                                }}
+                                            />
+                                        ) : (
+                                            <img
+                                                src={annotatedImage || selectedImage}
+                                                alt="Nahraná fotka"
+                                                style={{
+                                                    width: '100%',
+                                                    maxHeight: '400px',
+                                                    objectFit: 'contain',
+                                                    borderRadius: 'var(--radius-lg)'
+                                                }}
+                                            />
+                                        )}
+                                    </div>
+
+                                    {/* Kreslící nástroje */}
+                                    {isDrawingMode && (
+                                        <div className="card mb-4" style={{padding: 'var(--space-3)', background: 'var(--color-bg-secondary)'}}>
+                                            <div className="flex-between flex-wrap gap-3">
+                                                <div className="flex items-center gap-3">
+                                                    <label style={{fontSize: 'var(--text-sm)'}}>Barva:</label>
+                                                    <div className="flex gap-2">
+                                                        {['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ffffff'].map(color => (
+                                                            <button
+                                                                key={color}
+                                                                onClick={() => setBrushColor(color)}
+                                                                style={{
+                                                                    width: '28px',
+                                                                    height: '28px',
+                                                                    borderRadius: '50%',
+                                                                    backgroundColor: color,
+                                                                    border: brushColor === color ? '3px solid var(--color-text-primary)' : '2px solid var(--color-border)',
+                                                                    cursor: 'pointer'
+                                                                }}
+                                                            />
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                                <div className="flex items-center gap-3">
+                                                    <label style={{fontSize: 'var(--text-sm)'}}>Velikost:</label>
+                                                    <input
+                                                        type="range"
+                                                        min="2"
+                                                        max="15"
+                                                        value={brushSize}
+                                                        onChange={(e) => setBrushSize(parseInt(e.target.value))}
+                                                        style={{width: '80px'}}
+                                                    />
+                                                </div>
+                                                <button onClick={clearCanvas} className="btn btn-secondary" style={{padding: 'var(--space-2) var(--space-3)'}}>
+                                                    <i className="fas fa-eraser mr-1"></i> Smazat
+                                                </button>
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {/* Akční tlačítka */}
+                                    <div className="flex gap-3" style={{flexWrap: 'wrap'}}>
+                                        {!isDrawingMode ? (
+                                            <>
+                                                <button
+                                                    onClick={() => setIsDrawingMode(true)}
+                                                    className="btn btn-secondary flex-1"
+                                                >
+                                                    <i className="fas fa-pencil-alt mr-2"></i>
+                                                    Označit problém
+                                                </button>
+                                                <button
+                                                    onClick={() => analyzeImage(annotatedImage || selectedImage)}
+                                                    className="btn btn-primary flex-1"
+                                                >
+                                                    <i className="fas fa-search mr-2"></i>
+                                                    Analyzovat
+                                                </button>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <button
+                                                    onClick={() => {
+                                                        setIsDrawingMode(false);
+                                                        setAnnotatedImage(null);
+                                                    }}
+                                                    className="btn btn-secondary flex-1"
+                                                >
+                                                    <i className="fas fa-times mr-2"></i>
+                                                    Zrušit
+                                                </button>
+                                                <button
+                                                    onClick={analyzeWithAnnotation}
+                                                    className="btn btn-primary flex-1"
+                                                >
+                                                    <i className="fas fa-check mr-2"></i>
+                                                    Hotovo - Analyzovat
+                                                </button>
+                                            </>
+                                        )}
+                                    </div>
+
+                                    {/* Nová fotka */}
+                                    <button
+                                        onClick={() => {
+                                            setSelectedImage(null);
+                                            setAnnotatedImage(null);
+                                            setIsDrawingMode(false);
+                                            setCurrentView('home');
+                                        }}
+                                        className="btn btn-link mt-4"
+                                        style={{width: '100%'}}
+                                    >
+                                        <i className="fas fa-camera mr-2"></i>
+                                        Nahrát jinou fotku
+                                    </button>
                                 </div>
                             </div>
                         )}
