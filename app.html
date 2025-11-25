@@ -91,6 +91,54 @@
             border-left: 4px solid var(--color-primary);
             padding-left: var(--space-3);
         }
+        /* Drag & Drop styles */
+        .drop-zone {
+            border: 3px dashed var(--color-border);
+            border-radius: var(--radius-xl);
+            padding: var(--space-8);
+            text-align: center;
+            transition: all var(--transition-normal);
+            cursor: pointer;
+            margin-bottom: var(--space-4);
+        }
+        .drop-zone:hover {
+            border-color: var(--color-primary);
+            background-color: var(--color-primary-light);
+        }
+        .drop-zone.drag-over {
+            border-color: var(--color-primary);
+            background-color: var(--color-primary-light);
+            transform: scale(1.02);
+        }
+        .drop-zone-icon {
+            font-size: var(--text-5xl);
+            color: var(--color-primary);
+            margin-bottom: var(--space-4);
+        }
+        .category-filter {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--space-2);
+            justify-content: center;
+            margin-bottom: var(--space-6);
+        }
+        .category-btn {
+            padding: var(--space-2) var(--space-4);
+            border-radius: var(--radius-full);
+            border: 2px solid var(--color-border);
+            background: var(--color-bg-primary);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            font-size: var(--text-sm);
+        }
+        .category-btn:hover {
+            border-color: var(--color-primary);
+        }
+        .category-btn.active {
+            background: var(--color-primary);
+            color: var(--color-text-inverse);
+            border-color: var(--color-primary);
+        }
     </style>
 </head>
 <body>
@@ -99,10 +147,13 @@
     <script type="text/babel">
         const { useState, useEffect, useRef } = React;
 
-        // Simulovaná databáze závad a oprav
+        // Rozšířená databáze závad a oprav - 12 kategorií
         const repairDatabase = {
+            // 🚰 VODA
             'kohoutek': {
-                name: 'Kohoutek jednopákový',
+                name: 'Kohoutek',
+                category: 'voda',
+                icon: '🚰',
                 issues: [
                     {
                         id: 'leak',
@@ -119,12 +170,14 @@
                             { step: 4, action: 'Sestavte kohoutek zpět', time: '3 min', icon: '🔩' },
                             { step: 5, action: 'Pusťte vodu a zkontrolujte těsnost', time: '2 min', icon: '✅' }
                         ],
-                        safetyWarnings: ['Vždy nejdříve zavřete hlavní přívod vody', 'Mějte připravený kbelík na zachycení zbylé vody']
+                        safetyWarnings: ['Vždy nejdříve zavřete hlavní přívod vody', 'Mějte připravený kbelík']
                     }
                 ]
             },
             'wc': {
                 name: 'Toaleta',
+                category: 'voda',
+                icon: '🚽',
                 issues: [
                     {
                         id: 'running',
@@ -145,8 +198,11 @@
                     }
                 ]
             },
+            // ⚡ ELEKTŘINA
             'zasuvka': {
                 name: 'Elektrická zásuvka',
+                category: 'elektrina',
+                icon: '🔌',
                 issues: [
                     {
                         id: 'not-working',
@@ -167,29 +223,35 @@
                     }
                 ]
             },
-            'dvere': {
-                name: 'Dveře',
+            'svetlo': {
+                name: 'Osvětlení',
+                category: 'elektrina',
+                icon: '💡',
                 issues: [
                     {
-                        id: 'squeaking',
-                        name: 'Vrzající dveře',
-                        description: 'Suché panty potřebují namazání',
-                        riskScore: 1,
-                        difficulty: 'Velmi nízká',
-                        timeEstimate: '5 min',
-                        tools: ['WD-40 nebo olej', 'Hadřík'],
+                        id: 'flickering',
+                        name: 'Blikající světlo',
+                        description: 'Špatný kontakt nebo vadná žárovka',
+                        riskScore: 5,
+                        difficulty: 'Střední',
+                        timeEstimate: '15 min',
+                        tools: ['Nová žárovka', 'Šroubovák', 'Tester'],
                         steps: [
-                            { step: 1, action: 'Otevřete dveře do poloviny', time: '10 s', icon: '🚪' },
-                            { step: 2, action: 'Nastříkejte mazivo na panty', time: '1 min', icon: '🔧' },
-                            { step: 3, action: 'Pohybujte dveřmi tam a zpět', time: '1 min', icon: '↔️' },
-                            { step: 4, action: 'Setřete přebytečné mazivo', time: '1 min', icon: '🧹' }
+                            { step: 1, action: 'Vypněte vypínač a jistič', time: '1 min', icon: '⚡' },
+                            { step: 2, action: 'Vyměňte žárovku za novou', time: '2 min', icon: '💡' },
+                            { step: 3, action: 'Pokud bliká dál, zkontrolujte vypínač', time: '5 min', icon: '🔍' },
+                            { step: 4, action: 'Utáhněte uvolněné kontakty', time: '5 min', icon: '🔧' },
+                            { step: 5, action: 'Zapněte a otestujte', time: '1 min', icon: '✅' }
                         ],
-                        safetyWarnings: ['Větrejte při použití sprejů']
+                        safetyWarnings: ['Vždy vypněte proud před prací', 'Nechte žárovku vychladnout']
                     }
                 ]
             },
+            // 🌡️ TOPENÍ
             'radiator': {
                 name: 'Radiátor',
+                category: 'topeni',
+                icon: '🌡️',
                 issues: [
                     {
                         id: 'cold',
@@ -209,8 +271,221 @@
                         safetyWarnings: ['Pozor na horkou vodu', 'Mějte připravený hadřík']
                     }
                 ]
+            },
+            // 🚪 DVEŘE & OKNA
+            'dvere': {
+                name: 'Dveře',
+                category: 'dvere_okna',
+                icon: '🚪',
+                issues: [
+                    {
+                        id: 'squeaking',
+                        name: 'Vrzající dveře',
+                        description: 'Suché panty potřebují namazání',
+                        riskScore: 1,
+                        difficulty: 'Velmi nízká',
+                        timeEstimate: '5 min',
+                        tools: ['WD-40 nebo olej', 'Hadřík'],
+                        steps: [
+                            { step: 1, action: 'Otevřete dveře do poloviny', time: '10 s', icon: '🚪' },
+                            { step: 2, action: 'Nastříkejte mazivo na panty', time: '1 min', icon: '🔧' },
+                            { step: 3, action: 'Pohybujte dveřmi tam a zpět', time: '1 min', icon: '↔️' },
+                            { step: 4, action: 'Setřete přebytečné mazivo', time: '1 min', icon: '🧹' }
+                        ],
+                        safetyWarnings: ['Větrejte při použití sprejů']
+                    }
+                ]
+            },
+            'okno': {
+                name: 'Okno',
+                category: 'dvere_okna',
+                icon: '🪟',
+                issues: [
+                    {
+                        id: 'drafty',
+                        name: 'Táhne z okna',
+                        description: 'Opotřebované těsnění',
+                        riskScore: 1,
+                        difficulty: 'Nízká',
+                        timeEstimate: '20 min',
+                        tools: ['Nové těsnění', 'Nůž', 'Čistič'],
+                        steps: [
+                            { step: 1, action: 'Odstraňte staré těsnění', time: '5 min', icon: '🔧' },
+                            { step: 2, action: 'Očistěte drážku od nečistot', time: '3 min', icon: '🧹' },
+                            { step: 3, action: 'Naměřte a ustřihněte nové těsnění', time: '2 min', icon: '📏' },
+                            { step: 4, action: 'Zatlačte těsnění do drážky', time: '8 min', icon: '👆' },
+                            { step: 5, action: 'Zkontrolujte těsnost zavřením okna', time: '1 min', icon: '✅' }
+                        ],
+                        safetyWarnings: ['Opatrně s ostrým nožem']
+                    }
+                ]
+            },
+            // 🪑 NÁBYTEK
+            'zidle': {
+                name: 'Židle',
+                category: 'nabytek',
+                icon: '🪑',
+                issues: [
+                    {
+                        id: 'wobbly',
+                        name: 'Viklající se židle',
+                        description: 'Uvolněné šrouby nebo poškozené nohy',
+                        riskScore: 1,
+                        difficulty: 'Nízká',
+                        timeEstimate: '10 min',
+                        tools: ['Šroubovák', 'Klíč', 'Lepidlo na dřevo'],
+                        steps: [
+                            { step: 1, action: 'Otočte židli nohama nahoru', time: '30 s', icon: '🪑' },
+                            { step: 2, action: 'Zkontrolujte všechny šrouby', time: '2 min', icon: '🔍' },
+                            { step: 3, action: 'Dotáhněte uvolněné šrouby', time: '5 min', icon: '🔧' },
+                            { step: 4, action: 'Pokud je spoj rozklížený, použijte lepidlo', time: '2 min', icon: '🧴' },
+                            { step: 5, action: 'Nechte zaschnout a otestujte', time: '1 min', icon: '✅' }
+                        ],
+                        safetyWarnings: ['Netestujte židli, dokud lepidlo nezaschne']
+                    }
+                ]
+            },
+            // 🔌 SPOTŘEBIČE
+            'pracka': {
+                name: 'Pračka',
+                category: 'spotrebice',
+                icon: '🧺',
+                issues: [
+                    {
+                        id: 'not-draining',
+                        name: 'Pračka nevypouští vodu',
+                        description: 'Ucpaný filtr nebo hadice',
+                        riskScore: 3,
+                        difficulty: 'Střední',
+                        timeEstimate: '25 min',
+                        tools: ['Hadřík', 'Nádoba', 'Kartáč'],
+                        steps: [
+                            { step: 1, action: 'Vypněte pračku a odpojte ze zásuvky', time: '1 min', icon: '🔌' },
+                            { step: 2, action: 'Najděte servisní dvířka (dole vpředu)', time: '1 min', icon: '🔍' },
+                            { step: 3, action: 'Podložte nádobu a pomalu otevřete filtr', time: '3 min', icon: '🪣' },
+                            { step: 4, action: 'Vyčistěte filtr od nečistot', time: '10 min', icon: '🧹' },
+                            { step: 5, action: 'Vraťte filtr zpět a otestujte', time: '5 min', icon: '✅' }
+                        ],
+                        safetyWarnings: ['Pozor na vytékající vodu', 'Vždy odpojte ze zásuvky']
+                    }
+                ]
+            },
+            // 🍳 KUCHYŇ
+            'sporák': {
+                name: 'Sporák',
+                category: 'kuchyn',
+                icon: '🍳',
+                issues: [
+                    {
+                        id: 'burner-not-lighting',
+                        name: 'Hořák nezapaluje',
+                        description: 'Ucpaná tryska nebo vadný zapalovač',
+                        riskScore: 5,
+                        difficulty: 'Střední',
+                        timeEstimate: '15 min',
+                        tools: ['Jehla nebo špendlík', 'Hadřík', 'Kartáček'],
+                        steps: [
+                            { step: 1, action: 'Zavřete přívod plynu', time: '1 min', icon: '⛽' },
+                            { step: 2, action: 'Sejměte mřížku a rozdělovač plamene', time: '1 min', icon: '🔧' },
+                            { step: 3, action: 'Vyčistěte trysku jehlou', time: '5 min', icon: '📍' },
+                            { step: 4, action: 'Očistěte zapalovač kartáčkem', time: '3 min', icon: '🧹' },
+                            { step: 5, action: 'Složte vše zpět a otestujte', time: '2 min', icon: '✅' }
+                        ],
+                        safetyWarnings: ['Vždy zavřete plyn před čištěním', 'Větrejte při práci s plynem']
+                    }
+                ]
+            },
+            // 🚿 KOUPELNA
+            'sprcha': {
+                name: 'Sprchová hlavice',
+                category: 'koupelna',
+                icon: '🚿',
+                issues: [
+                    {
+                        id: 'low-pressure',
+                        name: 'Slabý proud vody',
+                        description: 'Zanesená sprchová hlavice vodním kamenem',
+                        riskScore: 1,
+                        difficulty: 'Nízká',
+                        timeEstimate: '30 min',
+                        tools: ['Ocet', 'Igelitový sáček', 'Gumička', 'Kartáček'],
+                        steps: [
+                            { step: 1, action: 'Naplňte sáček octem', time: '1 min', icon: '🧴' },
+                            { step: 2, action: 'Navlékněte sáček na hlavici a upevněte gumičkou', time: '2 min', icon: '🎒' },
+                            { step: 3, action: 'Nechte působit 2-4 hodiny', time: '2-4 hod', icon: '⏰' },
+                            { step: 4, action: 'Sundejte sáček a dočistěte kartáčkem', time: '5 min', icon: '🧹' },
+                            { step: 5, action: 'Propláchněte vodou', time: '2 min', icon: '✅' }
+                        ],
+                        safetyWarnings: ['Ocet může dráždit oči - buďte opatrní']
+                    }
+                ]
+            },
+            // 🏠 STĚNY & PODLAHY
+            'stena': {
+                name: 'Stěna',
+                category: 'steny_podlahy',
+                icon: '🏠',
+                issues: [
+                    {
+                        id: 'hole',
+                        name: 'Díra ve stěně',
+                        description: 'Malá díra po hmoždince nebo hřebíku',
+                        riskScore: 1,
+                        difficulty: 'Nízká',
+                        timeEstimate: '15 min',
+                        tools: ['Tmel', 'Špachtle', 'Brusný papír', 'Barva'],
+                        steps: [
+                            { step: 1, action: 'Očistěte díru od prachu', time: '1 min', icon: '🧹' },
+                            { step: 2, action: 'Naneste tmel do díry špachtlí', time: '3 min', icon: '🔧' },
+                            { step: 3, action: 'Uhlaďte povrch a nechte zaschnout', time: '30 min', icon: '⏰' },
+                            { step: 4, action: 'Přebruste jemným papírem', time: '2 min', icon: '📄' },
+                            { step: 5, action: 'Přetřete barvou', time: '5 min', icon: '🎨' }
+                        ],
+                        safetyWarnings: ['Větrejte při práci s tmelem a barvou']
+                    }
+                ]
+            },
+            // 🌱 ZAHRADA
+            'hadice': {
+                name: 'Zahradní hadice',
+                category: 'zahrada',
+                icon: '🌱',
+                issues: [
+                    {
+                        id: 'leaking',
+                        name: 'Děravá hadice',
+                        description: 'Malá díra nebo prasklina v hadici',
+                        riskScore: 1,
+                        difficulty: 'Nízká',
+                        timeEstimate: '10 min',
+                        tools: ['Opravná páska na hadice', 'Nůžky', 'Hadřík'],
+                        steps: [
+                            { step: 1, action: 'Najděte místo úniku', time: '2 min', icon: '🔍' },
+                            { step: 2, action: 'Osušte a očistěte oblast kolem díry', time: '2 min', icon: '🧹' },
+                            { step: 3, action: 'Odstřihněte kus opravné pásky', time: '1 min', icon: '✂️' },
+                            { step: 4, action: 'Přilepte pásku přes díru s přesahem', time: '3 min', icon: '🩹' },
+                            { step: 5, action: 'Pusťte vodu a zkontrolujte opravu', time: '2 min', icon: '✅' }
+                        ],
+                        safetyWarnings: ['Ujistěte se, že je hadice suchá před lepením']
+                    }
+                ]
             }
         };
+
+        // Kategorie pro filtrování
+        const categories = [
+            { id: 'all', name: 'Vše', icon: '📋' },
+            { id: 'voda', name: 'Voda', icon: '🚰' },
+            { id: 'elektrina', name: 'Elektřina', icon: '⚡' },
+            { id: 'topeni', name: 'Topení', icon: '🌡️' },
+            { id: 'dvere_okna', name: 'Dveře & Okna', icon: '🚪' },
+            { id: 'nabytek', name: 'Nábytek', icon: '🪑' },
+            { id: 'spotrebice', name: 'Spotřebiče', icon: '🔌' },
+            { id: 'kuchyn', name: 'Kuchyň', icon: '🍳' },
+            { id: 'koupelna', name: 'Koupelna', icon: '🚿' },
+            { id: 'steny_podlahy', name: 'Stěny', icon: '🏠' },
+            { id: 'zahrada', name: 'Zahrada', icon: '🌱' }
+        ];
 
         function FixoApp() {
             const [currentView, setCurrentView] = useState('home');
@@ -221,7 +496,10 @@
             const [isAnalyzing, setIsAnalyzing] = useState(false);
             const [repairHistory, setRepairHistory] = useState([]);
             const [currentStep, setCurrentStep] = useState(0);
+            const [isDragging, setIsDragging] = useState(false);
+            const [selectedCategory, setSelectedCategory] = useState('all');
             const fileInputRef = useRef(null);
+            const dropZoneRef = useRef(null);
 
             // Simulace AI analýzy fotky
             const analyzeImage = async () => {
@@ -250,6 +528,12 @@
             const handleImageUpload = (event) => {
                 const file = event.target.files[0];
                 if (file) {
+                    processFile(file);
+                }
+            };
+
+            const processFile = (file) => {
+                if (file && file.type.startsWith('image/')) {
                     const reader = new FileReader();
                     reader.onloadend = () => {
                         setSelectedImage(reader.result);
@@ -257,6 +541,40 @@
                     };
                     reader.readAsDataURL(file);
                 }
+            };
+
+            // Drag & Drop handlers
+            const handleDragOver = (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setIsDragging(true);
+            };
+
+            const handleDragLeave = (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setIsDragging(false);
+            };
+
+            const handleDrop = (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setIsDragging(false);
+
+                const files = e.dataTransfer.files;
+                if (files && files.length > 0) {
+                    processFile(files[0]);
+                }
+            };
+
+            // Filtrování databáze podle kategorie
+            const getFilteredDatabase = () => {
+                if (selectedCategory === 'all') {
+                    return Object.entries(repairDatabase);
+                }
+                return Object.entries(repairDatabase).filter(([key, item]) =>
+                    item.category === selectedCategory
+                );
             };
 
             const startRepair = (issue) => {
@@ -334,8 +652,7 @@
                         {currentView === 'home' && (
                             <div className="center-content">
                                 <div className="upload-card max-w-md w-full">
-                                    <div className="text-center mb-8">
-                                        <i className="fas fa-camera" style={{fontSize: 'var(--text-6xl)', color: 'var(--color-primary)', marginBottom: 'var(--space-4)', display: 'block'}}></i>
+                                    <div className="text-center mb-6">
                                         <h1 style={{fontSize: 'var(--text-2xl)', fontWeight: 'var(--font-bold)', color: 'var(--color-text-primary)', marginBottom: 'var(--space-2)'}}>
                                             Vyfotografujte závadu
                                         </h1>
@@ -352,12 +669,39 @@
                                         className="hidden"
                                     />
 
+                                    {/* Drag & Drop Zone */}
+                                    <div
+                                        ref={dropZoneRef}
+                                        className={`drop-zone ${isDragging ? 'drag-over' : ''}`}
+                                        onDragOver={handleDragOver}
+                                        onDragLeave={handleDragLeave}
+                                        onDrop={handleDrop}
+                                        onClick={() => fileInputRef.current.click()}
+                                    >
+                                        <div className="drop-zone-icon">
+                                            {isDragging ? (
+                                                <i className="fas fa-cloud-upload-alt"></i>
+                                            ) : (
+                                                <i className="fas fa-camera"></i>
+                                            )}
+                                        </div>
+                                        <p style={{fontSize: 'var(--text-lg)', fontWeight: 'var(--font-semibold)', marginBottom: 'var(--space-2)', color: 'var(--color-text-primary)'}}>
+                                            {isDragging ? 'Pusťte pro nahrání' : 'Přetáhněte fotografii sem'}
+                                        </p>
+                                        <p className="text-secondary" style={{fontSize: 'var(--text-sm)'}}>
+                                            nebo klikněte pro výběr souboru
+                                        </p>
+                                        <p className="text-muted" style={{fontSize: 'var(--text-xs)', marginTop: 'var(--space-2)'}}>
+                                            Podporované formáty: JPG, PNG, GIF, WebP
+                                        </p>
+                                    </div>
+
                                     <button
                                         onClick={() => fileInputRef.current.click()}
                                         className="btn btn-primary btn-xl btn-block hover-scale"
                                     >
                                         <i className="fas fa-camera mr-2"></i>
-                                        Nahrát fotografii
+                                        Vybrat fotografii
                                     </button>
 
                                     <div className="grid grid-3 mt-6 gap-2">
@@ -685,11 +1029,33 @@
                             <div className="max-w-2xl mx-auto">
                                 <h2 className="page-title">Databáze závad a oprav</h2>
 
+                                {/* Category Filter */}
+                                <div className="category-filter">
+                                    {categories.map(cat => (
+                                        <button
+                                            key={cat.id}
+                                            onClick={() => setSelectedCategory(cat.id)}
+                                            className={`category-btn ${selectedCategory === cat.id ? 'active' : ''}`}
+                                        >
+                                            <span style={{marginRight: 'var(--space-1)'}}>{cat.icon}</span>
+                                            {cat.name}
+                                        </button>
+                                    ))}
+                                </div>
+
+                                {/* Results count */}
+                                <p className="text-center text-secondary mb-6" style={{fontSize: 'var(--text-sm)'}}>
+                                    Zobrazeno {getFilteredDatabase().length} z {Object.keys(repairDatabase).length} položek
+                                </p>
+
                                 <div className="grid grid-3 gap-6">
-                                    {Object.entries(repairDatabase).map(([key, item]) => (
+                                    {getFilteredDatabase().map(([key, item]) => (
                                         <div key={key} className="knowledge-card">
                                             <div className="knowledge-card-header">
-                                                <h3 style={{fontWeight: 'var(--font-bold)', fontSize: 'var(--text-lg)'}}>{item.name}</h3>
+                                                <div className="flex-between items-center">
+                                                    <h3 style={{fontWeight: 'var(--font-bold)', fontSize: 'var(--text-lg)'}}>{item.name}</h3>
+                                                    <span style={{fontSize: 'var(--text-2xl)'}}>{item.icon}</span>
+                                                </div>
                                             </div>
                                             <div className="p-4">
                                                 <div style={{display: 'flex', flexDirection: 'column', gap: 'var(--space-3)'}}>
@@ -700,6 +1066,9 @@
                                                             <div style={{marginTop: 'var(--space-2)', display: 'flex', gap: 'var(--space-4)', fontSize: 'var(--text-xs)', color: 'var(--color-text-muted)'}}>
                                                                 <span><i className="fas fa-clock mr-1"></i>{issue.timeEstimate}</span>
                                                                 <span><i className="fas fa-signal mr-1"></i>{issue.difficulty}</span>
+                                                                <span className={`badge badge-${issue.riskScore > 5 ? 'danger' : issue.riskScore > 2 ? 'warning' : 'success'}`} style={{fontSize: 'var(--text-xs)'}}>
+                                                                    Riziko: {issue.riskScore}/10
+                                                                </span>
                                                             </div>
                                                         </div>
                                                     ))}
@@ -708,6 +1077,14 @@
                                         </div>
                                     ))}
                                 </div>
+
+                                {getFilteredDatabase().length === 0 && (
+                                    <div className="empty-state card">
+                                        <div className="empty-state-icon"><i className="fas fa-search"></i></div>
+                                        <p className="empty-state-title">Žádné položky v této kategorii</p>
+                                        <p className="empty-state-desc">Zkuste vybrat jinou kategorii</p>
+                                    </div>
+                                )}
 
                                 <div className="alert alert-info mt-8">
                                     <p className="alert-title">

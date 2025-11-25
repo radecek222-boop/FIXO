@@ -11,9 +11,9 @@
 📅 Posledni aktualizace: 2025-11-25
 👤 Aktualizoval: Claude AI
 📍 Aktualni faze: FAZE 6 - Moduly aplikace
-✅ Posledni dokonceny krok: FAZE 5 - Design system aplikovan na HTML
-⏳ Aktualne se dela: Testovani na GitHub Pages
-🔜 Dalsi krok: Otestovat responzivitu, pak FAZE 6
+✅ Posledni dokonceny krok: Drag & drop upload, rozsirena databaze, filtrovani kategorii
+⏳ Aktualne se dela: Vylepseni UI pruvodce opravou
+🔜 Dalsi krok: Vylepsit historii oprav s filtrovanim a exportem
 ```
 
 ---
@@ -94,16 +94,16 @@ FIXO/
 ### FAZE 5: Hlavni stranka ✅ HOTOVO
 - [x] Aplikovat design system na index.html
 - [x] Aplikovat design system na app.html
-- [ ] Otestovat na GitHub Pages (po merge do main)
-- [ ] Responzivita (mobil, tablet, desktop)
+- [x] Otestovat na GitHub Pages (merge do main)
+- [x] Responzivita (mobil, tablet, desktop)
 
-### FAZE 6: Moduly aplikace ⬚ CEKA
-- [ ] Modul: Upload fotografii
-- [ ] Modul: AI analyza (simulovana)
-- [ ] Modul: Vysledky analyzy
-- [ ] Modul: Pruvodce opravou (kroky)
-- [ ] Modul: Historie oprav
-- [ ] Modul: Databaze zavad
+### FAZE 6: Moduly aplikace ⏳ PROBIHA
+- [x] Modul: Upload fotografii (drag & drop)
+- [x] Modul: AI analyza (rozsirena databaze - 13 objektu, 11 kategorii)
+- [x] Modul: Vysledky analyzy
+- [x] Modul: Pruvodce opravou (kroky)
+- [ ] Modul: Historie oprav (filtrovani a export)
+- [x] Modul: Databaze zavad (filtrovani kategorii)
 
 ### FAZE 7: Backend ⬚ CEKA (volitelne)
 - [ ] Nasadit backend na Render.com nebo Railway
@@ -132,28 +132,25 @@ FIXO/
 
 ### ✅ Krok 1: Aplikovat design system na index.html - HOTOVO
 ### ✅ Krok 2: Aplikovat design system na app.html - HOTOVO
+### ✅ Krok 3: Responzivita a mobilni menu - HOTOVO
+### ✅ Krok 4: Merge do main a test na GitHub Pages - HOTOVO
+### ✅ Krok 5: Drag & drop upload - HOTOVO
+### ✅ Krok 6: Rozsirena databaze zavad (13 objektu) - HOTOVO
+### ✅ Krok 7: Filtrovani kategorii v databazi - HOTOVO
 
-### Krok 3: Otestovat a opravit responzivitu ⏳
+### Krok 8: Vylepsit historii oprav ⏳
 ```
-- Zkontrolovat mobilni zobrazeni (< 768px)
-- Zkontrolovat tablet zobrazeni (768px - 1024px)
-- Opravit pripadne problemy v CSS
-- Pridat chybejici mobilni styly
-```
-
-### Krok 4: Merge do main a test na GitHub Pages
-```
-- Vytvorit Pull Request
-- Merge do main branch
-- Overit funkcnost na https://radecek222-boop.github.io/FIXO/
+- Pridat filtrovani podle stavu (dokonceno/probiha)
+- Pridat filtrovani podle data
+- Pridat moznost exportu do PDF/CSV
+- Pridat detailni prehled opravy
 ```
 
-### Krok 5: FAZE 6 - Vylepsit moduly aplikace
+### Krok 9: Dalsi vylepseni (volitelne)
 ```
-- Upload fotografii - pridat drag & drop
-- AI analyza - pridat vice objektu do databaze
-- Pruvodce opravou - vylepsit UI kroků
-- Historie oprav - pridat filtrovani a export
+- Pridat vyhledavani v databazi
+- Pridat tmavý režim (dark mode)
+- Pridat offline rezim (PWA)
 ```
 
 ---
@@ -215,6 +212,9 @@ FIXO/
 
 | Datum | Autor | Zmena |
 |-------|-------|-------|
+| 2025-11-25 | Claude AI | **FAZE 6** - Filtrovani kategorii v databazi zavad |
+| 2025-11-25 | Claude AI | **FAZE 6** - Rozsirena databaze (13 objektu, 11 kategorii) |
+| 2025-11-25 | Claude AI | **FAZE 6** - Drag & drop upload fotografii |
 | 2025-11-25 | Claude AI | **FAZE 5 HOTOVA** - Design system aplikovan na HTML |
 | 2025-11-25 | Claude AI | Aktualizace index.html (vlastni CSS misto Tailwind) |
 | 2025-11-25 | Claude AI | Aktualizace app.html (React s design systemem) |
