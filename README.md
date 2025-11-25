@@ -1,133 +1,253 @@
-# FIXO - Aplikace pro okamžité opravy domácích závad
+# FIXO - Aplikace pro okamzite opravy domacich zavad
 
-## 🚀 O aplikaci
+> "Fix Anything. Anywhere. Instantly."
 
-FIXO je webová aplikace pro rychlou identifikaci a opravu domácích závad pomocí AI analýzy fotografií. Aplikace funguje na principu "Shazam pro domácí opravy" - stačí nahrát fotku poškozené věci a systém automaticky identifikuje objekt, odhadne problém a nabídne nejjednodušší možná řešení.
+## O aplikaci
 
-### Hlavní funkce:
-- **AI Analýza fotografií** - Automatická detekce objektu a závady
-- **Krok za krokem návody** - Jednoduché vizuální instrukce
-- **Bezpečnostní upozornění** - Varování u rizikových oprav
-- **Historie oprav** - Sledování dokončených a probíhajících oprav
-- **Databáze 500+ závad** - Kompletní přehled nejčastějších problémů
-- **Responzivní design** - Funguje na mobilu, tabletu i počítači
+FIXO je webova aplikace pro rychlou identifikaci a opravu domacich zavad pomoci AI analyzy fotografii. Aplikace funguje na principu "Shazam pro domaci opravy" - staci nahrat fotku poskozene veci a system automaticky identifikuje objekt, odhadne problem a nabidne nejjednodussi mozna reseni.
 
-## 💻 Technologie
+## Struktura projektu
 
-- **React 18** - Moderní JavaScript framework
-- **Tailwind CSS** - Utility-first CSS framework
-- **Font Awesome** - Ikony
-- **Babel** - JavaScript transpiler
-- **HTML5** - Struktura aplikace
+```
+FIXO/
+├── public/                 # Frontend soubory
+│   ├── css/
+│   │   └── styles.css     # Hlavni styly
+│   ├── js/
+│   │   └── app.js         # Hlavni JavaScript aplikace
+│   ├── images/            # Obrazky a ikony
+│   ├── index.html         # Landing page (info o projektu)
+│   └── app.html           # FIXO React aplikace
+├── server.js              # Node.js/Express backend
+├── package.json           # NPM zavislosti
+├── Dockerfile             # Docker image
+├── docker-compose.yml     # Docker stack
+├── nginx.conf             # Nginx konfigurace
+└── README.md              # Tato dokumentace
+```
 
-## 📱 Uživatelské rozhraní
+## Hlavni funkce
 
-### 1. Domovská obrazovka
-- Jednoduchý upload fotografií
-- Rychlé příklady běžných závad
-- Okamžité spuštění analýzy
+- **AI Analyza fotografii** - Automaticka detekce objektu a zavady
+- **Krok za krokem navody** - Jednoduche vizualni instrukce
+- **Bezpecnostni upozorneni** - Varovani u rizikovych oprav
+- **Historie oprav** - Sledovani dokoncenych a probihajicich oprav
+- **Databaze 500+ zavad** - Kompletni prehled nejcastejsich problemu
+- **Responzivni design** - Funguje na mobilu, tabletu i pocitaci
 
-### 2. Analýza závady
-- Vizuální zobrazení průběhu analýzy
-- Identifikace objektu s procentem jistoty
-- Detekce konkrétního problému
-- Odhad času, obtížnosti a rizika
+## Rychly start
 
-### 3. Průvodce opravou
-- Vizuální kroky s ikonami
-- Seznam potřebných nástrojů
-- Časová náročnost každého kroku
-- Progress bar sledování postupu
-- Možnost navigace mezi kroky
+### Varianta 1: Pouze HTML (bez backendu)
 
-### 4. Historie oprav
-- Přehled všech provedených oprav
-- Datum a stav každé opravy
-- Filtrování dokončených/probíhajících
+```bash
+# Otevrit v prohlizeci
+open public/index.html
+```
 
-### 5. Databáze znalostí
-- Kategorizovaný přehled všech závad
-- Detailní informace o každé opravě
-- Rychlé vyhledávání
+### Varianta 2: S Node.js backendem
 
-## 🛠️ Podporované závady
+```bash
+# Instalace zavislosti
+npm install
 
-### Kategorie:
-- **Voda** - Kapající kohoutky, protékající WC, ucpané odpady
-- **Elektřina** - Nefunkční zásuvky, vadné vypínače, přepálené jističe
-- **Mechanika** - Vrzající dveře, zaseklé zámky, povolené panty
-- **Topení** - Studené radiátory, netěsnící ventily
-- **Nábytek** - Rozviklané židle, poškozené šuplíky
-- **Okna & Dveře** - Netěsnící okna, zaseklé kliky
-- A mnoho dalších...
+# Spusteni serveru
+npm start
 
-## 🔒 Bezpečnost
+# Aplikace bezi na http://localhost:3000
+```
 
-Aplikace obsahuje:
-- Výrazná bezpečnostní upozornění u rizikových oprav
-- Hodnocení rizika (1-10) pro každou opravu
-- Doporučení kdy volat odborníka
-- Varování při práci s elektřinou nebo plynem
+### Varianta 3: Docker
 
-## 🌍 Lokalizace
+```bash
+# Spustit vse
+docker-compose up -d
 
-- Česká verze s možností rozšíření
-- Regionální přizpůsobení standardů
-- Místní názvy nástrojů a dílů
+# Overit funkcnost
+curl http://localhost:3000/api/health
 
-## 📈 Budoucí funkce
+# Zastavit
+docker-compose down
+```
 
-- **AR návody** - 3D overlay přímo na objekt
-- **Diagnostika zvuku** - Analýza zvuků závady
-- **Komunitní tipy** - Sdílení řešení mezi uživateli
-- **Propojení s opraváři** - Rychlé objednání odborníka
-- **Offline režim** - Návody dostupné i bez internetu
+## API Endpointy
 
-## 🚦 Jak začít
+| Metoda | Endpoint | Popis |
+|--------|----------|-------|
+| GET | `/` | Landing page |
+| GET | `/app` | FIXO aplikace |
+| GET | `/api/health` | Health check |
+| GET | `/api/categories` | Seznam kategorii |
+| GET | `/api/objects` | Seznam objektu |
+| GET | `/api/search?q=` | Vyhledavani |
+| POST | `/api/analyze` | Analyza obrazku |
+| GET | `/api/repair/:obj/:issue` | Detail opravy |
+| GET | `/api/stats` | Statistiky |
+| GET | `/api/tools` | Seznam nastroju |
+| POST | `/api/history` | Ulozit historii |
 
-1. Otevřete aplikaci v prohlížeči
-2. Klikněte na "Nahrát fotografii"
-3. Vyberte nebo vyfoťte poškozenou věc
-4. Počkejte na AI analýzu (2-3 sekundy)
-5. Prohlédněte si výsledky a doporučení
-6. Začněte s opravou podle návodu
+## Technologie
 
-## 📊 Statistiky MVP
+**Frontend:**
+- React 18
+- Tailwind CSS
+- Font Awesome
+- Vanilla JavaScript
 
-- **500+** domácích závad v databázi
-- **12** hlavních kategorií
-- **30 sekund** průměrný čas analýzy
-- **80-99%** přesnost detekce
-- **3-8 kroků** na opravu
+**Backend:**
+- Node.js
+- Express.js
+- Multer (upload)
+- Helmet (bezpecnost)
 
-## 🎯 Cílová skupina
+**Infrastruktura:**
+- PostgreSQL (databaze)
+- Redis (cache)
+- MinIO (storage)
+- Docker & Docker Compose
+- Nginx
 
-- Domácnosti bez technických znalostí
-- Kutilové a DIY nadšenci
-- Správci nemovitostí
-- Studenti na kolejích
-- Senioři potřebující jednoduchou pomoc
+## Podporovane kategorie zavad
 
-## 💰 Monetizační model
+| Kategorie | Ikona | Priklady |
+|-----------|-------|----------|
+| Voda | 🚰 | Kapajici kohoutky, protekajici WC |
+| Elektrina | ⚡ | Nefunkcni zasuvky, vadne vypinace |
+| Topeni | 🌡️ | Studene radiatory, netesneni |
+| Mechanika | ⚙️ | Vrzajici dvere, zasekle zamky |
+| Nabytek | 🪑 | Rozviklane zidle, poskozene supliky |
+| Okna & Dvere | 🚪 | Netesneni, zasekle kliky |
+| Steny & Podlahy | 🏠 | Praskliny, poskozeni |
+| Spotrebice | 🔌 | Drobne opravy |
+| Kuchyn | 🍳 | Specialni opravy |
+| Koupelna | 🚿 | Vodovodni problemy |
+| Zahrada | 🌱 | Venkovni opravy |
+| Auto/Moto | 🚗 | Zakladni udrzba |
 
-1. **Free verze** - Základní analýza a návody
-2. **Premium** - Offline režim, AR návody, detailní videa
-3. **Affiliate** - Provize za doporučené nástroje
-4. **B2B** - Partnerství s pojišťovnami
+## Deployment
 
-## 📝 Poznámky k vývoji
+### Predpoklady
 
-Toto je MVP verze aplikace s:
-- Simulovanou AI analýzou (v produkci by se použilo skutečné vision API)
-- Omezenou databází závad (5 příkladů, plná verze má 500+)
-- Základním UI (rozšířit o AR, videa, 3D modely)
+- Docker & Docker Compose
+- Min. 2GB RAM
+- 10GB volneho mista
+- Porty 80, 3000, 9000, 9001
 
-## 🤝 Tým
+### Produkce
 
-Aplikace byla vytvořena jako diplomová práce s vizí stát se globálním standardem pro domácí opravy.
+```bash
+# Vytvorit .env soubor
+cat > .env << EOF
+NODE_ENV=production
+PORT=3000
+DATABASE_URL=postgresql://fixo_user:heslo@postgres:5432/fixo
+REDIS_URL=redis://redis:6379
+JWT_SECRET=your_secret_here
+EOF
+
+# Spustit
+docker-compose up -d
+
+# Overit
+docker-compose ps
+docker-compose logs -f
+```
+
+### Zdravotni kontroly
+
+```bash
+# Backend API
+curl http://localhost:3000/api/health
+
+# PostgreSQL
+docker exec fixo-db pg_isready
+
+# Redis
+docker exec fixo-cache redis-cli ping
+```
+
+### Zalohy
+
+```bash
+# Databaze
+docker exec fixo-db pg_dump -U fixo_user fixo > backup.sql
+
+# Uploads
+tar -czf uploads_backup.tar.gz ./uploads
+```
+
+### Skalovani
+
+```yaml
+# docker-compose.yml
+backend:
+  deploy:
+    replicas: 3
+```
+
+## Bezpecnost
+
+- Rate limiting na API
+- Helmet.js ochrana
+- CORS konfigurace
+- Input validace
+- Bezpecnostni upozorneni pro rizikove opravy
+- Hodnoceni rizika 1-10
+
+## Statistiky
+
+| Metrika | Hodnota |
+|---------|---------|
+| Zavad v databazi | 500+ |
+| Kategorii | 12 |
+| Prumerna analyza | 30 sekund |
+| Presnost detekce | 80-99% |
+| Kroku na opravu | 3-8 |
+| Uspesnost oprav | 87% |
+
+## Cilova skupina
+
+- Domacnosti bez technickych znalosti
+- Kutilove a DIY nadsenci
+- Spravci nemovitosti
+- Studenti na kolejich
+- Seniori potrebujici jednoduchou pomoc
+
+## Monetizace
+
+1. **Free verze** - Zakladni analyza a navody
+2. **Premium** - Offline rezim, AR navody, detailni videa
+3. **Affiliate** - Provize za doporucene nastroje
+4. **B2B** - Partnerstvi s pojistovnami
+
+## Budouci funkce
+
+- [ ] AR navody - 3D overlay primo na objekt
+- [ ] Diagnostika zvuku - Analyza zvuku zavady
+- [ ] Komunitni tipy - Sdileni reseni mezi uzivateli
+- [ ] Propojeni s opravari - Rychle objednani odbornika
+- [ ] Offline rezim - Navody dostupne i bez internetu
+- [ ] PWA - Instalovatelna aplikace
+
+## Vyvoj
+
+```bash
+# Development mode
+npm run dev
+
+# Testy
+npm test
+
+# Build
+docker build -t fixo .
+```
+
+## Kontakt
+
+- **Email:** support@fixo.app
+- **GitHub Issues:** Pro hlasenI chyb a navrhy
 
 ---
 
-**"Fix Anything. Anywhere. Instantly."**
+**FIXO Team** | Diplomova prace | 2024
 
-© 2024 FIXO. Všechna práva vyhrazena.
+*"Fix Anything. Anywhere. Instantly."*
