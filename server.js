@@ -506,6 +506,60 @@ Odpověz POUZE ve formátu JSON bez markdown:
     }
 });
 
+// AI Překlad textu do libovolného jazyka
+app.post('/api/translate', async (req, res) => {
+    try {
+        const { texts, targetLanguage, sourceLanguage = 'cs' } = req.body;
+
+        if (!texts || !targetLanguage) {
+            return res.status(400).json({ error: 'Chybí texty nebo cílový jazyk' });
+        }
+
+        // Pokud je cílový jazyk stejný jako zdrojový, vrátíme originál
+        if (targetLanguage === sourceLanguage) {
+            return res.json({ success: true, translations: texts });
+        }
+
+        console.log(`Překládám ${texts.length} textů do jazyka: ${targetLanguage}`);
+
+        const response = await openai.chat.completions.create({
+            model: "gpt-4o-mini", // Rychlejší a levnější model pro překlady
+            messages: [
+                {
+                    role: "system",
+                    content: `Jsi profesionální překladatel. Přelož následující texty z ${sourceLanguage} do ${targetLanguage}.
+Zachovej formátování, HTML tagy a speciální znaky. Vrať POUZE JSON pole s překlady ve stejném pořadí.
+Příklad: ["přeložený text 1", "přeložený text 2"]`
+                },
+                {
+                    role: "user",
+                    content: JSON.stringify(texts)
+                }
+            ],
+            max_tokens: 4000
+        });
+
+        let translations;
+        try {
+            const content = response.choices[0].message.content;
+            const jsonStr = content.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+            translations = JSON.parse(jsonStr);
+        } catch (parseError) {
+            console.error('Chyba při parsování překladu:', parseError);
+            translations = texts; // Fallback na originál
+        }
+
+        res.json({ success: true, translations });
+
+    } catch (error) {
+        console.error('Chyba při překladu:', error);
+        res.status(500).json({
+            error: 'Chyba při překladu',
+            message: error.message
+        });
+    }
+});
+
 // Získat detail opravy
 app.get('/api/repair/:objectId/:issueId', (req, res) => {
     const { objectId, issueId } = req.params;
