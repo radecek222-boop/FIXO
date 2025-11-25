@@ -1,7 +1,12 @@
 // FIXO Backend Server
 // REST API pro aplikaci na diagnostiku domácích závad
 
-require('dotenv').config();
+// Optional dotenv - won't fail if not installed
+try {
+    require('dotenv').config();
+} catch (e) {
+    console.log('dotenv not found, using environment variables directly');
+}
 
 const express = require('express');
 const cors = require('cors');
@@ -875,6 +880,123 @@ app.get('/api/tools', (req, res) => {
     res.json({ tools });
 });
 
+// ====== JSON DATA ENDPOINTS ======
+
+// Získat seznam jazyků
+app.get('/api/languages', (req, res) => {
+    try {
+        const languagesPath = path.join(__dirname, 'data', 'languages.json');
+        if (fs.existsSync(languagesPath)) {
+            const data = JSON.parse(fs.readFileSync(languagesPath, 'utf8'));
+            res.json({ success: true, data: data.languages });
+        } else {
+            res.status(404).json({ error: 'Languages data not found' });
+        }
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to load languages', message: error.message });
+    }
+});
+
+// Získat překlady
+app.get('/api/translations', (req, res) => {
+    try {
+        const translationsPath = path.join(__dirname, 'data', 'translations.json');
+        if (fs.existsSync(translationsPath)) {
+            const data = JSON.parse(fs.readFileSync(translationsPath, 'utf8'));
+            res.json({ success: true, data: data });
+        } else {
+            res.status(404).json({ error: 'Translations data not found' });
+        }
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to load translations', message: error.message });
+    }
+});
+
+// Získat překlady pro konkrétní jazyk
+app.get('/api/translations/:lang', (req, res) => {
+    try {
+        const { lang } = req.params;
+        const translationsPath = path.join(__dirname, 'data', 'translations.json');
+        if (fs.existsSync(translationsPath)) {
+            const data = JSON.parse(fs.readFileSync(translationsPath, 'utf8'));
+            if (data[lang]) {
+                res.json({ success: true, data: data[lang] });
+            } else {
+                // Fallback to Czech
+                res.json({ success: true, data: data.cs || data, fallback: true });
+            }
+        } else {
+            res.status(404).json({ error: 'Translations data not found' });
+        }
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to load translations', message: error.message });
+    }
+});
+
+// Získat databázi oprav
+app.get('/api/repairs', (req, res) => {
+    try {
+        const repairsPath = path.join(__dirname, 'data', 'repairs.json');
+        if (fs.existsSync(repairsPath)) {
+            const data = JSON.parse(fs.readFileSync(repairsPath, 'utf8'));
+            res.json({ success: true, data: data });
+        } else {
+            res.status(404).json({ error: 'Repairs data not found' });
+        }
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to load repairs', message: error.message });
+    }
+});
+
+// Získat opravy podle kategorie
+app.get('/api/repairs/category/:category', (req, res) => {
+    try {
+        const { category } = req.params;
+        const repairsPath = path.join(__dirname, 'data', 'repairs.json');
+        if (fs.existsSync(repairsPath)) {
+            const data = JSON.parse(fs.readFileSync(repairsPath, 'utf8'));
+            if (category === 'all') {
+                res.json({ success: true, data: data.repairs });
+            } else {
+                const filtered = {};
+                Object.entries(data.repairs).forEach(([key, value]) => {
+                    if (value.category === category) {
+                        filtered[key] = value;
+                    }
+                });
+                res.json({ success: true, data: filtered });
+            }
+        } else {
+            res.status(404).json({ error: 'Repairs data not found' });
+        }
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to load repairs', message: error.message });
+    }
+});
+
+// Získat konkrétní opravu
+app.get('/api/repairs/:repairId', (req, res) => {
+    try {
+        const { repairId } = req.params;
+        const repairsPath = path.join(__dirname, 'data', 'repairs.json');
+        if (fs.existsSync(repairsPath)) {
+            const data = JSON.parse(fs.readFileSync(repairsPath, 'utf8'));
+            if (data.repairs[repairId]) {
+                res.json({ success: true, data: data.repairs[repairId] });
+            } else {
+                res.status(404).json({ error: 'Repair not found' });
+            }
+        } else {
+            res.status(404).json({ error: 'Repairs data not found' });
+        }
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to load repair', message: error.message });
+    }
+});
+
+// Servírování data složky jako statické soubory (pro fallback)
+app.use('/data', express.static(path.join(__dirname, 'data')));
+
 // Servírování statických souborů
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/public', express.static(path.join(__dirname, 'public')));
@@ -916,15 +1038,26 @@ app.listen(PORT, () => {
     ╚══════════════════════════════════╝
     `);
     console.log('API Endpoints:');
-    console.log('  GET  /api/health         - Health check');
-    console.log('  GET  /api/categories     - Seznam kategorií');
-    console.log('  POST /api/analyze        - Analyzovat obrázek');
-    console.log('  GET  /api/repair/:id/:id - Detail opravy');
-    console.log('  GET  /api/objects        - Seznam objektů');
-    console.log('  GET  /api/search         - Vyhledávání');
-    console.log('  POST /api/history        - Uložit historii');
-    console.log('  GET  /api/stats          - Statistiky');
-    console.log('  GET  /api/tools          - Seznam nástrojů');
+    console.log('  GET  /api/health              - Health check');
+    console.log('  GET  /api/categories          - Seznam kategorií');
+    console.log('  POST /api/analyze             - Analyzovat obrázek');
+    console.log('  POST /api/analyze-base64      - Analyzovat obrázek (base64)');
+    console.log('  POST /api/translate           - Přeložit texty');
+    console.log('  GET  /api/repair/:id/:id      - Detail opravy');
+    console.log('  GET  /api/objects             - Seznam objektů');
+    console.log('  GET  /api/search              - Vyhledávání');
+    console.log('  POST /api/history             - Uložit historii');
+    console.log('  GET  /api/stats               - Statistiky');
+    console.log('  GET  /api/tools               - Seznam nástrojů');
+    console.log('  --- JSON Data Endpoints ---');
+    console.log('  GET  /api/languages           - Seznam jazyků');
+    console.log('  GET  /api/translations        - Všechny překlady');
+    console.log('  GET  /api/translations/:lang  - Překlady pro jazyk');
+    console.log('  GET  /api/repairs             - Databáze oprav');
+    console.log('  GET  /api/repairs/:id         - Detail opravy');
+    console.log('  GET  /api/repairs/category/:c - Opravy podle kategorie');
+    console.log('  --- Static Files ---');
+    console.log('  GET  /data/*.json             - JSON data files');
 });
 
 module.exports = app;
