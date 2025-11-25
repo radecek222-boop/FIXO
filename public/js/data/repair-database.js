@@ -1086,6 +1086,726 @@ const FIXO_REPAIR_DATABASE = {
                 safetyWarnings: ['Při práci s výškou použijte stabilní schůdky', 'Opatrně s ostrými hranami lamel']
             }
         ]
+    },
+    'bojler': {
+        name: 'Bojler',
+        category: 'voda',
+        icon: '🔥',
+        issues: [
+            {
+                id: 'no-hot-water',
+                name: 'Neteče teplá voda',
+                description: 'Bojler nehřeje nebo teče jen studená voda',
+                riskScore: 4,
+                difficulty: 'Střední',
+                timeEstimate: '30 min',
+                tools: ['Šroubovák', 'Multimetr', 'Hadřík'],
+                steps: [
+                    {
+                        step: 1,
+                        action: 'Zkontrolujte, zda je bojler zapnutý',
+                        time: '2 min',
+                        icon: '🔌',
+                        hint: 'Zkontrolujte hlavní vypínač bojleru a jistič v rozvaděči. Některé bojlery mají vlastní termostat.',
+                        checkQuestion: {
+                            question: 'Je bojler zapnutý?',
+                            options: ['Ano, je zapnutý', 'Ne, byl vypnutý'],
+                            correctAnswer: 0,
+                            failMessage: 'Zapněte bojler a počkejte 1-2 hodiny na ohřátí vody.'
+                        }
+                    },
+                    {
+                        step: 2,
+                        action: 'Zkontrolujte nastavení termostatu',
+                        time: '3 min',
+                        icon: '🌡️',
+                        hint: 'Termostat by měl být nastaven na 55-60°C. Příliš nízké nastavení = vlažná voda.',
+                        checkQuestion: null
+                    },
+                    {
+                        step: 3,
+                        action: 'Zkontrolujte kontrolku a pojistku',
+                        time: '5 min',
+                        icon: '💡',
+                        hint: 'Pokud nesvítí kontrolka, může být spálená pojistka nebo přehřívací ochrana (reset tlačítko).',
+                        checkQuestion: {
+                            question: 'Svítí kontrolka?',
+                            options: ['Ano, svítí', 'Ne, nesvítí'],
+                            correctAnswer: 0,
+                            failMessage: 'Zkuste najít reset tlačítko (obvykle červené) a stisknout ho. Pokud nepomůže, volejte odborníka.'
+                        }
+                    },
+                    {
+                        step: 4,
+                        action: 'Odpusťte usazeniny z bojleru',
+                        time: '15 min',
+                        icon: '🚰',
+                        hint: 'Na spodku bojleru je vypouštěcí ventil. Odpusťte několik litrů vody do kbelíku.',
+                        checkQuestion: null
+                    },
+                    {
+                        step: 5,
+                        action: 'Počkejte na ohřátí a otestujte',
+                        time: '5 min',
+                        icon: '✅',
+                        hint: 'Po úpravách počkejte alespoň hodinu a zkontrolujte teplotu vody u kohoutku.',
+                        checkQuestion: {
+                            question: 'Teče teplá voda?',
+                            options: ['Ano, voda je teplá', 'Ne, stále studená'],
+                            correctAnswer: 0,
+                            failMessage: 'Problém může být v topném tělese nebo termostatu. Doporučujeme zavolat odborníka.'
+                        }
+                    }
+                ],
+                safetyWarnings: ['Bojler je připojen k elektřině - buďte opatrní', 'Pozor na horkou vodu při odpouštění']
+            }
+        ]
+    },
+    'roleta': {
+        name: 'Roleta',
+        category: 'dvere_okna',
+        icon: '🪟',
+        issues: [
+            {
+                id: 'wont-roll',
+                name: 'Roleta nejde stáhnout/vytáhnout',
+                description: 'Mechanismus rolety je zaseknutý nebo poškozený',
+                riskScore: 1,
+                difficulty: 'Střední',
+                timeEstimate: '25 min',
+                tools: ['Šroubovák', 'WD-40', 'Štafle'],
+                steps: [
+                    {
+                        step: 1,
+                        action: 'Zkontrolujte vodící lišty',
+                        time: '3 min',
+                        icon: '🔍',
+                        hint: 'Podívejte se, zda není roleta vyskočená z lišt nebo zda v nich není nečistota.',
+                        checkQuestion: {
+                            question: 'Je roleta správně v lištách?',
+                            options: ['Ano, je v lištách', 'Ne, vyskočila'],
+                            correctAnswer: 0,
+                            failMessage: 'Opatrně zatlačte roletu zpět do vodících lišt.'
+                        }
+                    },
+                    {
+                        step: 2,
+                        action: 'Vyčistěte a promažte lišty',
+                        time: '5 min',
+                        icon: '🧹',
+                        hint: 'Hadříkem odstraňte prach a nečistoty. Nastříkejte trochu silikonového spreje.',
+                        checkQuestion: null
+                    },
+                    {
+                        step: 3,
+                        action: 'Zkontrolujte navíjecí mechanismus',
+                        time: '5 min',
+                        icon: '⚙️',
+                        hint: 'Otevřete kryt nahoře a zkontrolujte, zda není pás přetržený nebo zamotaný.',
+                        checkQuestion: {
+                            question: 'Je pás v pořádku?',
+                            options: ['Ano, není poškozený', 'Ne, je přetržený/zamotaný'],
+                            correctAnswer: 0,
+                            failMessage: 'Přetržený pás je nutné vyměnit. Zamotaný opatrně rozmotat.'
+                        }
+                    },
+                    {
+                        step: 4,
+                        action: 'Zkontrolujte pružinu',
+                        time: '8 min',
+                        icon: '🔧',
+                        hint: 'Pokud roleta padá dolů sama, pružina je uvolněná. Pokud nejde stáhnout, je moc napnutá.',
+                        checkQuestion: null
+                    },
+                    {
+                        step: 5,
+                        action: 'Otestujte funkčnost',
+                        time: '2 min',
+                        icon: '✅',
+                        hint: 'Několikrát roletu stáhněte a vytáhněte. Měla by jít plynule.',
+                        checkQuestion: {
+                            question: 'Funguje roleta správně?',
+                            options: ['Ano, jde plynule', 'Ne, stále má problém'],
+                            correctAnswer: 0,
+                            failMessage: 'Může být poškozený vnitřní mechanismus. Zvažte výměnu.'
+                        }
+                    }
+                ],
+                safetyWarnings: ['Při práci ve výšce použijte stabilní schůdky', 'Pozor na pružinu - je pod napětím']
+            }
+        ]
+    },
+    'skrin': {
+        name: 'Skříň',
+        category: 'nabytek',
+        icon: '🗄️',
+        issues: [
+            {
+                id: 'falling-shelf',
+                name: 'Padající police',
+                description: 'Police ve skříni se propadá nebo vypadla',
+                riskScore: 1,
+                difficulty: 'Nízká',
+                timeEstimate: '15 min',
+                tools: ['Šroubovák', 'Kolíčky/podpěrky polic', 'Lepidlo na dřevo'],
+                steps: [
+                    {
+                        step: 1,
+                        action: 'Vyjměte obsah police',
+                        time: '3 min',
+                        icon: '📦',
+                        hint: 'Odstraňte všechny věci z police i z polic pod ní pro bezpečnou práci.',
+                        checkQuestion: null
+                    },
+                    {
+                        step: 2,
+                        action: 'Zkontrolujte podpěrky police',
+                        time: '2 min',
+                        icon: '🔍',
+                        hint: 'Police většinou drží na malých kolíčcích nebo kovových podpěrkách. Zkontrolujte, zda nejsou zlomené.',
+                        checkQuestion: {
+                            question: 'Jsou podpěrky v pořádku?',
+                            options: ['Ano, jsou OK', 'Ne, jsou poškozené/chybí'],
+                            correctAnswer: 0,
+                            failMessage: 'Kupte nové podpěrky - běžně dostupné v hobby marketech.'
+                        }
+                    },
+                    {
+                        step: 3,
+                        action: 'Zkontrolujte otvory v bočnicích',
+                        time: '3 min',
+                        icon: '🕳️',
+                        hint: 'Pokud jsou otvory rozšířené, zkuste použít silnější kolíčky nebo přesunout polici do jiných otvorů.',
+                        checkQuestion: null
+                    },
+                    {
+                        step: 4,
+                        action: 'Opravte rozšířené otvory',
+                        time: '5 min',
+                        icon: '🔧',
+                        hint: 'Do rozšířeného otvoru vložte párátko s lepidlem, nechte zaschnout a vyvrtejte nový otvor.',
+                        checkQuestion: null
+                    },
+                    {
+                        step: 5,
+                        action: 'Vraťte polici a otestujte',
+                        time: '2 min',
+                        icon: '✅',
+                        hint: 'Nasaďte podpěrky, položte polici a mírně zatěžte rukou pro test stability.',
+                        checkQuestion: {
+                            question: 'Drží police pevně?',
+                            options: ['Ano, je stabilní', 'Ne, stále se prohýbá'],
+                            correctAnswer: 0,
+                            failMessage: 'Police může být přetížená nebo prohnutá. Zvažte přidání prostřední podpěry.'
+                        }
+                    }
+                ],
+                safetyWarnings: ['Nepřetěžujte police', 'Těžké věci dávejte dolů']
+            }
+        ]
+    },
+    'digestor': {
+        name: 'Digestoř',
+        category: 'kuchyn',
+        icon: '💨',
+        issues: [
+            {
+                id: 'poor-suction',
+                name: 'Digestoř špatně táhne',
+                description: 'Slabý odsávací výkon nebo hlučný provoz',
+                riskScore: 2,
+                difficulty: 'Nízká',
+                timeEstimate: '30 min',
+                tools: ['Šroubovák', 'Odmašťovač', 'Hadřík', 'Nový filtr'],
+                steps: [
+                    {
+                        step: 1,
+                        action: 'Vyjměte a zkontrolujte filtry',
+                        time: '3 min',
+                        icon: '🔍',
+                        hint: 'Tukové filtry jsou obvykle kovové mřížky. Vyjměte je stisknutím pojistky nebo vysunutím.',
+                        checkQuestion: {
+                            question: 'Jsou filtry zanesené?',
+                            options: ['Ano, jsou mastné', 'Ne, vypadají čistě'],
+                            correctAnswer: null,
+                            failMessage: 'I tak je vyčistěte pro lepší výkon.'
+                        }
+                    },
+                    {
+                        step: 2,
+                        action: 'Vyčistěte tukové filtry',
+                        time: '15 min',
+                        icon: '🧽',
+                        hint: 'Namočte filtry do horké vody s odmašťovačem na 10 minut, pak vydrhněte kartáčem.',
+                        checkQuestion: null
+                    },
+                    {
+                        step: 3,
+                        action: 'Zkontrolujte/vyměňte uhlíkový filtr',
+                        time: '5 min',
+                        icon: '⬛',
+                        hint: 'Pokud digestoř jen cirkuluje vzduch (není vyvedena ven), má uhlíkový filtr. Ten nelze čistit, jen vyměnit.',
+                        checkQuestion: {
+                            question: 'Má digestoř uhlíkový filtr?',
+                            options: ['Ano, má ho', 'Ne, je vyvedena ven', 'Nevím'],
+                            correctAnswer: null,
+                            failMessage: 'Uhlíkový filtr měňte každých 3-6 měsíců podle používání.'
+                        }
+                    },
+                    {
+                        step: 4,
+                        action: 'Vyčistěte vnitřek digestoře',
+                        time: '5 min',
+                        icon: '✨',
+                        hint: 'Hadříkem s odmašťovačem otřete vnitřní povrchy a ventilátor (opatrně na lopatky!).',
+                        checkQuestion: null
+                    },
+                    {
+                        step: 5,
+                        action: 'Vraťte filtry a otestujte',
+                        time: '2 min',
+                        icon: '✅',
+                        hint: 'Nasaďte suché filtry zpět. Zapněte digestoř a přiložte list papíru - měl by se přisát.',
+                        checkQuestion: {
+                            question: 'Táhne digestoř lépe?',
+                            options: ['Ano, výkon je lepší', 'Ne, stále slabě táhne'],
+                            correctAnswer: 0,
+                            failMessage: 'Problém může být v motoru nebo ucpaném odvodu. Zavolejte servis.'
+                        }
+                    }
+                ],
+                safetyWarnings: ['Před čištěním odpojte digestoř od elektřiny', 'Nechte filtry zcela uschnout před nasazením']
+            }
+        ]
+    },
+    'susicka': {
+        name: 'Sušička prádla',
+        category: 'spotrebice',
+        icon: '👕',
+        issues: [
+            {
+                id: 'not-drying',
+                name: 'Sušička nesuší',
+                description: 'Prádlo zůstává mokré nebo sušení trvá příliš dlouho',
+                riskScore: 2,
+                difficulty: 'Nízká',
+                timeEstimate: '25 min',
+                tools: ['Vysavač', 'Hadřík', 'Kartáč'],
+                steps: [
+                    {
+                        step: 1,
+                        action: 'Vyčistěte filtr na vlákna',
+                        time: '3 min',
+                        icon: '🧹',
+                        hint: 'Filtr je obvykle ve dveřích nebo nahoře. Vyjměte ho a odstraňte všechna vlákna.',
+                        checkQuestion: {
+                            question: 'Byl filtr zanesený?',
+                            options: ['Ano, hodně vláken', 'Ne, byl čistý'],
+                            correctAnswer: null,
+                            failMessage: 'Filtr čistěte po každém sušení!'
+                        }
+                    },
+                    {
+                        step: 2,
+                        action: 'Zkontrolujte a vyprázdněte zásobník na vodu',
+                        time: '2 min',
+                        icon: '💧',
+                        hint: 'U kondenzačních sušiček se voda sbírá do zásobníku. Pokud je plný, sušička se vypne.',
+                        checkQuestion: null
+                    },
+                    {
+                        step: 3,
+                        action: 'Vyčistěte kondenzátor (u kondenzačních sušiček)',
+                        time: '10 min',
+                        icon: '❄️',
+                        hint: 'Kondenzátor je obvykle dole za dvířky. Vyjměte ho a opláchněte pod tekoucí vodou.',
+                        checkQuestion: {
+                            question: 'Má vaše sušička kondenzátor?',
+                            options: ['Ano, vyčistil/a jsem ho', 'Ne, je to odtahová sušička'],
+                            correctAnswer: null,
+                            failMessage: 'Kondenzátor čistěte alespoň 1x měsíčně.'
+                        }
+                    },
+                    {
+                        step: 4,
+                        action: 'Zkontrolujte odvětrávací hadici',
+                        time: '5 min',
+                        icon: '🔄',
+                        hint: 'U odtahových sušiček zkontrolujte, zda není hadice zanesená nebo přiskřípnutá.',
+                        checkQuestion: null
+                    },
+                    {
+                        step: 5,
+                        action: 'Otestujte sušení',
+                        time: '5 min',
+                        icon: '✅',
+                        hint: 'Vložte malou dávku prádla a spusťte krátký program. Prádlo by mělo být viditelně sušší.',
+                        checkQuestion: {
+                            question: 'Suší sušička lépe?',
+                            options: ['Ano, prádlo je suché', 'Ne, stále mokré'],
+                            correctAnswer: 0,
+                            failMessage: 'Může být problém s topným tělesem nebo termostaty. Zavolejte servis.'
+                        }
+                    }
+                ],
+                safetyWarnings: ['Odpojte sušičku před čištěním kondenzátoru', 'Pravidelně čistěte filtr - požární riziko!']
+            }
+        ]
+    },
+    'vana': {
+        name: 'Vana',
+        category: 'koupelna',
+        icon: '🛁',
+        issues: [
+            {
+                id: 'slow-drain',
+                name: 'Pomalý odtok z vany',
+                description: 'Voda odtéká pomalu nebo vůbec',
+                riskScore: 2,
+                difficulty: 'Nízká',
+                timeEstimate: '25 min',
+                tools: ['Zvon', 'Gumové rukavice', 'Soda bikarbona', 'Ocet'],
+                steps: [
+                    {
+                        step: 1,
+                        action: 'Odstraňte vlasy z odpadu',
+                        time: '5 min',
+                        icon: '💇',
+                        hint: 'Vyjměte krytku odpadu (většinou se jen vytáhne nebo odšroubuje). Vytáhněte nahromaděné vlasy.',
+                        checkQuestion: {
+                            question: 'Byly tam vlasy?',
+                            options: ['Ano, hodně', 'Trochu', 'Nic tam nebylo'],
+                            correctAnswer: null,
+                            failMessage: 'Pokračujte dalšími kroky pro hlubší čištění.'
+                        }
+                    },
+                    {
+                        step: 2,
+                        action: 'Použijte sodu a ocet',
+                        time: '10 min',
+                        icon: '🧪',
+                        hint: 'Nasypte půl hrnku sody do odpadu, pak nalijte půl hrnku octa. Nechte 10 minut bublat.',
+                        checkQuestion: null
+                    },
+                    {
+                        step: 3,
+                        action: 'Propláchněte horkou vodou',
+                        time: '3 min',
+                        icon: '🚿',
+                        hint: 'Nalijte do odpadu hrnec horké (ne vařící) vody, která odpláchne uvolněné usazeniny.',
+                        checkQuestion: null
+                    },
+                    {
+                        step: 4,
+                        action: 'Použijte zvon',
+                        time: '5 min',
+                        icon: '🪠',
+                        hint: 'Ucpěte přepad hadříkem. Naplňte vanu 5 cm vody a použijte zvon na hlavní odpad.',
+                        checkQuestion: {
+                            question: 'Odtéká voda rychleji?',
+                            options: ['Ano, je to lepší', 'Ne, stále pomalu'],
+                            correctAnswer: 0,
+                            failMessage: 'Zkuste postup zopakovat nebo použít spirálu na odpady.'
+                        }
+                    },
+                    {
+                        step: 5,
+                        action: 'Nainstalujte lapač vlasů',
+                        time: '2 min',
+                        icon: '✅',
+                        hint: 'Pro prevenci si pořiďte sítko nebo lapač vlasů na odpad.',
+                        checkQuestion: null
+                    }
+                ],
+                safetyWarnings: ['Použijte gumové rukavice', 'Nikdy nemíchejte chemické čističe s octem!']
+            }
+        ]
+    },
+    'zamek': {
+        name: 'Zámek',
+        category: 'dvere_okna',
+        icon: '🔐',
+        issues: [
+            {
+                id: 'stuck',
+                name: 'Zaseknutý zámek',
+                description: 'Klíč se těžko otáčí nebo nejde zasunout',
+                riskScore: 2,
+                difficulty: 'Nízká',
+                timeEstimate: '15 min',
+                tools: ['Grafitový sprej nebo tužka', 'WD-40', 'Hadřík'],
+                steps: [
+                    {
+                        step: 1,
+                        action: 'Zkontrolujte klíč',
+                        time: '2 min',
+                        icon: '🔑',
+                        hint: 'Podívejte se, zda klíč není ohnutý, otupený nebo poškozený. Zkuste záložní klíč.',
+                        checkQuestion: {
+                            question: 'Je klíč v pořádku?',
+                            options: ['Ano, není poškozený', 'Ne, je ohnutý/poškozený'],
+                            correctAnswer: 0,
+                            failMessage: 'Nechte si vyrobit nový klíč podle originálu nebo zálohy.'
+                        }
+                    },
+                    {
+                        step: 2,
+                        action: 'Vyčistěte vložku zámku',
+                        time: '3 min',
+                        icon: '🧹',
+                        hint: 'Vyfukem nebo stlačeným vzduchem vyfoukněte nečistoty ze štěrbiny zámku.',
+                        checkQuestion: null
+                    },
+                    {
+                        step: 3,
+                        action: 'Namažte zámek grafitem',
+                        time: '5 min',
+                        icon: '✏️',
+                        hint: 'Nejlepší je grafitový sprej. Alternativně potřete klíč měkkou tužkou (grafit) a několikrát zasuňte.',
+                        checkQuestion: null
+                    },
+                    {
+                        step: 4,
+                        action: 'Pohybujte klíčem v zámku',
+                        time: '3 min',
+                        icon: '🔄',
+                        hint: 'Několikrát zasuňte a vytáhněte klíč, otočte na obě strany. Mazivo se rozptýlí.',
+                        checkQuestion: {
+                            question: 'Jde klíč lépe?',
+                            options: ['Ano, otáčí se snadno', 'Ne, stále drhne'],
+                            correctAnswer: 0,
+                            failMessage: 'Zámková vložka může být poškozená. Zvažte výměnu.'
+                        }
+                    },
+                    {
+                        step: 5,
+                        action: 'Zkontrolujte zapadání dveří',
+                        time: '2 min',
+                        icon: '🚪',
+                        hint: 'Pokud zámek stále drhne, může být problém v nesouososti dveří a zárubně.',
+                        checkQuestion: null
+                    }
+                ],
+                safetyWarnings: ['Nepoužívejte olej - přitahuje prach', 'Nezkoušejte sílu - můžete zlomit klíč']
+            }
+        ]
+    },
+    'lista': {
+        name: 'Podlahová lišta',
+        category: 'steny_podlahy',
+        icon: '📏',
+        issues: [
+            {
+                id: 'detached',
+                name: 'Odlepená lišta',
+                description: 'Lišta se odlepila nebo uvolnila od zdi',
+                riskScore: 1,
+                difficulty: 'Velmi nízká',
+                timeEstimate: '20 min',
+                tools: ['Montážní lepidlo nebo hřebíčky', 'Kladívko', 'Hadřík'],
+                steps: [
+                    {
+                        step: 1,
+                        action: 'Odstraňte starou lištu',
+                        time: '3 min',
+                        icon: '🔧',
+                        hint: 'Opatrně vypačte lištu, pokud je částečně připevněná. Použijte špachtli jako páku.',
+                        checkQuestion: null
+                    },
+                    {
+                        step: 2,
+                        action: 'Očistěte povrchy',
+                        time: '5 min',
+                        icon: '🧹',
+                        hint: 'Odstraňte staré lepidlo a nečistoty ze zdi i z lišty. Hadříkem otřete prach.',
+                        checkQuestion: {
+                            question: 'Jsou povrchy čisté?',
+                            options: ['Ano, jsou připravené', 'Lišta je poškozená'],
+                            correctAnswer: 0,
+                            failMessage: 'Pokud je lišta prasklá nebo poškozená, kupte novou v podobném stylu.'
+                        }
+                    },
+                    {
+                        step: 3,
+                        action: 'Naneste montážní lepidlo',
+                        time: '3 min',
+                        icon: '🧴',
+                        hint: 'Naneste lepidlo v bodech nebo hadovitě na zadní stranu lišty. Ne příliš blízko okrajů!',
+                        checkQuestion: null
+                    },
+                    {
+                        step: 4,
+                        action: 'Přitlačte lištu ke zdi',
+                        time: '5 min',
+                        icon: '👐',
+                        hint: 'Přitiskněte lištu ke zdi a podržte minutu. U dlouhých lišt položte těžké předměty.',
+                        checkQuestion: null
+                    },
+                    {
+                        step: 5,
+                        action: 'Případně zajistěte hřebíčky',
+                        time: '4 min',
+                        icon: '✅',
+                        hint: 'Pro extra držení můžete zatlouct tenké hřebíčky. Hlavičky zapusťte a zatmelte.',
+                        checkQuestion: {
+                            question: 'Drží lišta pevně?',
+                            options: ['Ano, je pevná', 'Ne, odpadá'],
+                            correctAnswer: 0,
+                            failMessage: 'Zkuste silnější lepidlo nebo více hřebíčků. Zkontrolujte, zda je zeď v pořádku.'
+                        }
+                    }
+                ],
+                safetyWarnings: ['Opatrně při práci s kladívkem', 'Lepidlo může dráždit kůži']
+            }
+        ]
+    },
+    'sekacka': {
+        name: 'Sekačka na trávu',
+        category: 'zahrada',
+        icon: '🌿',
+        issues: [
+            {
+                id: 'wont-start',
+                name: 'Sekačka nechce nastartovat',
+                description: 'Motor se netočí nebo hned zhasne',
+                riskScore: 3,
+                difficulty: 'Střední',
+                timeEstimate: '30 min',
+                tools: ['Klíč na svíčky', 'Nová svíčka', 'Čerstvý benzín', 'Hadřík'],
+                steps: [
+                    {
+                        step: 1,
+                        action: 'Zkontrolujte palivo',
+                        time: '3 min',
+                        icon: '⛽',
+                        hint: 'Je v nádrži benzín? Starý benzín (3+ měsíce) může být problém - vyměňte za čerstvý.',
+                        checkQuestion: {
+                            question: 'Je benzín čerstvý?',
+                            options: ['Ano, tankoval/a jsem nedávno', 'Ne, je starý', 'Mám elektrickou sekačku'],
+                            correctAnswer: null,
+                            failMessage: 'Vypusťte starý benzín a natankujte čerstvý.'
+                        }
+                    },
+                    {
+                        step: 2,
+                        action: 'Zkontrolujte zapalovací svíčku',
+                        time: '10 min',
+                        icon: '⚡',
+                        hint: 'Vyjměte svíčku klíčem. Je mokrá (zahlcená) nebo suchá s černým povlakem? Vyčistěte nebo vyměňte.',
+                        checkQuestion: null
+                    },
+                    {
+                        step: 3,
+                        action: 'Zkontrolujte vzduchový filtr',
+                        time: '5 min',
+                        icon: '💨',
+                        hint: 'Zanesený filtr = motor se dusí. Vyjměte, vyklepte nebo vyměňte.',
+                        checkQuestion: {
+                            question: 'Byl filtr zanesený?',
+                            options: ['Ano, vyčistil/a jsem ho', 'Ne, byl čistý'],
+                            correctAnswer: null,
+                            failMessage: 'Filtr měňte každou sezónu.'
+                        }
+                    },
+                    {
+                        step: 4,
+                        action: 'Zkontrolujte hladinu oleje',
+                        time: '3 min',
+                        icon: '🛢️',
+                        hint: 'Vytáhněte měrku a zkontrolujte hladinu. Málo oleje = motor se může zablokovat.',
+                        checkQuestion: null
+                    },
+                    {
+                        step: 5,
+                        action: 'Zkuste nastartovat',
+                        time: '5 min',
+                        icon: '✅',
+                        hint: 'Nastavte sytič (choke) na start. Zatáhněte za startovací šňůru rychle a silně.',
+                        checkQuestion: {
+                            question: 'Nastartovala sekačka?',
+                            options: ['Ano, běží!', 'Ne, stále nic'],
+                            correctAnswer: 0,
+                            failMessage: 'Problém může být v karburátoru nebo zapalování. Doporučujeme servis.'
+                        }
+                    }
+                ],
+                safetyWarnings: ['Nikdy nedolévejte benzín za běhu motoru!', 'Před kontrolou nože vytáhněte kabel svíčky']
+            }
+        ]
+    },
+    'trouba': {
+        name: 'Trouba',
+        category: 'kuchyn',
+        icon: '🍕',
+        issues: [
+            {
+                id: 'uneven-heating',
+                name: 'Trouba nepeče rovnoměrně',
+                description: 'Jídlo je na jedné straně připálené a na druhé syrové',
+                riskScore: 2,
+                difficulty: 'Nízká',
+                timeEstimate: '25 min',
+                tools: ['Hadřík', 'Odmašťovač', 'Teploměr do trouby (volitelný)'],
+                steps: [
+                    {
+                        step: 1,
+                        action: 'Vyčistěte troubu',
+                        time: '15 min',
+                        icon: '🧽',
+                        hint: 'Připálený tuk a zbytky jídla mohou ovlivňovat proudění vzduchu. Důkladně vyčistěte stěny.',
+                        checkQuestion: {
+                            question: 'Je trouba čistá?',
+                            options: ['Ano, vyčistil/a jsem ji', 'Ne, má pyrolýzu/parní čištění'],
+                            correctAnswer: null,
+                            failMessage: 'Spusťte samočistící program podle návodu.'
+                        }
+                    },
+                    {
+                        step: 2,
+                        action: 'Zkontrolujte těsnění dvířek',
+                        time: '3 min',
+                        icon: '🚪',
+                        hint: 'Poškozené těsnění = únik tepla. Podívejte se, zda není zatuhly, prasklé nebo uvolněné.',
+                        checkQuestion: {
+                            question: 'Je těsnění v pořádku?',
+                            options: ['Ano, je nepoškozené', 'Ne, je poškozené'],
+                            correctAnswer: 0,
+                            failMessage: 'Těsnění je potřeba vyměnit - objednejte díl podle modelu trouby.'
+                        }
+                    },
+                    {
+                        step: 3,
+                        action: 'Zkontrolujte umístění roštů',
+                        time: '2 min',
+                        icon: '📐',
+                        hint: 'Rošty musí být ve správné výšce a rovně. Pro většinu pečení používejte střední pozici.',
+                        checkQuestion: null
+                    },
+                    {
+                        step: 4,
+                        action: 'Ověřte skutečnou teplotu',
+                        time: '3 min',
+                        icon: '🌡️',
+                        hint: 'Pokud máte teploměr do trouby, ověřte, zda zobrazená teplota odpovídá skutečné.',
+                        checkQuestion: null
+                    },
+                    {
+                        step: 5,
+                        action: 'Zkuste s ventilátorem / bez něj',
+                        time: '2 min',
+                        icon: '✅',
+                        hint: 'Horký vzduch (s ventilátorem) peče rovnoměrněji. Bez ventilátoru je spodek silnější.',
+                        checkQuestion: {
+                            question: 'Peče trouba lépe?',
+                            options: ['Ano, je to lepší', 'Ne, stále nerovnoměrně'],
+                            correctAnswer: 0,
+                            failMessage: 'Může být problém s topným tělesem nebo termočidlem. Zavolejte servis.'
+                        }
+                    }
+                ],
+                safetyWarnings: ['Čistěte pouze vychladlou troubu', 'Při čištění větrejte']
+            }
+        ]
     }
 };
 
