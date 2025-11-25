@@ -491,18 +491,19 @@ app.get('/api/tools', (req, res) => {
 
 // Servírování statických souborů
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-app.use('/css', express.static(path.join(__dirname, 'public/css')));
-app.use('/js', express.static(path.join(__dirname, 'public/js')));
-app.use('/images', express.static(path.join(__dirname, 'public/images')));
+app.use('/public', express.static(path.join(__dirname, 'public')));
 
 // Hlavní stránka - informativní landing page
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public/index.html'));
+    res.sendFile(path.join(__dirname, 'index.html'));
 });
 
 // Aplikace - FIXO React aplikace
 app.get('/app', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public/app.html'));
+    res.sendFile(path.join(__dirname, 'app.html'));
+});
+app.get('/app.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'app.html'));
 });
 
 // Error handling middleware

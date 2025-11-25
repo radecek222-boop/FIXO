@@ -10,21 +10,25 @@ FIXO je webova aplikace pro rychlou identifikaci a opravu domacich zavad pomoci 
 
 ```
 FIXO/
-├── public/                 # Frontend soubory
+├── index.html             # Landing page (hlavni stranka)
+├── app.html               # FIXO React aplikace
+├── public/                # Staticke soubory
 │   ├── css/
 │   │   └── styles.css     # Hlavni styly
 │   ├── js/
-│   │   └── app.js         # Hlavni JavaScript aplikace
-│   ├── images/            # Obrazky a ikony
-│   ├── index.html         # Landing page (info o projektu)
-│   └── app.html           # FIXO React aplikace
-├── server.js              # Node.js/Express backend
+│   │   └── app.js         # JavaScript aplikace
+│   └── images/            # Obrazky a ikony
+├── server.js              # Node.js/Express backend (pro lokalni vyvoj)
 ├── package.json           # NPM zavislosti
 ├── Dockerfile             # Docker image
 ├── docker-compose.yml     # Docker stack
 ├── nginx.conf             # Nginx konfigurace
 └── README.md              # Tato dokumentace
 ```
+
+## GitHub Pages
+
+Stranka je dostupna na: **https://radecek222-boop.github.io/FIXO/**
 
 ## Hlavni funkce
 
