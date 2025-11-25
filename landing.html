@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FIXO - Aplikace pro okamžité opravy domácích závad</title>
+
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="FIXO - Shazam pro domácí opravy. AI aplikace pro rychlou identifikaci a opravu domácích závad pomocí analýzy fotografií.">
+    <meta name="keywords" content="opravy, domácnost, DIY, závady, AI analýza, kutilství, návody">
+    <meta name="author" content="FIXO Team">
+    <meta name="theme-color" content="#2563eb">
+
+    <!-- Open Graph / Social Media -->
+    <meta property="og:title" content="FIXO - Aplikace pro okamžité opravy domácích závad">
+    <meta property="og:description" content="Shazam pro domácí opravy - stačí nahrát fotku a AI identifikuje problém a nabídne řešení.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://radecek222-boop.github.io/FIXO/">
+
+    <!-- Preconnect for faster CDN loading -->
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="public/css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo">FIXO</a>
+                <button class="menu-toggle" id="menuToggle" aria-label="Menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <nav class="nav" id="mainNav">
+                    <a href="#about" class="nav-link">O aplikaci</a>
+                    <a href="#features" class="nav-link">Funkce</a>
+                    <a href="#categories" class="nav-link">Kategorie</a>
+                    <a href="index.html" class="btn btn-primary">Spustit aplikaci</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1 class="hero-title">FIXO</h1>
+            <p class="hero-subtitle">Aplikace pro okamžité opravy domácích závad</p>
+            <p class="hero-desc">
+                "Shazam pro domácí opravy" - stačí nahrát fotku poškozené věci a systém automaticky identifikuje problém a nabídne řešení.
+            </p>
+            <a href="index.html" class="btn btn-white btn-xl">
+                <i class="fas fa-rocket"></i>
+                Spustit aplikaci
+            </a>
+        </div>
+    </section>
+
+    <!-- O aplikaci -->
+    <section id="about" class="section">
+        <div class="container">
+            <h2 class="section-title">
+                <i class="fas fa-info-circle section-title-icon"></i>
+                O aplikaci
+            </h2>
+            <div class="card max-w-lg mx-auto">
+                <div class="card-body">
+                    <p class="text-secondary mb-6" style="font-size: var(--text-lg); line-height: var(--leading-relaxed);">
+                        FIXO je webová aplikace pro rychlou identifikaci a opravu domácích závad pomocí AI analýzy fotografií.
+                        Aplikace funguje na principu "Shazam pro domácí opravy" - stačí nahrát fotku poškozené věci a systém
+                        automaticky identifikuje objekt, odhadne problém a nabídne nejjednodušší možná řešení.
+                    </p>
+                    <div class="text-center">
+                        <span class="badge badge-primary" style="font-size: var(--text-base); padding: var(--space-2) var(--space-4);">
+                            "Fix Anything. Anywhere. Instantly."
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Hlavní funkce -->
+    <section id="features" class="section section-gray">
+        <div class="container">
+            <h2 class="section-title">
+                <i class="fas fa-star" style="color: var(--color-warning);"></i>
+                Hlavní funkce
+            </h2>
+            <div class="grid grid-3">
+                <div class="feature-card">
+                    <div class="feature-icon" style="color: var(--color-primary);"><i class="fas fa-camera"></i></div>
+                    <h3 class="feature-title">AI Analýza fotografií</h3>
+                    <p class="feature-desc">Automatická detekce objektu a závady pomocí umělé inteligence.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon" style="color: var(--color-success);"><i class="fas fa-list-ol"></i></div>
+                    <h3 class="feature-title">Krok za krokem návody</h3>
+                    <p class="feature-desc">Jednoduché vizuální instrukce pro každou opravu.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon" style="color: var(--color-danger);"><i class="fas fa-exclamation-triangle"></i></div>
+                    <h3 class="feature-title">Bezpečnostní upozornění</h3>
+                    <p class="feature-desc">Varování u rizikových oprav, doporučení kdy volat odborníka.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon" style="color: #9333ea;"><i class="fas fa-history"></i></div>
+                    <h3 class="feature-title">Historie oprav</h3>
+                    <p class="feature-desc">Sledování dokončených a probíhajících oprav.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon" style="color: #ea580c;"><i class="fas fa-database"></i></div>
+                    <h3 class="feature-title">Databáze 500+ závad</h3>
+                    <p class="feature-desc">Kompletní přehled nejčastějších domácích problémů.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon" style="color: var(--color-secondary);"><i class="fas fa-mobile-alt"></i></div>
+                    <h3 class="feature-title">Responzivní design</h3>
+                    <p class="feature-desc">Funguje na mobilu, tabletu i počítači.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Jak to funguje -->
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title">
+                <i class="fas fa-cogs section-title-icon"></i>
+                Jak to funguje
+            </h2>
+            <div class="grid grid-4">
+                <div class="text-center">
+                    <div class="step-number mx-auto mb-4" style="width: 4rem; height: 4rem; font-size: var(--text-2xl);">1</div>
+                    <h3 class="font-bold mb-2">Nahrajte fotku</h3>
+                    <p class="text-muted" style="font-size: var(--text-sm);">Vyfoťte nebo nahrajte obrázek poškozené věci</p>
+                </div>
+                <div class="text-center">
+                    <div class="step-number mx-auto mb-4" style="width: 4rem; height: 4rem; font-size: var(--text-2xl);">2</div>
+                    <h3 class="font-bold mb-2">AI analýza</h3>
+                    <p class="text-muted" style="font-size: var(--text-sm);">Systém automaticky identifikuje objekt a problém</p>
+                </div>
+                <div class="text-center">
+                    <div class="step-number mx-auto mb-4" style="width: 4rem; height: 4rem; font-size: var(--text-2xl);">3</div>
+                    <h3 class="font-bold mb-2">Doporučení</h3>
+                    <p class="text-muted" style="font-size: var(--text-sm);">Získáte odhad času, obtížnosti a potřebných nástrojů</p>
+                </div>
+                <div class="text-center">
+                    <div class="step-number mx-auto mb-4" style="width: 4rem; height: 4rem; font-size: var(--text-2xl);">4</div>
+                    <h3 class="font-bold mb-2">Oprava</h3>
+                    <p class="text-muted" style="font-size: var(--text-sm);">Postupujte podle vizuálního návodu krok za krokem</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Kategorie závad -->
+    <section id="categories" class="section section-gray">
+        <div class="container">
+            <h2 class="section-title">
+                <i class="fas fa-th-large section-title-icon"></i>
+                Podporované kategorie
+            </h2>
+            <div class="grid grid-6">
+                <div class="category-card">
+                    <div class="category-icon">🚰</div>
+                    <div class="category-name">Voda</div>
+                </div>
+                <div class="category-card">
+                    <div class="category-icon">⚡</div>
+                    <div class="category-name">Elektřina</div>
+                </div>
+                <div class="category-card">
+                    <div class="category-icon">🌡️</div>
+                    <div class="category-name">Topení</div>
+                </div>
+                <div class="category-card">
+                    <div class="category-icon">⚙️</div>
+                    <div class="category-name">Mechanika</div>
+                </div>
+                <div class="category-card">
+                    <div class="category-icon">🪑</div>
+                    <div class="category-name">Nábytek</div>
+                </div>
+                <div class="category-card">
+                    <div class="category-icon">🚪</div>
+                    <div class="category-name">Okna & Dveře</div>
+                </div>
+                <div class="category-card">
+                    <div class="category-icon">🏠</div>
+                    <div class="category-name">Stěny & Podlahy</div>
+                </div>
+                <div class="category-card">
+                    <div class="category-icon">🔌</div>
+                    <div class="category-name">Spotřebiče</div>
+                </div>
+                <div class="category-card">
+                    <div class="category-icon">🍳</div>
+                    <div class="category-name">Kuchyň</div>
+                </div>
+                <div class="category-card">
+                    <div class="category-icon">🚿</div>
+                    <div class="category-name">Koupelna</div>
+                </div>
+                <div class="category-card">
+                    <div class="category-icon">🌱</div>
+                    <div class="category-name">Zahrada</div>
+                </div>
+                <div class="category-card">
+                    <div class="category-icon">🚗</div>
+                    <div class="category-name">Auto/Moto</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Statistiky -->
+    <section class="section-gradient py-16">
+        <div class="container">
+            <h2 class="section-title">
+                <i class="fas fa-chart-bar mr-2"></i>
+                Statistiky
+            </h2>
+            <div class="grid grid-4">
+                <div class="stat-card">
+                    <div class="stat-number">500+</div>
+                    <div class="stat-label">Domácích závad</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">12</div>
+                    <div class="stat-label">Kategorií</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">30s</div>
+                    <div class="stat-label">Průměrná analýza</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">87%</div>
+                    <div class="stat-label">Úspěšnost oprav</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Technologie -->
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title">
+                <i class="fas fa-code section-title-icon"></i>
+                Technologie
+            </h2>
+            <div class="flex flex-center flex-wrap gap-4">
+                <span class="badge badge-primary">React 18</span>
+                <span class="badge" style="background-color: var(--color-secondary-light); color: #0e7490;">Vlastní Design System</span>
+                <span class="badge badge-success">Node.js</span>
+                <span class="badge badge-warning">Express</span>
+                <span class="badge" style="background-color: #f3e8ff; color: #7e22ce;">PostgreSQL</span>
+                <span class="badge badge-danger">Redis</span>
+                <span class="badge badge-secondary">Docker</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Cílová skupina -->
+    <section class="section section-gray">
+        <div class="container">
+            <h2 class="section-title">
+                <i class="fas fa-users section-title-icon"></i>
+                Pro koho je FIXO
+            </h2>
+            <div class="grid grid-5">
+                <div class="feature-card text-center">
+                    <div style="font-size: var(--text-4xl); margin-bottom: var(--space-3);">🏠</div>
+                    <h3 class="font-bold">Domácnosti</h3>
+                    <p class="text-muted" style="font-size: var(--text-sm); margin-top: var(--space-2);">Bez technických znalostí</p>
+                </div>
+                <div class="feature-card text-center">
+                    <div style="font-size: var(--text-4xl); margin-bottom: var(--space-3);">🔧</div>
+                    <h3 class="font-bold">Kutilové</h3>
+                    <p class="text-muted" style="font-size: var(--text-sm); margin-top: var(--space-2);">DIY nadšenci</p>
+                </div>
+                <div class="feature-card text-center">
+                    <div style="font-size: var(--text-4xl); margin-bottom: var(--space-3);">🏢</div>
+                    <h3 class="font-bold">Správci</h3>
+                    <p class="text-muted" style="font-size: var(--text-sm); margin-top: var(--space-2);">Správci nemovitostí</p>
+                </div>
+                <div class="feature-card text-center">
+                    <div style="font-size: var(--text-4xl); margin-bottom: var(--space-3);">🎓</div>
+                    <h3 class="font-bold">Studenti</h3>
+                    <p class="text-muted" style="font-size: var(--text-sm); margin-top: var(--space-2);">Na kolejích</p>
+                </div>
+                <div class="feature-card text-center">
+                    <div style="font-size: var(--text-4xl); margin-bottom: var(--space-3);">👴</div>
+                    <h3 class="font-bold">Senioři</h3>
+                    <p class="text-muted" style="font-size: var(--text-sm); margin-top: var(--space-2);">Jednoduchá pomoc</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta">
+        <div class="container">
+            <h2 class="cta-title">Připraveni opravit?</h2>
+            <p class="cta-desc">
+                Začněte používat FIXO ještě dnes a staňte se mistrem domácích oprav!
+            </p>
+            <a href="index.html" class="btn btn-white btn-xl hover-scale">
+                <i class="fas fa-play"></i>
+                Spustit aplikaci
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div>
+                    <a href="index.html" class="logo mb-4" style="display: inline-block;">FIXO</a>
+                    <p class="footer-text">
+                        První světový standard pro vizuální diagnostiku domácích závad.
+                    </p>
+                </div>
+                <div>
+                    <h3 class="footer-title">Rychlé odkazy</h3>
+                    <ul class="footer-links">
+                        <li><a href="index.html" class="footer-link">Spustit aplikaci</a></li>
+                        <li><a href="#about" class="footer-link">O aplikaci</a></li>
+                        <li><a href="#features" class="footer-link">Funkce</a></li>
+                        <li><a href="#categories" class="footer-link">Kategorie</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="footer-title">Kontakt</h3>
+                    <p class="footer-text">
+                        <i class="fas fa-envelope mr-2"></i>support@fixo.app
+                    </p>
+                    <p class="footer-text mt-4" style="font-style: italic;">
+                        "Fix Anything. Anywhere. Instantly."
+                    </p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 FIXO. Všechna práva vyhrazena.</p>
+                <p class="mt-2" style="font-size: var(--text-sm);">Vytvořeno jako diplomová práce s vizí stát se globálním standardem pro domácí opravy.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Mobile Menu Toggle -->
+    <script>
+        document.getElementById('menuToggle').addEventListener('click', function() {
+            const nav = document.getElementById('mainNav');
+            const icon = this.querySelector('i');
+            nav.classList.toggle('nav-open');
+            icon.classList.toggle('fa-bars');
+            icon.classList.toggle('fa-times');
+        });
+
+        // Close menu when clicking on a link
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                const nav = document.getElementById('mainNav');
+                const icon = document.querySelector('#menuToggle i');
+                nav.classList.remove('nav-open');
+                icon.classList.add('fa-bars');
+                icon.classList.remove('fa-times');
+            });
+        });
+    </script>
+</body>
+</html>
