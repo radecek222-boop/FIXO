@@ -366,12 +366,17 @@
             -webkit-touch-callout: none;
             -webkit-user-select: none;
             user-select: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
         .drawing-container canvas {
             display: block;
-            width: 100%;
-            max-height: 400px;
-            object-fit: contain;
+            max-width: 100%;
+            max-height: 60vh;
+            width: auto;
+            height: auto;
+            margin: 0 auto;
             border-radius: var(--radius-lg);
             cursor: crosshair;
         }
@@ -1558,7 +1563,6 @@
             const [brushColor, setBrushColor] = useState('#00ffff'); // Neon cyan
             const [brushSize, setBrushSize] = useState(5);
             const [annotatedImage, setAnnotatedImage] = useState(null);
-            const [neonMarkers, setNeonMarkers] = useState([]); // Placed markers [{x, y}]
 
             // Hamburger menu state
             const [menuOpen, setMenuOpen] = useState(false);
@@ -2089,23 +2093,21 @@
                 const clientX = e.touches ? e.touches[0].clientX : e.clientX;
                 const clientY = e.touches ? e.touches[0].clientY : e.clientY;
 
-                const x = ((clientX - rect.left) / rect.width) * 100;
-                const y = ((clientY - rect.top) / rect.height) * 100;
-
-                setNeonMarkers(prev => [...prev, { x, y, id: Date.now() }]);
-
-                // Also draw on canvas
+                // Správný výpočet s poměrem canvas/zobrazení
                 const ctx = canvas.getContext('2d');
                 const scaleX = canvas.width / rect.width;
                 const scaleY = canvas.height / rect.height;
                 const canvasX = (clientX - rect.left) * scaleX;
                 const canvasY = (clientY - rect.top) * scaleY;
 
+                // Velikost markeru proporční k rozlišení obrázku
+                const markerRadius = Math.min(canvas.width, canvas.height) * 0.03;
+
                 // Draw neon circle marker on canvas
                 ctx.beginPath();
-                ctx.arc(canvasX, canvasY, 30, 0, 2 * Math.PI);
+                ctx.arc(canvasX, canvasY, markerRadius, 0, 2 * Math.PI);
                 ctx.strokeStyle = '#00ffff';
-                ctx.lineWidth = 4;
+                ctx.lineWidth = Math.max(4, markerRadius / 5);
                 ctx.shadowColor = '#00ffff';
                 ctx.shadowBlur = 20;
                 ctx.stroke();
@@ -2114,7 +2116,6 @@
 
             const clearCanvas = () => {
                 initCanvas();
-                setNeonMarkers([]);
             };
 
             const saveAnnotatedImage = () => {
@@ -2661,17 +2662,6 @@
                                                     onTouchEnd={(e) => { e.preventDefault(); stopDrawing(); }}
                                                     onClick={placeMarker}
                                                 />
-                                                {/* Neon markers overlay */}
-                                                {neonMarkers.map(marker => (
-                                                    <div
-                                                        key={marker.id}
-                                                        className="neon-marker"
-                                                        style={{
-                                                            left: `${marker.x}%`,
-                                                            top: `${marker.y}%`
-                                                        }}
-                                                    />
-                                                ))}
                                             </>
                                         ) : (
                                             <img
