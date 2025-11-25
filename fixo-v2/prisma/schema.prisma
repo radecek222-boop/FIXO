@@ -59,6 +59,11 @@ model User {
   subscriptionId   String?
   subscriptionEnd  DateTime?
 
+  // Usage limits
+  monthlyAnalysesUsed  Int @default(0)
+  monthlyAnalysesLimit Int @default(3)
+  analysesResetDate    DateTime?
+
   // Stats
   totalRepairs   Int @default(0)
   totalSaved     Int @default(0) // Money saved in CZK
@@ -115,25 +120,17 @@ model Category {
 }
 
 model Repair {
-  id           String     @id @default(cuid())
-  slug         String     @unique
-  categoryId   String
-  category     Category   @relation(fields: [categoryId], references: [id])
-  name         String
-  nameEn       String?
-  description  String
-  difficulty   Difficulty
-  timeEstimate Int // minutes
-  riskScore    Int // 1-10
-  costMin      Int?
-  costMax      Int?
-  proCostMin   Int?
-  proCostMax   Int?
-  proRequired  Boolean    @default(false)
-  videoUrl     String?
-  imageUrl     String?
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  categoryId  String
+  category    Category @relation(fields: [categoryId], references: [id])
+  name        String
+  nameEn      String?
+  icon        String?
+  description String?
+  imageUrl    String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   issues      Issue[]
   tools       RepairTool[]
@@ -149,24 +146,31 @@ enum Difficulty {
   EASY
   MEDIUM
   HARD
+  VERY_HARD
   EXPERT
 }
 
 model Issue {
-  id          String   @id @default(cuid())
-  repairId    String
-  repair      Repair   @relation(fields: [repairId], references: [id], onDelete: Cascade)
-  name        String
-  nameEn      String?
-  description String
-  symptoms    String[] // Array of symptoms
-  riskScore   Int      @default(3)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id             String     @id @default(cuid())
+  slug           String
+  repairId       String
+  repair         Repair     @relation(fields: [repairId], references: [id], onDelete: Cascade)
+  name           String
+  nameEn         String?
+  description    String
+  symptoms       String[] // Array of symptoms
+  riskScore      Int        @default(3)
+  difficulty     Difficulty @default(MEDIUM)
+  timeEstimate   Int        @default(15) // minutes
+  safetyWarnings String[]
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
 
   steps    Step[]
   warnings Warning[]
+  tools    IssueTool[]
 
+  @@unique([repairId, slug])
   @@index([repairId])
 }
 
@@ -174,18 +178,26 @@ model Step {
   id          String  @id @default(cuid())
   issueId     String
   issue       Issue   @relation(fields: [issueId], references: [id], onDelete: Cascade)
-  order       Int
-  title       String
-  description String  @db.Text
+  stepNumber  Int
+  action      String
+  time        String  @default("1 min")
+  icon        String?
+  hint        String?
   imageUrl    String?
   videoUrl    String?
-  duration    Int? // seconds
-  tip         String?
-  warning     String?
-  icon        String?
 
   @@index([issueId])
-  @@unique([issueId, order])
+  @@unique([issueId, stepNumber])
+}
+
+model IssueTool {
+  id       String @id @default(cuid())
+  issueId  String
+  issue    Issue  @relation(fields: [issueId], references: [id], onDelete: Cascade)
+  name     String
+  required Boolean @default(true)
+
+  @@index([issueId])
 }
 
 model Warning {
