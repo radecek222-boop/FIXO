@@ -170,11 +170,11 @@ FIXO/
 - Pridat detailni prehled opravy
 ```
 
-### Krok 9: Dalsi vylepseni (volitelne)
+### Krok 9: Dalsi vylepseni ✅ HOTOVO
 ```
-- Pridat vyhledavani v databazi
-- Pridat tmavý režim (dark mode)
-- Pridat offline rezim (PWA)
+- Pridat vyhledavani v databazi ✅
+- Pridat tmavý režim (dark mode) ✅
+- Pridat offline rezim (PWA) ✅
 ```
 
 ---
