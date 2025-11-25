@@ -13,7 +13,10 @@
         <div class="container">
             <div class="header-content">
                 <a href="index.html" class="logo">FIXO</a>
-                <nav class="nav">
+                <button class="menu-toggle" id="menuToggle" aria-label="Menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <nav class="nav" id="mainNav">
                     <a href="#about" class="nav-link">O aplikaci</a>
                     <a href="#features" class="nav-link">Funkce</a>
                     <a href="#categories" class="nav-link">Kategorie</a>
@@ -250,7 +253,7 @@
                 <i class="fas fa-users section-title-icon"></i>
                 Pro koho je FIXO
             </h2>
-            <div class="grid" style="grid-template-columns: repeat(5, 1fr);">
+            <div class="grid grid-5">
                 <div class="feature-card text-center">
                     <div style="font-size: var(--text-4xl); margin-bottom: var(--space-3);">🏠</div>
                     <h3 class="font-bold">Domácnosti</h3>
@@ -329,5 +332,27 @@
             </div>
         </div>
     </footer>
+
+    <!-- Mobile Menu Toggle -->
+    <script>
+        document.getElementById('menuToggle').addEventListener('click', function() {
+            const nav = document.getElementById('mainNav');
+            const icon = this.querySelector('i');
+            nav.classList.toggle('nav-open');
+            icon.classList.toggle('fa-bars');
+            icon.classList.toggle('fa-times');
+        });
+
+        // Close menu when clicking on a link
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                const nav = document.getElementById('mainNav');
+                const icon = document.querySelector('#menuToggle i');
+                nav.classList.remove('nav-open');
+                icon.classList.add('fa-bars');
+                icon.classList.remove('fa-times');
+            });
+        });
+    </script>
 </body>
 </html>

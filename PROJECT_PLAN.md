@@ -130,31 +130,30 @@ FIXO/
 
 ## DALSI KROKY (co delat ted)
 
-### Krok 1: Aplikovat design system na index.html ⏳
+### ✅ Krok 1: Aplikovat design system na index.html - HOTOVO
+### ✅ Krok 2: Aplikovat design system na app.html - HOTOVO
+
+### Krok 3: Otestovat a opravit responzivitu ⏳
 ```
-Soubor: index.html
-Ukoly:
-- Zmenit <link> z styles.css na public/css/styles.css
-- Nahradit Tailwind tridy vlastnimi tridami z design systemu
-- Pouzit: .header, .nav, .hero, .section, .card, .btn-primary, .footer
-- Otestovat lokalne a na GitHub Pages
+- Zkontrolovat mobilni zobrazeni (< 768px)
+- Zkontrolovat tablet zobrazeni (768px - 1024px)
+- Opravit pripadne problemy v CSS
+- Pridat chybejici mobilni styly
 ```
 
-### Krok 2: Aplikovat design system na app.html
+### Krok 4: Merge do main a test na GitHub Pages
 ```
-Soubor: app.html
-Ukoly:
-- Zmenit <link> na public/css/styles.css
-- Nahradit Tailwind tridy vlastnimi CSS tridami
-- Upravit React komponenty aby pouzivaly nove tridy
+- Vytvorit Pull Request
+- Merge do main branch
+- Overit funkcnost na https://radecek222-boop.github.io/FIXO/
 ```
 
-### Krok 3: Otestovat responzivitu
+### Krok 5: FAZE 6 - Vylepsit moduly aplikace
 ```
-- Mobil (< 768px)
-- Tablet (768px - 1024px)
-- Desktop (> 1024px)
-- Opravit pripadne problemy
+- Upload fotografii - pridat drag & drop
+- AI analyza - pridat vice objektu do databaze
+- Pruvodce opravou - vylepsit UI kroků
+- Historie oprav - pridat filtrovani a export
 ```
 
 ---
@@ -216,6 +215,9 @@ Ukoly:
 
 | Datum | Autor | Zmena |
 |-------|-------|-------|
+| 2025-11-25 | Claude AI | **FAZE 5 HOTOVA** - Design system aplikovan na HTML |
+| 2025-11-25 | Claude AI | Aktualizace index.html (vlastni CSS misto Tailwind) |
+| 2025-11-25 | Claude AI | Aktualizace app.html (React s design systemem) |
 | 2025-11-25 | Claude AI | **FAZE 3 HOTOVA** - Kompletni design system |
 | 2025-11-25 | Claude AI | Vytvoreni design-system.css (CSS promenne) |
 | 2025-11-25 | Claude AI | Vytvoreni components.css (tlacitka, karty, formulare) |
