@@ -11,8 +11,8 @@
 📅 Posledni aktualizace: 2025-11-25
 👤 Aktualizoval: Claude AI
 📍 Aktualni faze: FAZE 6/7 - AI integrace
-✅ Posledni dokonceny krok: OpenAI Vision API integrace
-⏳ Aktualne se dela: Backend s AI analyzu obrazku
+✅ Posledni dokonceny krok: Multi-language AI preklad s cache
+⏳ Aktualne se dela: Jazykova podpora (50+ jazyku)
 🔜 Dalsi krok: Nasadit backend na Render.com, testovani AI
 ```
 
@@ -32,6 +32,7 @@
 - Bezpecnostni upozorneni
 - Historie oprav
 - Databaze 500+ zavad
+- Multi-language podpora (50+ jazyku s AI prekladem)
 
 ### Cilova skupina
 - Domacnosti bez technickych znalosti
@@ -106,6 +107,7 @@ FIXO/
 - [x] Modul: Pruvodce opravou (kroky)
 - [ ] Modul: Historie oprav (filtrovani a export)
 - [x] Modul: Databaze zavad (filtrovani kategorii)
+- [x] Modul: Multi-language (50+ jazyku, AI preklad, permanentni cache)
 
 ### FAZE 7: Backend ⬚ CEKA (volitelne)
 - [ ] Nasadit backend na Render.com nebo Railway
@@ -214,6 +216,9 @@ FIXO/
 
 | Datum | Autor | Zmena |
 |-------|-------|-------|
+| 2025-11-25 | Claude AI | **FAZE 6** - Multi-language podpora (50+ jazyku, AI preklad, cache) |
+| 2025-11-25 | Claude AI | Pridani /api/translate endpointu pro AI preklad |
+| 2025-11-25 | Claude AI | Implementace permanentni cache prekladu (localStorage) |
 | 2025-11-25 | Claude AI | **FAZE 7** - OpenAI Vision API integrace do backendu |
 | 2025-11-25 | Claude AI | Bezpecne ulozeni API klicu (.env) |
 | 2025-11-25 | Claude AI | Frontend pripojeni k backend AI |
