@@ -485,8 +485,16 @@ app.get('/api/tools', (req, res) => {
         radiator_key: { name: 'Odvzdušňovací klíč', price: 80, unit: 'CZK' },
         bucket: { name: 'Kbelík', price: 50, unit: 'CZK' }
     };
-    
+
     res.json({ tools });
+});
+
+// Servírování statických souborů (uploads)
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+// Hlavní stránka - servíruje HTML aplikaci
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'fixo-app.html'));
 });
 
 // Error handling middleware
