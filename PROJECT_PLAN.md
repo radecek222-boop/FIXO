@@ -10,10 +10,10 @@
 ```
 📅 Posledni aktualizace: 2025-11-25
 👤 Aktualizoval: Claude AI
-📍 Aktualni faze: FAZE 6/7 - AI integrace
-✅ Posledni dokonceny krok: Multi-language AI preklad s cache
-⏳ Aktualne se dela: Jazykova podpora (50+ jazyku)
-🔜 Dalsi krok: Nasadit backend na Render.com, testovani AI
+📍 Aktualni faze: FAZE 6 HOTOVA - Vsechny moduly dokonceny
+✅ Posledni dokonceny krok: Historie oprav (filtrovani, export CSV, detaily)
+⏳ Aktualne se dela: Testovani a optimalizace
+🔜 Dalsi krok: FAZE 8 - Testovani nebo FAZE 7 - Backend (volitelne)
 ```
 
 ---
@@ -100,12 +100,12 @@ FIXO/
 - [x] Otestovat na GitHub Pages (merge do main)
 - [x] Responzivita (mobil, tablet, desktop)
 
-### FAZE 6: Moduly aplikace ⏳ PROBIHA
+### FAZE 6: Moduly aplikace ✅ HOTOVO
 - [x] Modul: Upload fotografii (drag & drop)
 - [x] Modul: AI analyza (rozsirena databaze - 13 objektu, 11 kategorii)
 - [x] Modul: Vysledky analyzy
 - [x] Modul: Pruvodce opravou (kroky)
-- [ ] Modul: Historie oprav (filtrovani a export)
+- [x] Modul: Historie oprav (filtrovani, export CSV, detail opravy)
 - [x] Modul: Databaze zavad (filtrovani kategorii)
 - [x] Modul: Multi-language (50+ jazyku, AI preklad, permanentni cache)
 
@@ -216,6 +216,8 @@ FIXO/
 
 | Datum | Autor | Zmena |
 |-------|-------|-------|
+| 2025-11-25 | Claude AI | **FAZE 6 HOTOVA** - Historie oprav (filtrovani, export CSV, detaily) |
+| 2025-11-25 | Claude AI | Predgenerovane preklady pro GitHub Pages (7 jazyku offline) |
 | 2025-11-25 | Claude AI | **FAZE 6** - Multi-language podpora (50+ jazyku, AI preklad, cache) |
 | 2025-11-25 | Claude AI | Pridani /api/translate endpointu pro AI preklad |
 | 2025-11-25 | Claude AI | Implementace permanentni cache prekladu (localStorage) |
