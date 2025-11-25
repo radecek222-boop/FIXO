@@ -1,0 +1,365 @@
+// FIXO Database Schema
+// Prisma ORM with PostgreSQL
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ==========================================
+// AUTHENTICATION & USERS
+// ==========================================
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String?
+  image         String?
+  emailVerified DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Subscription
+  plan             Plan      @default(FREE)
+  stripeCustomerId String?   @unique
+  subscriptionId   String?
+  subscriptionEnd  DateTime?
+
+  // Stats
+  totalRepairs   Int @default(0)
+  totalSaved     Int @default(0) // Money saved in CZK
+  xp             Int @default(0)
+  level          Int @default(1)
+  currentStreak  Int @default(0)
+  longestStreak  Int @default(0)
+  lastActiveDate DateTime?
+
+  // Relations
+  accounts     Account[]
+  sessions     Session[]
+  repairs      RepairHistory[]
+  achievements UserAchievement[]
+  savedGuides  SavedGuide[]
+
+  @@index([email])
+  @@index([stripeCustomerId])
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+enum Plan {
+  FREE
+  PLUS
+  PRO
+  LIFETIME
+}
+
+// ==========================================
+// REPAIR DATABASE
+// ==========================================
+
+model Category {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  name        String
+  nameEn      String?
+  icon        String
+  description String?
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  repairs Repair[]
+
+  @@index([slug])
+}
+
+model Repair {
+  id           String     @id @default(cuid())
+  slug         String     @unique
+  categoryId   String
+  category     Category   @relation(fields: [categoryId], references: [id])
+  name         String
+  nameEn       String?
+  description  String
+  difficulty   Difficulty
+  timeEstimate Int // minutes
+  riskScore    Int // 1-10
+  costMin      Int?
+  costMax      Int?
+  proCostMin   Int?
+  proCostMax   Int?
+  proRequired  Boolean    @default(false)
+  videoUrl     String?
+  imageUrl     String?
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  issues      Issue[]
+  tools       RepairTool[]
+  repairLogs  RepairHistory[]
+  savedGuides SavedGuide[]
+
+  @@index([slug])
+  @@index([categoryId])
+}
+
+enum Difficulty {
+  VERY_EASY
+  EASY
+  MEDIUM
+  HARD
+  EXPERT
+}
+
+model Issue {
+  id          String   @id @default(cuid())
+  repairId    String
+  repair      Repair   @relation(fields: [repairId], references: [id], onDelete: Cascade)
+  name        String
+  nameEn      String?
+  description String
+  symptoms    String[] // Array of symptoms
+  riskScore   Int      @default(3)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  steps    Step[]
+  warnings Warning[]
+
+  @@index([repairId])
+}
+
+model Step {
+  id          String  @id @default(cuid())
+  issueId     String
+  issue       Issue   @relation(fields: [issueId], references: [id], onDelete: Cascade)
+  order       Int
+  title       String
+  description String  @db.Text
+  imageUrl    String?
+  videoUrl    String?
+  duration    Int? // seconds
+  tip         String?
+  warning     String?
+  icon        String?
+
+  @@index([issueId])
+  @@unique([issueId, order])
+}
+
+model Warning {
+  id       String  @id @default(cuid())
+  issueId  String
+  issue    Issue   @relation(fields: [issueId], references: [id], onDelete: Cascade)
+  text     String
+  critical Boolean @default(false)
+
+  @@index([issueId])
+}
+
+// ==========================================
+// TOOLS & AFFILIATE
+// ==========================================
+
+model Tool {
+  id         String       @id @default(cuid())
+  name       String       @unique
+  nameEn     String?
+  icon       String?
+  category   String?
+  repairs    RepairTool[]
+  affiliates AffiliateLink[]
+}
+
+model RepairTool {
+  repairId String
+  toolId   String
+  repair   Repair  @relation(fields: [repairId], references: [id], onDelete: Cascade)
+  tool     Tool    @relation(fields: [toolId], references: [id], onDelete: Cascade)
+  required Boolean @default(true)
+  quantity Int     @default(1)
+
+  @@id([repairId, toolId])
+}
+
+model AffiliateLink {
+  id         String  @id @default(cuid())
+  toolId     String
+  tool       Tool    @relation(fields: [toolId], references: [id], onDelete: Cascade)
+  store      String // hornbach, obi, alza, mall
+  url        String
+  price      Int?
+  commission Float?
+  active     Boolean @default(true)
+
+  @@index([toolId])
+  @@index([store])
+}
+
+// ==========================================
+// USER HISTORY & GAMIFICATION
+// ==========================================
+
+model RepairHistory {
+  id          String       @id @default(cuid())
+  userId      String
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  repairId    String?
+  repair      Repair?      @relation(fields: [repairId], references: [id])
+  title       String
+  description String?
+  status      RepairStatus @default(IN_PROGRESS)
+  aiDiagnosis Json?
+  notes       String?      @db.Text
+  images      String[]
+  startedAt   DateTime     @default(now())
+  completedAt DateTime?
+  duration    Int? // actual duration in minutes
+  savedAmount Int? // money saved vs. professional
+  rating      Int? // 1-5 user satisfaction
+
+  @@index([userId])
+  @@index([repairId])
+  @@index([status])
+}
+
+enum RepairStatus {
+  IN_PROGRESS
+  COMPLETED
+  ABANDONED
+  CALLED_PRO
+}
+
+model SavedGuide {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  repairId  String
+  repair    Repair   @relation(fields: [repairId], references: [id], onDelete: Cascade)
+  savedAt   DateTime @default(now())
+  notes     String?
+
+  @@unique([userId, repairId])
+  @@index([userId])
+}
+
+// ==========================================
+// ACHIEVEMENTS
+// ==========================================
+
+model Achievement {
+  id          String  @id @default(cuid())
+  slug        String  @unique
+  name        String
+  nameEn      String?
+  description String
+  icon        String
+  xp          Int
+  rarity      Rarity  @default(COMMON)
+  condition   Json // Conditions for unlocking
+
+  users UserAchievement[]
+
+  @@index([slug])
+}
+
+enum Rarity {
+  COMMON
+  UNCOMMON
+  RARE
+  EPIC
+  LEGENDARY
+}
+
+model UserAchievement {
+  userId        String
+  achievementId String
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  achievement   Achievement @relation(fields: [achievementId], references: [id], onDelete: Cascade)
+  unlockedAt    DateTime    @default(now())
+
+  @@id([userId, achievementId])
+  @@index([userId])
+}
+
+// ==========================================
+// CRAFTSMEN MARKETPLACE
+// ==========================================
+
+model Craftsman {
+  id            String   @id @default(cuid())
+  name          String
+  email         String   @unique
+  phone         String?
+  description   String?
+  specialties   String[]
+  rating        Float    @default(0)
+  reviewCount   Int      @default(0)
+  verified      Boolean  @default(false)
+  active        Boolean  @default(true)
+  city          String?
+  region        String?
+  profileImage  String?
+  portfolioUrls String[]
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([email])
+  @@index([city])
+  @@index([verified])
+}
+
+// ==========================================
+// TRANSLATIONS (for dynamic content)
+// ==========================================
+
+model Translation {
+  id       String @id @default(cuid())
+  key      String
+  language String
+  value    String @db.Text
+
+  @@unique([key, language])
+  @@index([language])
+}

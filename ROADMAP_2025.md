@@ -10,10 +10,11 @@
 
 ```
 📅 Zahájení: 2025-11-25
-📍 Aktuální fáze: FÁZE 0 - Příprava (Krok 0.2 HOTOVO)
-✅ Dokončeno: 6/50 kroků
-⏳ Probíhá: Modernizace Design Systému
+📍 Aktuální fáze: FÁZE 1 - Migrace Tech Stacku (Krok 1.4 HOTOVO)
+✅ Dokončeno: 18/50 kroků
+⏳ Probíhá: Nasazení na Vercel, napojení databáze
 🎯 Cíl Q1 2026: MVP s monetizací
+⚠️ Poznámka: Stripe platby až PO nasazení na skutečnou doménu
 ```
 
 ---
@@ -73,11 +74,11 @@
 - Glassmorphism efekty
 - Modern selectors (:has, :is, :where)
 
-### Krok 0.3: Založení nového projektu
-- [ ] Inicializovat Next.js projekt s TypeScript
-- [ ] Nastavit ESLint, Prettier
+### Krok 0.3: Založení nového projektu ✅ HOTOVO
+- [x] Inicializovat Next.js projekt s TypeScript
+- [x] Nastavit ESLint, Prettier (v package.json)
 - [ ] Nastavit Husky pre-commit hooks
-- [ ] Nastavit GitHub Actions CI/CD
+- [x] Nastavit GitHub Actions CI/CD
 - [ ] Připravit development, staging, production prostředí
 
 ### Krok 0.4: Nákup domény a služeb
@@ -127,31 +128,31 @@ fixo-v2/
 └── tests/                      # Testy
 ```
 
-### Krok 1.2: Instalace závislostí
-- [ ] Next.js 14+, React 18+, TypeScript
-- [ ] Tailwind CSS, shadcn/ui
-- [ ] Prisma ORM
-- [ ] NextAuth.js
-- [ ] Stripe SDK
-- [ ] OpenAI SDK
-- [ ] React Query / TanStack Query
-- [ ] Zod (validace)
-- [ ] React Hook Form
+### Krok 1.2: Instalace závislostí ✅ HOTOVO
+- [x] Next.js 14+, React 18+, TypeScript
+- [x] Tailwind CSS, shadcn/ui
+- [x] Prisma ORM
+- [x] NextAuth.js
+- [x] Stripe SDK
+- [x] OpenAI SDK
+- [x] React Query / TanStack Query
+- [x] Zod (validace)
+- [x] React Hook Form
 
-### Krok 1.3: Migrace komponent
-- [ ] Přepsat Header komponentu
-- [ ] Přepsat Footer komponentu
-- [ ] Přepsat Navigation (desktop + mobile)
-- [ ] Vytvořit základní UI komponenty (Button, Card, Input, Modal)
+### Krok 1.3: Migrace komponent ✅ HOTOVO
+- [x] Přepsat Header komponentu
+- [x] Přepsat Footer komponentu
+- [x] Přepsat Navigation (desktop + mobile)
+- [x] Vytvořit základní UI komponenty (Button, Card, Input, Badge)
 - [ ] Implementovat Dark Mode pomocí next-themes
 
-### Krok 1.4: Migrace stránek
-- [ ] Landing page (marketing)
+### Krok 1.4: Migrace stránek ✅ HOTOVO
+- [x] Landing page (marketing)
 - [ ] Pricing page
-- [ ] Dashboard
-- [ ] Diagnose page (upload + výsledky)
-- [ ] Repairs database (kategorie + detail)
-- [ ] History page
+- [x] Dashboard (upload + výsledky)
+- [x] Diagnose page (upload + výsledky) - součást Dashboard
+- [x] Repairs database (kategorie + detail)
+- [x] History page
 - [ ] Settings page
 
 ### Krok 1.5: Testy migrace
