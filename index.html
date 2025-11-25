@@ -2492,18 +2492,89 @@
                 }
             }, [selectedIssue]);
 
+            // Social sharing state
+            const [showShareModal, setShowShareModal] = useState(false);
+            const [shareData, setShareData] = useState(null);
+
+            // Generate shareable content
+            const generateShareContent = (issue, timeSpent) => {
+                const timeText = timeSpent > 0 ? formatTime(timeSpent) : issue?.timeEstimate || 'rychle';
+                const savingsMin = issue?.costEstimate ? Math.round((issue.costEstimate.min + issue.costEstimate.max) / 2 * 4) : 500;
+                const savingsMax = issue?.costEstimate ? Math.round((issue.costEstimate.min + issue.costEstimate.max) / 2 * 7) : 1500;
+
+                return {
+                    title: `Opravil/a jsem: ${issue?.name || 'závadu'}`,
+                    text: `Právě jsem opravil/a "${issue?.name || 'závadu'}" za ${timeText}! Ušetřil/a jsem ${savingsMin}-${savingsMax} Kč díky #FIXO. DIY je pecka!`,
+                    hashtags: ['FIXO', 'DIY', 'oprava', 'šikovnost', 'ušetřeno'],
+                    emoji: '🔧✅💪',
+                    url: 'https://fixo.cz'
+                };
+            };
+
+            const shareToTwitter = (content) => {
+                const text = encodeURIComponent(`${content.emoji} ${content.text}`);
+                const hashtags = encodeURIComponent(content.hashtags.join(','));
+                const url = `https://twitter.com/intent/tweet?text=${text}&hashtags=${hashtags}`;
+                window.open(url, '_blank', 'width=600,height=400');
+            };
+
+            const shareToFacebook = (content) => {
+                const text = encodeURIComponent(`${content.emoji} ${content.text}\n\n#${content.hashtags.join(' #')}`);
+                const url = `https://www.facebook.com/sharer/sharer.php?quote=${text}`;
+                window.open(url, '_blank', 'width=600,height=400');
+            };
+
+            const shareNative = async (content) => {
+                if (navigator.share) {
+                    try {
+                        await navigator.share({
+                            title: content.title,
+                            text: `${content.emoji} ${content.text}`,
+                            url: content.url
+                        });
+                    } catch (err) {
+                        // User cancelled or error
+                        copyShareText(content);
+                    }
+                } else {
+                    copyShareText(content);
+                }
+            };
+
+            const copyShareText = (content) => {
+                const fullText = `${content.emoji} ${content.text}\n\n#${content.hashtags.join(' #')}\n${content.url}`;
+                navigator.clipboard.writeText(fullText).then(() => {
+                    alert('✅ Text zkopírován do schránky!\n\nMůžeš ho vložit kamkoliv na sociální sítě.');
+                });
+            };
+
             const completeRepair = () => {
                 // Aktualizovat historii
                 setRepairHistory(prev => prev.map(item =>
                     item.id === repairHistory[0].id
-                        ? {...item, status: 'completed'}
+                        ? {...item, status: 'completed', actualTime: elapsedTime}
                         : item
                 ));
+
+                // Připravit data pro sdílení a zobrazit modal
+                const content = generateShareContent(selectedIssue, elapsedTime);
+                setShareData({
+                    ...content,
+                    issue: selectedIssue,
+                    timeSpent: elapsedTime
+                });
+                setShowShareModal(true);
+            };
+
+            const closeShareAndFinish = () => {
+                setShowShareModal(false);
+                setShareData(null);
                 setCurrentView('home');
                 setSelectedImage(null);
                 setAnalysisResult(null);
                 setSelectedIssue(null);
                 setCurrentStep(0);
+                pauseTimer();
             };
 
             return (
@@ -2708,6 +2779,179 @@
                                         Zaškrtni všechny důležité položky (*) pro pokračování
                                     </p>
                                 )}
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Social Share Modal - po dokončení opravy */}
+                    {showShareModal && shareData && (
+                        <div className="translating-overlay" onClick={closeShareAndFinish}>
+                            <div className="translating-box" style={{maxWidth: '450px', width: '95%', textAlign: 'center'}} onClick={e => e.stopPropagation()}>
+                                {/* Success animation */}
+                                <div style={{
+                                    fontSize: '4rem',
+                                    marginBottom: 'var(--space-4)',
+                                    animation: 'pulse 1s ease-in-out'
+                                }}>
+                                    🎉
+                                </div>
+
+                                <h2 style={{
+                                    fontSize: 'var(--text-2xl)',
+                                    fontWeight: 'var(--font-bold)',
+                                    color: 'var(--color-success)',
+                                    marginBottom: 'var(--space-2)'
+                                }}>
+                                    Oprava dokončena!
+                                </h2>
+
+                                <p style={{
+                                    fontSize: 'var(--text-lg)',
+                                    fontWeight: 'var(--font-semibold)',
+                                    marginBottom: 'var(--space-4)'
+                                }}>
+                                    {shareData.issue?.name}
+                                </p>
+
+                                {/* Stats */}
+                                <div style={{
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                    gap: 'var(--space-6)',
+                                    marginBottom: 'var(--space-6)',
+                                    padding: 'var(--space-4)',
+                                    background: 'var(--color-bg-secondary)',
+                                    borderRadius: 'var(--radius-xl)'
+                                }}>
+                                    <div style={{textAlign: 'center'}}>
+                                        <div style={{fontSize: 'var(--text-3xl)', fontWeight: 'var(--font-bold)', color: 'var(--color-primary)'}}>
+                                            {shareData.timeSpent > 0 ? formatTime(shareData.timeSpent) : shareData.issue?.timeEstimate || '-'}
+                                        </div>
+                                        <div style={{fontSize: 'var(--text-xs)', color: 'var(--color-text-muted)', textTransform: 'uppercase'}}>
+                                            <i className="fas fa-stopwatch mr-1"></i> Čas
+                                        </div>
+                                    </div>
+                                    <div style={{width: '1px', background: 'var(--color-border)'}}></div>
+                                    <div style={{textAlign: 'center'}}>
+                                        <div style={{fontSize: 'var(--text-3xl)', fontWeight: 'var(--font-bold)', color: 'var(--color-success)'}}>
+                                            {shareData.issue?.costEstimate
+                                                ? `${Math.round((shareData.issue.costEstimate.min + shareData.issue.costEstimate.max) / 2 * 5)} Kč`
+                                                : '~1000 Kč'
+                                            }
+                                        </div>
+                                        <div style={{fontSize: 'var(--text-xs)', color: 'var(--color-text-muted)', textTransform: 'uppercase'}}>
+                                            <i className="fas fa-piggy-bank mr-1"></i> Ušetřeno
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <p style={{
+                                    fontSize: 'var(--text-sm)',
+                                    color: 'var(--color-text-secondary)',
+                                    marginBottom: 'var(--space-4)'
+                                }}>
+                                    Pochlub se svou šikovností na sociálních sítích!
+                                </p>
+
+                                {/* Share preview */}
+                                <div style={{
+                                    background: 'var(--color-bg-tertiary)',
+                                    padding: 'var(--space-4)',
+                                    borderRadius: 'var(--radius-lg)',
+                                    marginBottom: 'var(--space-4)',
+                                    textAlign: 'left',
+                                    fontSize: 'var(--text-sm)',
+                                    border: '1px solid var(--color-border)'
+                                }}>
+                                    <p style={{marginBottom: 'var(--space-2)'}}>
+                                        {shareData.emoji} {shareData.text}
+                                    </p>
+                                    <p style={{color: 'var(--color-primary)', fontSize: 'var(--text-xs)'}}>
+                                        #{shareData.hashtags.join(' #')}
+                                    </p>
+                                </div>
+
+                                {/* Share buttons */}
+                                <div style={{display: 'flex', gap: 'var(--space-2)', marginBottom: 'var(--space-4)', justifyContent: 'center', flexWrap: 'wrap'}}>
+                                    <button
+                                        onClick={() => shareToTwitter(shareData)}
+                                        style={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            gap: 'var(--space-2)',
+                                            padding: 'var(--space-3) var(--space-4)',
+                                            background: '#000000',
+                                            color: 'white',
+                                            border: 'none',
+                                            borderRadius: 'var(--radius-lg)',
+                                            fontWeight: 'var(--font-semibold)',
+                                            cursor: 'pointer'
+                                        }}
+                                    >
+                                        <i className="fab fa-x-twitter"></i>
+                                        X / Twitter
+                                    </button>
+                                    <button
+                                        onClick={() => shareToFacebook(shareData)}
+                                        style={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            gap: 'var(--space-2)',
+                                            padding: 'var(--space-3) var(--space-4)',
+                                            background: '#1877f2',
+                                            color: 'white',
+                                            border: 'none',
+                                            borderRadius: 'var(--radius-lg)',
+                                            fontWeight: 'var(--font-semibold)',
+                                            cursor: 'pointer'
+                                        }}
+                                    >
+                                        <i className="fab fa-facebook"></i>
+                                        Facebook
+                                    </button>
+                                    <button
+                                        onClick={() => shareNative(shareData)}
+                                        style={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            gap: 'var(--space-2)',
+                                            padding: 'var(--space-3) var(--space-4)',
+                                            background: 'var(--color-primary)',
+                                            color: 'white',
+                                            border: 'none',
+                                            borderRadius: 'var(--radius-lg)',
+                                            fontWeight: 'var(--font-semibold)',
+                                            cursor: 'pointer'
+                                        }}
+                                    >
+                                        <i className="fas fa-share-alt"></i>
+                                        Sdílet
+                                    </button>
+                                </div>
+
+                                {/* Copy button */}
+                                <button
+                                    onClick={() => copyShareText(shareData)}
+                                    className="btn btn-secondary w-full mb-4"
+                                    style={{fontSize: 'var(--text-sm)'}}
+                                >
+                                    <i className="fas fa-copy mr-2"></i>
+                                    Zkopírovat text
+                                </button>
+
+                                {/* Skip button */}
+                                <button
+                                    onClick={closeShareAndFinish}
+                                    style={{
+                                        background: 'none',
+                                        border: 'none',
+                                        color: 'var(--color-text-muted)',
+                                        cursor: 'pointer',
+                                        fontSize: 'var(--text-sm)'
+                                    }}
+                                >
+                                    Přeskočit a dokončit
+                                </button>
                             </div>
                         </div>
                     )}
