@@ -10,10 +10,10 @@
 ```
 📅 Posledni aktualizace: 2025-11-25
 👤 Aktualizoval: Claude AI
-📍 Aktualni faze: FAZE 6 HOTOVA - Vsechny moduly dokonceny
-✅ Posledni dokonceny krok: Historie oprav (filtrovani, export CSV, detaily)
-⏳ Aktualne se dela: Testovani a optimalizace
-🔜 Dalsi krok: FAZE 8 - Testovani nebo FAZE 7 - Backend (volitelne)
+📍 Aktualni faze: FAZE 8 PROBIHA - Testovani
+✅ Posledni dokonceny krok: Testovani - opraveny chyby (rok 2024->2025, technologie badge)
+⏳ Aktualne se dela: Revize kodu a oprava nalezenych chyb
+🔜 Dalsi krok: FAZE 9 - Optimalizace nebo FAZE 10 - Finalizace
 ```
 
 ---
@@ -115,10 +115,18 @@ FIXO/
 - [ ] Databaze (PostgreSQL)
 - [ ] Autentizace uzivatelu
 
-### FAZE 8: Testovani ⬚ CEKA
-- [ ] Manualni testy vsech funkci
-- [ ] Testovani na ruznych zarizenich
-- [ ] Testovani na ruznych prohlizecich
+### FAZE 8: Testovani ⏳ PROBIHA
+- [x] Revize kodu - index.html (rok 2024->2025, Tailwind->Vlastni Design System)
+- [x] Revize kodu - app.html (rok 2024->2025 ve vsech prekladech)
+- [x] Overeni upload modulu (drag & drop)
+- [x] Overeni AI simulace
+- [x] Overeni historie oprav (filtrovani, export, detaily)
+- [x] Overeni databaze zavad
+- [x] Overeni multi-language podpory
+- [x] Overeni CSS design systemu
+- [x] Presun jazykoveho volice doprava
+- [ ] Testovani na ruznych zarizenich (mobil, tablet, desktop)
+- [ ] Testovani na ruznych prohlizecich (Chrome, Firefox, Safari)
 
 ### FAZE 9: Optimalizace ⬚ CEKA
 - [ ] Rychlost nacitani
@@ -216,6 +224,7 @@ FIXO/
 
 | Datum | Autor | Zmena |
 |-------|-------|-------|
+| 2025-11-25 | Claude AI | **FAZE 8** - Testovani, oprava roku 2024->2025, presun jazykoveho volice |
 | 2025-11-25 | Claude AI | **FAZE 6 HOTOVA** - Historie oprav (filtrovani, export CSV, detaily) |
 | 2025-11-25 | Claude AI | Predgenerovane preklady pro GitHub Pages (7 jazyku offline) |
 | 2025-11-25 | Claude AI | **FAZE 6** - Multi-language podpora (50+ jazyku, AI preklad, cache) |
