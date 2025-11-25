@@ -642,3 +642,23 @@
     transform: translateY(-4px);
     box-shadow: var(--shadow-xl);
 }
+
+/* ==========================================
+   DARK MODE TOGGLE - DESKTOP
+   ========================================== */
+.dark-mode-toggle-desktop {
+    display: flex !important;
+}
+
+.dark-mode-toggle-desktop:hover {
+    background: var(--color-bg-tertiary) !important;
+    border-color: var(--color-primary) !important;
+    transform: scale(1.05);
+}
+
+/* Skryj na mobilu, tam je toggle v menu */
+@media (max-width: 768px) {
+    .dark-mode-toggle-desktop {
+        display: none !important;
+    }
+}
