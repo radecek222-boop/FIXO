@@ -10,10 +10,10 @@
 ```
 📅 Poslední aktualizace: 2025-11-25
 👤 Aktualizoval: Claude AI
-📍 Aktuální fáze: MIGRACE NA NEXT.JS (fixo-v2)
-✅ Poslední dokončený krok: Implementace základních stránek Next.js
-⏳ Aktuálně se dělá: Dokončování migrace, testování
-🔜 Další krok: Nasazení na Vercel, napojení databáze
+📍 Aktuální fáze: MIGRACE NA NEXT.JS (fixo-v2) - TÉMĚŘ HOTOVO
+✅ Poslední dokončený krok: NextAuth.js autentizace + middleware + hooks
+⏳ Aktuálně se dělá: Finální úpravy UI komponent
+🔜 Další krok: Nasazení na Vercel, připojení databáze
 ⚠️ Poznámka: Platební brána Stripe až PO nasazení na skutečnou doménu
 ```
 
@@ -71,17 +71,24 @@ FIXO/
 │   ├── src/
 │   │   ├── app/                # Next.js App Router
 │   │   │   ├── (app)/          # Aplikace (dashboard, history, repairs)
-│   │   │   └── api/            # API routes
+│   │   │   ├── (marketing)/    # Marketing stránky (pricing)
+│   │   │   ├── auth/           # Autentizace (login, error)
+│   │   │   └── api/            # API routes (health, repairs, analyze, auth, cron)
 │   │   ├── components/         # React komponenty
 │   │   │   ├── ui/             # Button, Card, Input, Badge
-│   │   │   └── layout/         # Header, Footer
-│   │   ├── lib/                # Utility funkce
+│   │   │   ├── layout/         # Header, Footer
+│   │   │   └── providers/      # SessionProvider
+│   │   ├── hooks/              # React hooks (useUser, useAnalysis)
+│   │   ├── lib/                # Utility funkce (auth, prisma)
 │   │   └── styles/             # Tailwind CSS
 │   ├── prisma/
-│   │   └── schema.prisma       # Databázové schéma
+│   │   ├── schema.prisma       # Databázové schéma
+│   │   └── seed.ts             # Seed script
 │   ├── package.json
 │   ├── tailwind.config.ts
-│   └── next.config.js
+│   ├── next.config.js
+│   ├── middleware.ts           # Route protection
+│   └── vercel.json             # Vercel config
 │
 ├── 📁 CI/CD
 │   └── .github/workflows/
@@ -114,7 +121,7 @@ FIXO/
 - [x] Freemium UI (3 tier model)
 - [x] Sociální slevy
 
-### FÁZE 3: Migrace na Next.js ⏳ PROBÍHÁ
+### FÁZE 3: Migrace na Next.js ⏳ TÉMĚŘ HOTOVO
 - [x] Inicializace Next.js 14 projektu
 - [x] Nastavení TypeScript
 - [x] Tailwind CSS + shadcn/ui komponenty
@@ -125,12 +132,18 @@ FIXO/
 - [x] Dashboard stránka (upload, analýza)
 - [x] Historie oprav stránka
 - [x] Databáze oprav stránka
+- [x] Pricing stránka
 - [x] CI/CD GitHub Actions
-- [ ] Nasazení na Vercel
+- [x] API routes (health, repairs, analyze)
+- [x] Autentizace (NextAuth.js)
+- [x] Middleware pro ochranu routes
+- [x] Database seed script
+- [x] User hooks (useUser, useAnalysis)
+- [x] Vercel deployment konfigurace
+- [ ] Nasazení na Vercel (čeká na spuštění)
 - [ ] Připojení PostgreSQL databáze
+- [ ] Spuštění Prisma migrace
 - [ ] Migrace dat z JSON do databáze
-- [ ] Napojení OpenAI Vision API
-- [ ] Autentizace (NextAuth.js)
 
 ### FÁZE 4: Monetizace (ČEKÁ NA DOMÉNU)
 > ⚠️ **DŮLEŽITÉ:** Platební brána Stripe se implementuje až PO nasazení na skutečnou doménu!
@@ -151,24 +164,17 @@ FIXO/
 
 ## CO DĚLAT NYNÍ
 
-### Krok 1: Dokončit migraci Next.js ⏳
+### Krok 1: Nasazení na Vercel ⏳ DALŠÍ KROK
 ```
-1. Nasadit fixo-v2 na Vercel
-2. Připojit PostgreSQL databázi (Supabase/Railway/Neon)
-3. Spustit Prisma migrace
-4. Migrovat data z JSON do databáze
-5. Napojit OpenAI Vision API
-```
-
-### Krok 2: Autentizace
-```
-1. Nakonfigurovat NextAuth.js
-2. Přidat Google/GitHub OAuth
-3. Implementovat user management
-4. Propojit s Prisma
+1. Vytvořit Vercel projekt
+2. Připojit GitHub repository
+3. Nastavit environment variables
+4. Připojit PostgreSQL (Supabase/Railway/Neon)
+5. Spustit Prisma migrace: npx prisma migrate deploy
+6. Spustit seed: npx prisma db seed
 ```
 
-### Krok 3: Testování
+### Krok 2: Testování
 ```
 1. E2E testy hlavních flows
 2. Unit testy utilit
@@ -176,15 +182,15 @@ FIXO/
 4. Accessibility audit
 ```
 
-### Krok 4: Nasazení na doménu
+### Krok 3: Nasazení na doménu
 ```
-1. Koupit doménu
+1. Koupit doménu (fixo.cz nebo fixo.app)
 2. Nastavit DNS na Vercel
-3. SSL certifikát
+3. SSL certifikát (automaticky přes Vercel)
 4. Monitoring (Sentry)
 ```
 
-### Krok 5: Stripe integrace (PO NASAZENÍ NA DOMÉNU)
+### Krok 4: Stripe integrace (PO NASAZENÍ NA DOMÉNU)
 ```
 1. Založit Stripe účet
 2. Vytvořit produkty a ceny
@@ -286,6 +292,13 @@ FIXO/
 | 2025-11-25 | Claude AI | Stránky: Landing, Dashboard, History, Repairs |
 | 2025-11-25 | Claude AI | **FÁZE 2 DOKONČENA** - 103 oprav, freemium UI, PWA |
 | 2025-11-25 | Claude AI | Business roadmap, monetizace, B2B plán |
+| 2025-11-25 | Claude AI | API routes: /api/health, /api/repairs, /api/analyze |
+| 2025-11-25 | Claude AI | Pricing stránka s 3-tier modelem |
+| 2025-11-25 | Claude AI | **AUTENTIZACE** - NextAuth.js s Google/GitHub/Demo providers |
+| 2025-11-25 | Claude AI | Middleware pro ochranu routes |
+| 2025-11-25 | Claude AI | Database seed script |
+| 2025-11-25 | Claude AI | User hooks: useUser, useAnalysis |
+| 2025-11-25 | Claude AI | Vercel deployment konfigurace + cron jobs |
 
 ---
 
