@@ -7,12 +7,95 @@
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="public/css/styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* App-specific overrides */
+        .app-bg {
+            background: linear-gradient(135deg, var(--color-primary-light) 0%, var(--color-secondary-light) 100%);
+            min-height: 100vh;
+        }
+        .upload-card {
+            background: var(--color-bg-primary);
+            border-radius: var(--radius-2xl);
+            box-shadow: var(--shadow-xl);
+            padding: var(--space-8);
+        }
+        .quick-stat {
+            background: var(--color-bg-tertiary);
+            border-radius: var(--radius-lg);
+            padding: var(--space-3);
+            text-align: center;
+        }
+        .example-card {
+            background: var(--color-bg-primary);
+            border-radius: var(--radius-lg);
+            padding: var(--space-4);
+            text-align: center;
+            cursor: pointer;
+            transition: all var(--transition-normal);
+        }
+        .example-card:hover {
+            box-shadow: var(--shadow-lg);
+        }
+        .result-header {
+            background: var(--gradient-primary);
+            color: var(--color-text-inverse);
+            padding: var(--space-6);
+        }
+        .info-box {
+            background: var(--color-bg-tertiary);
+            border-radius: var(--radius-lg);
+            padding: var(--space-4);
+            text-align: center;
+        }
+        .step-box {
+            background: linear-gradient(135deg, var(--color-primary-light) 0%, var(--color-secondary-light) 100%);
+            border-radius: var(--radius-xl);
+            padding: var(--space-8);
+            text-align: center;
+        }
+        .step-item {
+            display: flex;
+            align-items: center;
+            padding: var(--space-3);
+            border-radius: var(--radius-lg);
+        }
+        .step-item-active {
+            background: var(--color-primary-light);
+            border-left: 4px solid var(--color-primary);
+        }
+        .step-item-completed {
+            background: var(--color-success-light);
+            opacity: 0.75;
+        }
+        .step-item-pending {
+            background: var(--color-bg-tertiary);
+        }
+        .knowledge-card {
+            background: var(--color-bg-primary);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+            transition: all var(--transition-normal);
+        }
+        .knowledge-card:hover {
+            box-shadow: var(--shadow-xl);
+        }
+        .knowledge-card-header {
+            background: var(--gradient-primary);
+            color: var(--color-text-inverse);
+            padding: var(--space-4);
+        }
+        .issue-item {
+            border-left: 4px solid var(--color-primary);
+            padding-left: var(--space-3);
+        }
+    </style>
 </head>
 <body>
     <div id="root"></div>
-    
+
     <script type="text/babel">
         const { useState, useEffect, useRef } = React;
 
@@ -144,22 +227,22 @@
             const analyzeImage = async () => {
                 setIsAnalyzing(true);
                 setCurrentView('analyzing');
-                
+
                 // Simulujeme AI zpracování (2-3 sekundy)
                 await new Promise(resolve => setTimeout(resolve, 2500));
-                
+
                 // Simulovaný výsledek - náhodně vybereme objekt
                 const objects = Object.keys(repairDatabase);
                 const randomObject = objects[Math.floor(Math.random() * objects.length)];
                 const objectData = repairDatabase[randomObject];
                 const randomIssue = objectData.issues[0];
-                
+
                 setAnalysisResult({
                     object: objectData,
                     issue: randomIssue,
                     confidence: Math.floor(Math.random() * 20) + 80 // 80-99%
                 });
-                
+
                 setIsAnalyzing(false);
                 setCurrentView('results');
             };
@@ -180,7 +263,7 @@
                 setSelectedIssue(issue);
                 setCurrentStep(0);
                 setCurrentView('repair');
-                
+
                 // Přidat do historie
                 const historyItem = {
                     id: Date.now(),
@@ -194,9 +277,9 @@
 
             const completeRepair = () => {
                 // Aktualizovat historii
-                setRepairHistory(prev => prev.map(item => 
-                    item.id === repairHistory[0].id 
-                        ? {...item, status: 'completed'} 
+                setRepairHistory(prev => prev.map(item =>
+                    item.id === repairHistory[0].id
+                        ? {...item, status: 'completed'}
                         : item
                 ));
                 setCurrentView('home');
@@ -207,37 +290,35 @@
             };
 
             return (
-                <div className="min-h-screen bg-gradient-to-br from-blue-50 to-cyan-50">
+                <div className="app-bg">
                     {/* Header */}
-                    <header className="bg-white shadow-lg sticky top-0 z-50">
-                        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                            <div className="flex justify-between items-center py-4">
-                                <div className="flex items-center cursor-pointer" onClick={() => setCurrentView('home')}>
-                                    <div className="bg-blue-600 text-white rounded-lg px-3 py-1 font-bold text-2xl mr-3">
-                                        FIXO
-                                    </div>
-                                    <span className="text-gray-600 text-sm hidden sm:inline">
+                    <header className="header">
+                        <div className="container">
+                            <div className="header-content">
+                                <div className="flex items-center" style={{cursor: 'pointer'}} onClick={() => setCurrentView('home')}>
+                                    <span className="logo mr-4">FIXO</span>
+                                    <span className="text-secondary hide-mobile" style={{fontSize: 'var(--text-sm)'}}>
                                         Okamžité opravy domácích závad
                                     </span>
                                 </div>
-                                <nav className="flex space-x-4">
+                                <nav className="nav">
                                     <button
                                         onClick={() => setCurrentView('home')}
-                                        className={`px-3 py-2 rounded-lg ${currentView === 'home' ? 'bg-blue-100 text-blue-600' : 'text-gray-600 hover:bg-gray-100'}`}
+                                        className={currentView === 'home' ? 'nav-link nav-link-active' : 'nav-link'}
                                     >
                                         <i className="fas fa-camera mr-2"></i>
                                         Analyzovat
                                     </button>
                                     <button
                                         onClick={() => setCurrentView('history')}
-                                        className={`px-3 py-2 rounded-lg ${currentView === 'history' ? 'bg-blue-100 text-blue-600' : 'text-gray-600 hover:bg-gray-100'}`}
+                                        className={currentView === 'history' ? 'nav-link nav-link-active' : 'nav-link'}
                                     >
                                         <i className="fas fa-history mr-2"></i>
                                         Historie
                                     </button>
                                     <button
                                         onClick={() => setCurrentView('knowledge')}
-                                        className={`px-3 py-2 rounded-lg ${currentView === 'knowledge' ? 'bg-blue-100 text-blue-600' : 'text-gray-600 hover:bg-gray-100'}`}
+                                        className={currentView === 'knowledge' ? 'nav-link nav-link-active' : 'nav-link'}
                                     >
                                         <i className="fas fa-book mr-2"></i>
                                         Databáze
@@ -248,21 +329,21 @@
                     </header>
 
                     {/* Main Content */}
-                    <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                    <main className="main container py-8">
                         {/* Home View - Camera/Upload */}
                         {currentView === 'home' && (
-                            <div className="flex flex-col items-center justify-center min-h-[70vh]">
-                                <div className="bg-white rounded-2xl shadow-xl p-8 max-w-md w-full">
+                            <div className="center-content">
+                                <div className="upload-card max-w-md w-full">
                                     <div className="text-center mb-8">
-                                        <i className="fas fa-camera text-6xl text-blue-600 mb-4"></i>
-                                        <h1 className="text-2xl font-bold text-gray-800 mb-2">
+                                        <i className="fas fa-camera" style={{fontSize: 'var(--text-6xl)', color: 'var(--color-primary)', marginBottom: 'var(--space-4)', display: 'block'}}></i>
+                                        <h1 style={{fontSize: 'var(--text-2xl)', fontWeight: 'var(--font-bold)', color: 'var(--color-text-primary)', marginBottom: 'var(--space-2)'}}>
                                             Vyfotografujte závadu
                                         </h1>
-                                        <p className="text-gray-600">
+                                        <p className="text-secondary">
                                             AI okamžitě identifikuje problém a nabídne řešení
                                         </p>
                                     </div>
-                                    
+
                                     <input
                                         ref={fileInputRef}
                                         type="file"
@@ -270,42 +351,42 @@
                                         onChange={handleImageUpload}
                                         className="hidden"
                                     />
-                                    
+
                                     <button
                                         onClick={() => fileInputRef.current.click()}
-                                        className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-8 rounded-xl transition duration-200 transform hover:scale-105 shadow-lg"
+                                        className="btn btn-primary btn-xl btn-block hover-scale"
                                     >
-                                        <i className="fas fa-camera mr-3"></i>
+                                        <i className="fas fa-camera mr-2"></i>
                                         Nahrát fotografii
                                     </button>
-                                    
-                                    <div className="mt-6 grid grid-cols-3 gap-2 text-center text-sm text-gray-600">
-                                        <div className="bg-gray-50 rounded-lg p-3">
-                                            <i className="fas fa-clock text-blue-600 mb-1"></i>
-                                            <div>30 sekund</div>
+
+                                    <div className="grid grid-3 mt-6 gap-2">
+                                        <div className="quick-stat">
+                                            <i className="fas fa-clock" style={{color: 'var(--color-primary)', marginBottom: 'var(--space-1)', display: 'block'}}></i>
+                                            <div style={{fontSize: 'var(--text-sm)'}}>30 sekund</div>
                                         </div>
-                                        <div className="bg-gray-50 rounded-lg p-3">
-                                            <i className="fas fa-shield-alt text-green-600 mb-1"></i>
-                                            <div>Bezpečné</div>
+                                        <div className="quick-stat">
+                                            <i className="fas fa-shield-alt" style={{color: 'var(--color-success)', marginBottom: 'var(--space-1)', display: 'block'}}></i>
+                                            <div style={{fontSize: 'var(--text-sm)'}}>Bezpečné</div>
                                         </div>
-                                        <div className="bg-gray-50 rounded-lg p-3">
-                                            <i className="fas fa-tools text-orange-600 mb-1"></i>
-                                            <div>500+ oprav</div>
+                                        <div className="quick-stat">
+                                            <i className="fas fa-tools" style={{color: 'var(--color-warning)', marginBottom: 'var(--space-1)', display: 'block'}}></i>
+                                            <div style={{fontSize: 'var(--text-sm)'}}>500+ oprav</div>
                                         </div>
                                     </div>
                                 </div>
 
                                 {/* Quick Examples */}
-                                <div className="mt-8 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl w-full">
+                                <div className="grid grid-4 mt-8 max-w-lg w-full gap-4">
                                     {[
                                         { icon: '🚰', name: 'Kapající kohoutek' },
                                         { icon: '🚽', name: 'Protékající WC' },
                                         { icon: '🔌', name: 'Nefunkční zásuvka' },
                                         { icon: '🚪', name: 'Vrzající dveře' }
                                     ].map((item, idx) => (
-                                        <div key={idx} className="bg-white rounded-lg p-4 text-center cursor-pointer hover:shadow-lg transition">
-                                            <div className="text-3xl mb-2">{item.icon}</div>
-                                            <div className="text-sm text-gray-600">{item.name}</div>
+                                        <div key={idx} className="example-card">
+                                            <div style={{fontSize: 'var(--text-3xl)', marginBottom: 'var(--space-2)'}}>{item.icon}</div>
+                                            <div style={{fontSize: 'var(--text-sm)', color: 'var(--color-text-secondary)'}}>{item.name}</div>
                                         </div>
                                     ))}
                                 </div>
@@ -314,34 +395,32 @@
 
                         {/* Analyzing View */}
                         {currentView === 'analyzing' && (
-                            <div className="flex flex-col items-center justify-center min-h-[70vh]">
-                                <div className="bg-white rounded-2xl shadow-xl p-8 max-w-md w-full">
+                            <div className="center-content">
+                                <div className="upload-card max-w-md w-full">
                                     <div className="text-center">
                                         {selectedImage && (
-                                            <img 
-                                                src={selectedImage} 
-                                                alt="Analyzovaná fotka" 
-                                                className="w-full h-48 object-cover rounded-lg mb-6"
+                                            <img
+                                                src={selectedImage}
+                                                alt="Analyzovaná fotka"
+                                                className="image-preview mb-6"
                                             />
                                         )}
-                                        <div className="flex justify-center mb-4">
-                                            <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-600"></div>
+                                        <div className="flex-center mb-4">
+                                            <div className="spinner spinner-lg"></div>
                                         </div>
-                                        <h2 className="text-xl font-bold text-gray-800 mb-2">
+                                        <h2 style={{fontSize: 'var(--text-xl)', fontWeight: 'var(--font-bold)', marginBottom: 'var(--space-2)'}}>
                                             Analyzuji fotografii...
                                         </h2>
-                                        <div className="space-y-2 text-gray-600">
-                                            <div className="flex items-center justify-center">
-                                                <i className="fas fa-check-circle text-green-500 mr-2"></i>
+                                        <div className="text-secondary" style={{display: 'flex', flexDirection: 'column', gap: 'var(--space-2)'}}>
+                                            <div className="flex-center">
+                                                <i className="fas fa-check-circle mr-2" style={{color: 'var(--color-success)'}}></i>
                                                 Detekce objektu
                                             </div>
-                                            <div className="flex items-center justify-center">
-                                                <div className="animate-pulse">
-                                                    <i className="fas fa-spinner fa-spin text-blue-500 mr-2"></i>
-                                                    Identifikace závady
-                                                </div>
+                                            <div className="flex-center animate-pulse">
+                                                <i className="fas fa-spinner fa-spin mr-2" style={{color: 'var(--color-primary)'}}></i>
+                                                Identifikace závady
                                             </div>
-                                            <div className="flex items-center justify-center text-gray-400">
+                                            <div className="flex-center text-muted">
                                                 <i className="far fa-circle mr-2"></i>
                                                 Příprava návodů
                                             </div>
@@ -353,20 +432,20 @@
 
                         {/* Results View */}
                         {currentView === 'results' && analysisResult && (
-                            <div className="max-w-4xl mx-auto">
-                                <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
+                            <div className="max-w-lg mx-auto">
+                                <div className="card">
                                     {/* Detection Header */}
-                                    <div className="bg-gradient-to-r from-blue-600 to-cyan-600 text-white p-6">
-                                        <div className="flex items-center justify-between">
+                                    <div className="result-header">
+                                        <div className="flex-between">
                                             <div>
-                                                <h2 className="text-2xl font-bold mb-2">
+                                                <h2 style={{fontSize: 'var(--text-2xl)', fontWeight: 'var(--font-bold)', marginBottom: 'var(--space-2)'}}>
                                                     {analysisResult.object.name}
                                                 </h2>
-                                                <p className="text-blue-100">
+                                                <p style={{opacity: 0.9}}>
                                                     Detekováno s {analysisResult.confidence}% jistotou
                                                 </p>
                                             </div>
-                                            <div className="text-5xl">
+                                            <div style={{fontSize: 'var(--text-5xl)'}}>
                                                 {analysisResult.issue.id === 'leak' && '🚰'}
                                                 {analysisResult.issue.id === 'running' && '🚽'}
                                                 {analysisResult.issue.id === 'not-working' && '🔌'}
@@ -377,48 +456,46 @@
                                     </div>
 
                                     {/* Issue Details */}
-                                    <div className="p-6">
+                                    <div className="card-body">
                                         <div className="mb-6">
-                                            <h3 className="text-lg font-semibold text-gray-800 mb-2">
+                                            <h3 style={{fontSize: 'var(--text-lg)', fontWeight: 'var(--font-semibold)', marginBottom: 'var(--space-2)'}}>
                                                 Identifikovaný problém
                                             </h3>
-                                            <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded">
-                                                <p className="font-semibold text-red-800">
-                                                    {analysisResult.issue.name}
-                                                </p>
-                                                <p className="text-red-600 text-sm mt-1">
+                                            <div className="alert alert-danger">
+                                                <p className="alert-title">{analysisResult.issue.name}</p>
+                                                <p style={{fontSize: 'var(--text-sm)', marginTop: 'var(--space-1)'}}>
                                                     {analysisResult.issue.description}
                                                 </p>
                                             </div>
                                         </div>
 
                                         {/* Quick Info */}
-                                        <div className="grid grid-cols-3 gap-4 mb-6">
-                                            <div className="bg-gray-50 rounded-lg p-4 text-center">
-                                                <i className="fas fa-clock text-blue-600 text-2xl mb-2"></i>
-                                                <div className="text-sm text-gray-600">Čas opravy</div>
+                                        <div className="grid grid-3 gap-4 mb-6">
+                                            <div className="info-box">
+                                                <i className="fas fa-clock" style={{color: 'var(--color-primary)', fontSize: 'var(--text-2xl)', marginBottom: 'var(--space-2)', display: 'block'}}></i>
+                                                <div style={{fontSize: 'var(--text-sm)', color: 'var(--color-text-secondary)'}}>Čas opravy</div>
                                                 <div className="font-semibold">{analysisResult.issue.timeEstimate}</div>
                                             </div>
-                                            <div className="bg-gray-50 rounded-lg p-4 text-center">
-                                                <i className="fas fa-signal text-orange-600 text-2xl mb-2"></i>
-                                                <div className="text-sm text-gray-600">Obtížnost</div>
+                                            <div className="info-box">
+                                                <i className="fas fa-signal" style={{color: 'var(--color-warning)', fontSize: 'var(--text-2xl)', marginBottom: 'var(--space-2)', display: 'block'}}></i>
+                                                <div style={{fontSize: 'var(--text-sm)', color: 'var(--color-text-secondary)'}}>Obtížnost</div>
                                                 <div className="font-semibold">{analysisResult.issue.difficulty}</div>
                                             </div>
-                                            <div className="bg-gray-50 rounded-lg p-4 text-center">
-                                                <i className="fas fa-exclamation-triangle text-yellow-600 text-2xl mb-2"></i>
-                                                <div className="text-sm text-gray-600">Riziko</div>
+                                            <div className="info-box">
+                                                <i className="fas fa-exclamation-triangle" style={{color: 'var(--color-danger)', fontSize: 'var(--text-2xl)', marginBottom: 'var(--space-2)', display: 'block'}}></i>
+                                                <div style={{fontSize: 'var(--text-sm)', color: 'var(--color-text-secondary)'}}>Riziko</div>
                                                 <div className="font-semibold">{analysisResult.issue.riskScore}/10</div>
                                             </div>
                                         </div>
 
                                         {/* Safety Warnings */}
                                         {analysisResult.issue.riskScore > 5 && (
-                                            <div className="bg-yellow-50 border-l-4 border-yellow-500 p-4 rounded mb-6">
-                                                <p className="font-semibold text-yellow-800 mb-2">
+                                            <div className="alert alert-warning mb-6">
+                                                <p className="alert-title">
                                                     <i className="fas fa-exclamation-triangle mr-2"></i>
                                                     Bezpečnostní upozornění
                                                 </p>
-                                                <ul className="text-yellow-700 text-sm space-y-1">
+                                                <ul style={{fontSize: 'var(--text-sm)', marginTop: 'var(--space-2)'}}>
                                                     {analysisResult.issue.safetyWarnings.map((warning, idx) => (
                                                         <li key={idx}>• {warning}</li>
                                                     ))}
@@ -430,14 +507,14 @@
                                         <div className="flex gap-4">
                                             <button
                                                 onClick={() => startRepair(analysisResult.issue)}
-                                                className="flex-1 bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-xl transition duration-200"
+                                                className="btn btn-success flex-1"
                                             >
                                                 <i className="fas fa-wrench mr-2"></i>
                                                 Začít opravu
                                             </button>
                                             <button
                                                 onClick={() => setCurrentView('home')}
-                                                className="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-3 px-6 rounded-xl transition duration-200"
+                                                className="btn btn-secondary flex-1"
                                             >
                                                 <i className="fas fa-phone mr-2"></i>
                                                 Zavolat odborníka
@@ -450,25 +527,25 @@
 
                         {/* Repair Steps View */}
                         {currentView === 'repair' && selectedIssue && (
-                            <div className="max-w-4xl mx-auto">
-                                <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
+                            <div className="max-w-lg mx-auto">
+                                <div className="card">
                                     {/* Progress Bar */}
-                                    <div className="bg-gray-200 h-2">
-                                        <div 
-                                            className="bg-green-600 h-2 transition-all duration-500"
+                                    <div className="progress" style={{borderRadius: 0}}>
+                                        <div
+                                            className="progress-bar"
                                             style={{ width: `${((currentStep + 1) / selectedIssue.steps.length) * 100}%` }}
                                         ></div>
                                     </div>
 
                                     {/* Tools Needed */}
-                                    <div className="bg-blue-50 p-6 border-b">
-                                        <h3 className="font-semibold text-blue-900 mb-3">
+                                    <div style={{background: 'var(--color-info-light)', padding: 'var(--space-6)', borderBottom: '1px solid var(--color-border)'}}>
+                                        <h3 style={{fontWeight: 'var(--font-semibold)', color: '#0c4a6e', marginBottom: 'var(--space-3)'}}>
                                             <i className="fas fa-toolbox mr-2"></i>
                                             Potřebné nástroje a materiál
                                         </h3>
-                                        <div className="flex flex-wrap gap-2">
+                                        <div className="tool-list">
                                             {selectedIssue.tools.map((tool, idx) => (
-                                                <span key={idx} className="bg-white px-3 py-1 rounded-full text-sm">
+                                                <span key={idx} className="tool-item">
                                                     {tool}
                                                 </span>
                                             ))}
@@ -476,20 +553,20 @@
                                     </div>
 
                                     {/* Current Step */}
-                                    <div className="p-6">
+                                    <div className="card-body">
                                         <div className="mb-6">
-                                            <h2 className="text-2xl font-bold text-gray-800 mb-4">
+                                            <h2 style={{fontSize: 'var(--text-2xl)', fontWeight: 'var(--font-bold)', marginBottom: 'var(--space-4)'}}>
                                                 Krok {currentStep + 1} z {selectedIssue.steps.length}
                                             </h2>
-                                            
-                                            <div className="bg-gradient-to-r from-blue-50 to-cyan-50 rounded-xl p-8 text-center">
-                                                <div className="text-6xl mb-4">
+
+                                            <div className="step-box">
+                                                <div style={{fontSize: 'var(--text-6xl)', marginBottom: 'var(--space-4)'}}>
                                                     {selectedIssue.steps[currentStep].icon}
                                                 </div>
-                                                <p className="text-xl font-semibold text-gray-800 mb-2">
+                                                <p style={{fontSize: 'var(--text-xl)', fontWeight: 'var(--font-semibold)', marginBottom: 'var(--space-2)'}}>
                                                     {selectedIssue.steps[currentStep].action}
                                                 </p>
-                                                <p className="text-gray-600">
+                                                <p className="text-secondary">
                                                     <i className="fas fa-clock mr-2"></i>
                                                     Časová náročnost: {selectedIssue.steps[currentStep].time}
                                                 </p>
@@ -498,25 +575,25 @@
 
                                         {/* All Steps Overview */}
                                         <div className="mb-6">
-                                            <h3 className="font-semibold text-gray-700 mb-3">Přehled všech kroků</h3>
-                                            <div className="space-y-2">
+                                            <h3 style={{fontWeight: 'var(--font-semibold)', marginBottom: 'var(--space-3)'}}>Přehled všech kroků</h3>
+                                            <div className="steps-timeline">
                                                 {selectedIssue.steps.map((step, idx) => (
-                                                    <div 
+                                                    <div
                                                         key={idx}
-                                                        className={`flex items-center p-3 rounded-lg ${
-                                                            idx === currentStep 
-                                                                ? 'bg-blue-100 border-l-4 border-blue-600' 
-                                                                : idx < currentStep 
-                                                                    ? 'bg-green-50 opacity-75' 
-                                                                    : 'bg-gray-50'
+                                                        className={`step-item ${
+                                                            idx === currentStep
+                                                                ? 'step-item-active'
+                                                                : idx < currentStep
+                                                                    ? 'step-item-completed'
+                                                                    : 'step-item-pending'
                                                         }`}
                                                     >
-                                                        <span className="mr-3 text-2xl">{step.icon}</span>
-                                                        <span className={`flex-1 ${idx === currentStep ? 'font-semibold' : ''}`}>
+                                                        <span style={{marginRight: 'var(--space-3)', fontSize: 'var(--text-2xl)'}}>{step.icon}</span>
+                                                        <span className="flex-1" style={{fontWeight: idx === currentStep ? 'var(--font-semibold)' : 'normal'}}>
                                                             {step.step}. {step.action}
                                                         </span>
                                                         {idx < currentStep && (
-                                                            <i className="fas fa-check-circle text-green-600"></i>
+                                                            <i className="fas fa-check-circle" style={{color: 'var(--color-success)'}}></i>
                                                         )}
                                                     </div>
                                                 ))}
@@ -528,11 +605,8 @@
                                             <button
                                                 onClick={() => setCurrentStep(Math.max(0, currentStep - 1))}
                                                 disabled={currentStep === 0}
-                                                className={`flex-1 font-bold py-3 px-6 rounded-xl transition duration-200 ${
-                                                    currentStep === 0 
-                                                        ? 'bg-gray-200 text-gray-400 cursor-not-allowed' 
-                                                        : 'bg-gray-200 hover:bg-gray-300 text-gray-800'
-                                                }`}
+                                                className={`btn flex-1 ${currentStep === 0 ? 'btn-secondary' : 'btn-secondary'}`}
+                                                style={currentStep === 0 ? {opacity: 0.5, cursor: 'not-allowed'} : {}}
                                             >
                                                 <i className="fas fa-arrow-left mr-2"></i>
                                                 Předchozí krok
@@ -540,7 +614,7 @@
                                             {currentStep < selectedIssue.steps.length - 1 ? (
                                                 <button
                                                     onClick={() => setCurrentStep(currentStep + 1)}
-                                                    className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-xl transition duration-200"
+                                                    className="btn btn-primary flex-1"
                                                 >
                                                     Další krok
                                                     <i className="fas fa-arrow-right ml-2"></i>
@@ -548,7 +622,7 @@
                                             ) : (
                                                 <button
                                                     onClick={completeRepair}
-                                                    className="flex-1 bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-xl transition duration-200"
+                                                    className="btn btn-success flex-1"
                                                 >
                                                     <i className="fas fa-check mr-2"></i>
                                                     Dokončit opravu
@@ -562,36 +636,37 @@
 
                         {/* History View */}
                         {currentView === 'history' && (
-                            <div className="max-w-4xl mx-auto">
-                                <h2 className="text-2xl font-bold text-gray-800 mb-6">Historie oprav</h2>
-                                
+                            <div className="max-w-lg mx-auto">
+                                <h2 className="page-title">Historie oprav</h2>
+
                                 {repairHistory.length === 0 ? (
-                                    <div className="bg-white rounded-xl shadow-lg p-8 text-center">
-                                        <i className="fas fa-history text-6xl text-gray-300 mb-4"></i>
-                                        <p className="text-gray-600">Zatím nemáte žádné opravy v historii</p>
+                                    <div className="empty-state card">
+                                        <div className="empty-state-icon"><i className="fas fa-history"></i></div>
+                                        <p className="empty-state-title">Zatím nemáte žádné opravy</p>
+                                        <p className="empty-state-desc">Nahrajte fotografii a začněte s první opravou</p>
                                     </div>
                                 ) : (
-                                    <div className="space-y-4">
+                                    <div style={{display: 'flex', flexDirection: 'column', gap: 'var(--space-4)'}}>
                                         {repairHistory.map(item => (
-                                            <div key={item.id} className="bg-white rounded-xl shadow-lg p-6">
-                                                <div className="flex items-center justify-between">
+                                            <div key={item.id} className="card">
+                                                <div className="card-body flex-between">
                                                     <div>
-                                                        <h3 className="font-semibold text-lg text-gray-800">
+                                                        <h3 style={{fontWeight: 'var(--font-semibold)', fontSize: 'var(--text-lg)'}}>
                                                             {item.object} - {item.issue}
                                                         </h3>
-                                                        <p className="text-gray-600 text-sm mt-1">
+                                                        <p className="text-muted" style={{fontSize: 'var(--text-sm)', marginTop: 'var(--space-1)'}}>
                                                             <i className="far fa-calendar mr-2"></i>
                                                             {item.date}
                                                         </p>
                                                     </div>
                                                     <div>
                                                         {item.status === 'completed' ? (
-                                                            <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-semibold">
+                                                            <span className="badge badge-success">
                                                                 <i className="fas fa-check-circle mr-1"></i>
                                                                 Dokončeno
                                                             </span>
                                                         ) : (
-                                                            <span className="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm font-semibold">
+                                                            <span className="badge badge-warning">
                                                                 <i className="fas fa-wrench mr-1"></i>
                                                                 Probíhá
                                                             </span>
@@ -607,22 +682,22 @@
 
                         {/* Knowledge Base View */}
                         {currentView === 'knowledge' && (
-                            <div className="max-w-6xl mx-auto">
-                                <h2 className="text-2xl font-bold text-gray-800 mb-6">Databáze závad a oprav</h2>
-                                
-                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <div className="max-w-2xl mx-auto">
+                                <h2 className="page-title">Databáze závad a oprav</h2>
+
+                                <div className="grid grid-3 gap-6">
                                     {Object.entries(repairDatabase).map(([key, item]) => (
-                                        <div key={key} className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition">
-                                            <div className="bg-gradient-to-r from-blue-600 to-cyan-600 text-white p-4">
-                                                <h3 className="font-bold text-lg">{item.name}</h3>
+                                        <div key={key} className="knowledge-card">
+                                            <div className="knowledge-card-header">
+                                                <h3 style={{fontWeight: 'var(--font-bold)', fontSize: 'var(--text-lg)'}}>{item.name}</h3>
                                             </div>
                                             <div className="p-4">
-                                                <div className="space-y-3">
+                                                <div style={{display: 'flex', flexDirection: 'column', gap: 'var(--space-3)'}}>
                                                     {item.issues.map(issue => (
-                                                        <div key={issue.id} className="border-l-4 border-blue-500 pl-3">
-                                                            <p className="font-semibold text-gray-800">{issue.name}</p>
-                                                            <p className="text-sm text-gray-600">{issue.description}</p>
-                                                            <div className="mt-2 flex gap-4 text-xs text-gray-500">
+                                                        <div key={issue.id} className="issue-item">
+                                                            <p style={{fontWeight: 'var(--font-semibold)'}}>{issue.name}</p>
+                                                            <p style={{fontSize: 'var(--text-sm)', color: 'var(--color-text-secondary)'}}>{issue.description}</p>
+                                                            <div style={{marginTop: 'var(--space-2)', display: 'flex', gap: 'var(--space-4)', fontSize: 'var(--text-xs)', color: 'var(--color-text-muted)'}}>
                                                                 <span><i className="fas fa-clock mr-1"></i>{issue.timeEstimate}</span>
                                                                 <span><i className="fas fa-signal mr-1"></i>{issue.difficulty}</span>
                                                             </div>
@@ -634,12 +709,12 @@
                                     ))}
                                 </div>
 
-                                <div className="mt-8 bg-blue-50 rounded-xl p-6">
-                                    <h3 className="font-bold text-blue-900 mb-3">
+                                <div className="alert alert-info mt-8">
+                                    <p className="alert-title">
                                         <i className="fas fa-info-circle mr-2"></i>
                                         O databázi
-                                    </h3>
-                                    <p className="text-blue-800">
+                                    </p>
+                                    <p>
                                         Naše databáze obsahuje více než 500 nejčastějších domácích závad rozdělených do 12 kategorií.
                                         Každá oprava obsahuje detailní návod, seznam potřebných nástrojů a bezpečnostní upozornění.
                                     </p>
@@ -649,18 +724,18 @@
                     </main>
 
                     {/* Footer */}
-                    <footer className="bg-gray-800 text-white mt-16">
-                        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <footer className="footer">
+                        <div className="container">
+                            <div className="footer-grid">
                                 <div>
-                                    <h3 className="font-bold text-lg mb-3">FIXO</h3>
-                                    <p className="text-gray-400 text-sm">
+                                    <h3 className="footer-title">FIXO</h3>
+                                    <p className="footer-text">
                                         První světový standard pro vizuální diagnostiku domácích závad.
                                     </p>
                                 </div>
                                 <div>
-                                    <h3 className="font-bold text-lg mb-3">Funkce</h3>
-                                    <ul className="text-gray-400 text-sm space-y-2">
+                                    <h3 className="footer-title">Funkce</h3>
+                                    <ul className="footer-links">
                                         <li>• AI analýza fotografií</li>
                                         <li>• 500+ návodů na opravy</li>
                                         <li>• Bezpečnostní upozornění</li>
@@ -668,14 +743,14 @@
                                     </ul>
                                 </div>
                                 <div>
-                                    <h3 className="font-bold text-lg mb-3">Kontakt</h3>
-                                    <p className="text-gray-400 text-sm">
+                                    <h3 className="footer-title">Kontakt</h3>
+                                    <p className="footer-text">
                                         support@fixo.app<br/>
                                         "Fix Anything. Anywhere. Instantly."
                                     </p>
                                 </div>
                             </div>
-                            <div className="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400 text-sm">
+                            <div className="footer-bottom">
                                 © 2024 FIXO. Všechna práva vyhrazena.
                             </div>
                         </div>

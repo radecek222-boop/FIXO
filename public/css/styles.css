@@ -1,556 +1,134 @@
-/* FIXO - Hlavní styly */
+/**
+ * FIXO - Hlavni styly
+ * ====================
+ * Tento soubor importuje vsechny CSS soubory design systemu.
+ *
+ * Poradi importu je dulezite:
+ * 1. design-system.css - promenne, reset, zakladni typografie
+ * 2. layout.css - kontejnery, grid, header, footer, sekce
+ * 3. components.css - tlacitka, karty, formulare, alerty
+ */
 
-/* ========================================
-   Základní styly a proměnné
-   ======================================== */
+@import url('design-system.css');
+@import url('layout.css');
+@import url('components.css');
 
-:root {
-    --primary-color: #2563eb;
-    --primary-hover: #1d4ed8;
-    --secondary-color: #06b6d4;
-    --success-color: #16a34a;
-    --warning-color: #eab308;
-    --danger-color: #dc2626;
-    --gray-50: #f9fafb;
-    --gray-100: #f3f4f6;
-    --gray-200: #e5e7eb;
-    --gray-300: #d1d5db;
-    --gray-400: #9ca3af;
-    --gray-500: #6b7280;
-    --gray-600: #4b5563;
-    --gray-700: #374151;
-    --gray-800: #1f2937;
-    --gray-900: #111827;
-    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-    --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
-    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-    --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
-    --transition-fast: 150ms ease;
-    --transition-normal: 200ms ease;
-    --transition-slow: 300ms ease;
-}
+/**
+ * Zde lze pridat specificke styly pro FIXO aplikaci,
+ * ktere nejsou soucasti design systemu.
+ *
+ * Vsechny nove styly by mely pouzivat promenne z design-system.css
+ * Priklad: background-color: var(--color-primary);
+ */
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+/* ==========================================
+   FIXO SPECIFICKE STYLY
+   ========================================== */
 
-body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-    background-color: var(--gray-50);
-    color: var(--gray-800);
-    line-height: 1.6;
-}
-
-/* ========================================
-   Utility classes
-   ======================================== */
-
-.container {
-    max-width: 1280px;
-    margin: 0 auto;
-    padding: 0 1rem;
-}
-
-.text-center {
+/* Upload zona */
+.upload-zone {
+    border: 2px dashed var(--color-border);
+    border-radius: var(--radius-xl);
+    padding: var(--space-12);
     text-align: center;
-}
-
-.hidden {
-    display: none !important;
-}
-
-/* ========================================
-   Tlačítka
-   ======================================== */
-
-.btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0.75rem 1.5rem;
-    border-radius: 0.75rem;
-    font-weight: 600;
-    font-size: 1rem;
-    border: none;
+    transition: all var(--transition-normal);
     cursor: pointer;
-    transition: all var(--transition-normal);
-    text-decoration: none;
 }
 
-.btn:hover {
-    transform: scale(1.02);
+.upload-zone:hover {
+    border-color: var(--color-primary);
+    background-color: var(--color-primary-light);
 }
 
-.btn-primary {
-    background-color: var(--primary-color);
-    color: white;
+.upload-zone-active {
+    border-color: var(--color-primary);
+    background-color: var(--color-primary-light);
 }
 
-.btn-primary:hover {
-    background-color: var(--primary-hover);
-}
-
-.btn-success {
-    background-color: var(--success-color);
-    color: white;
-}
-
-.btn-success:hover {
-    background-color: #15803d;
-}
-
-.btn-secondary {
-    background-color: var(--gray-200);
-    color: var(--gray-800);
-}
-
-.btn-secondary:hover {
-    background-color: var(--gray-300);
-}
-
-.btn-lg {
-    padding: 1rem 2rem;
-    font-size: 1.125rem;
-}
-
-.btn-block {
+/* Nahled obrazku */
+.image-preview {
     width: 100%;
+    max-height: 300px;
+    object-fit: cover;
+    border-radius: var(--radius-lg);
 }
 
-/* ========================================
-   Karty
-   ======================================== */
+/* Risk score indikator */
+.risk-indicator {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+}
 
-.card {
-    background: white;
-    border-radius: 1rem;
-    box-shadow: var(--shadow-lg);
+.risk-bar {
+    flex: 1;
+    height: 8px;
+    background-color: var(--color-bg-tertiary);
+    border-radius: var(--radius-full);
     overflow: hidden;
 }
 
-.card-body {
-    padding: 1.5rem;
-}
-
-.card-header {
-    padding: 1.5rem;
-    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-    color: white;
-}
-
-/* ========================================
-   Header / Navigace
-   ======================================== */
-
-.header {
-    background: white;
-    box-shadow: var(--shadow-lg);
-    position: sticky;
-    top: 0;
-    z-index: 50;
-}
-
-.header-content {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem;
-}
-
-.logo {
-    background-color: var(--primary-color);
-    color: white;
-    padding: 0.5rem 1rem;
-    border-radius: 0.5rem;
-    font-weight: 700;
-    font-size: 1.5rem;
-}
-
-.nav {
-    display: flex;
-    gap: 1rem;
-    align-items: center;
-}
-
-.nav-link {
-    padding: 0.5rem 1rem;
-    border-radius: 0.5rem;
-    color: var(--gray-600);
-    text-decoration: none;
-    transition: all var(--transition-fast);
-}
-
-.nav-link:hover,
-.nav-link.active {
-    background-color: var(--gray-100);
-    color: var(--primary-color);
-}
-
-/* ========================================
-   Hero sekce
-   ======================================== */
-
-.hero {
-    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-    color: white;
-    padding: 5rem 1rem;
-    text-align: center;
-}
-
-.hero h1 {
-    font-size: 3rem;
-    font-weight: 700;
-    margin-bottom: 1rem;
-}
-
-.hero p {
-    font-size: 1.25rem;
-    opacity: 0.9;
-    max-width: 600px;
-    margin: 0 auto 2rem;
-}
-
-/* ========================================
-   Grid systém
-   ======================================== */
-
-.grid {
-    display: grid;
-    gap: 1.5rem;
-}
-
-.grid-2 {
-    grid-template-columns: repeat(2, 1fr);
-}
-
-.grid-3 {
-    grid-template-columns: repeat(3, 1fr);
-}
-
-.grid-4 {
-    grid-template-columns: repeat(4, 1fr);
-}
-
-@media (max-width: 1024px) {
-    .grid-4 {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-@media (max-width: 768px) {
-    .grid-2,
-    .grid-3,
-    .grid-4 {
-        grid-template-columns: 1fr;
-    }
-}
-
-/* ========================================
-   Sekce
-   ======================================== */
-
-.section {
-    padding: 4rem 1rem;
-}
-
-.section-gray {
-    background-color: var(--gray-100);
-}
-
-.section-title {
-    font-size: 2rem;
-    font-weight: 700;
-    text-align: center;
-    margin-bottom: 3rem;
-    color: var(--gray-800);
-}
-
-.section-title i {
-    margin-right: 0.75rem;
-    color: var(--primary-color);
-}
-
-/* ========================================
-   Feature karty
-   ======================================== */
-
-.feature-card {
-    background: white;
-    padding: 1.5rem;
-    border-radius: 1rem;
-    box-shadow: var(--shadow);
-    transition: all var(--transition-normal);
-}
-
-.feature-card:hover {
-    box-shadow: var(--shadow-xl);
-    transform: translateY(-4px);
-}
-
-.feature-icon {
-    font-size: 2.5rem;
-    margin-bottom: 1rem;
-}
-
-.feature-title {
-    font-size: 1.25rem;
-    font-weight: 700;
-    margin-bottom: 0.5rem;
-    color: var(--gray-800);
-}
-
-.feature-desc {
-    color: var(--gray-600);
-    font-size: 0.95rem;
-}
-
-/* ========================================
-   Statistiky
-   ======================================== */
-
-.stats {
-    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-    color: white;
-    padding: 4rem 1rem;
-}
-
-.stat-item {
-    text-align: center;
-}
-
-.stat-number {
-    font-size: 3rem;
-    font-weight: 700;
-    margin-bottom: 0.5rem;
-}
-
-.stat-label {
-    opacity: 0.8;
-}
-
-/* ========================================
-   Footer
-   ======================================== */
-
-.footer {
-    background: var(--gray-800);
-    color: white;
-    padding: 3rem 1rem;
-}
-
-.footer-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 2rem;
-}
-
-@media (max-width: 768px) {
-    .footer-grid {
-        grid-template-columns: 1fr;
-    }
-}
-
-.footer-title {
-    font-weight: 700;
-    font-size: 1.125rem;
-    margin-bottom: 1rem;
-}
-
-.footer-text {
-    color: var(--gray-400);
-}
-
-.footer-link {
-    color: var(--gray-400);
-    text-decoration: none;
-    transition: color var(--transition-fast);
-}
-
-.footer-link:hover {
-    color: white;
-}
-
-.footer-bottom {
-    border-top: 1px solid var(--gray-700);
-    margin-top: 2rem;
-    padding-top: 2rem;
-    text-align: center;
-    color: var(--gray-400);
-}
-
-/* ========================================
-   Animace
-   ======================================== */
-
-@keyframes spin {
-    from {
-        transform: rotate(0deg);
-    }
-    to {
-        transform: rotate(360deg);
-    }
-}
-
-.animate-spin {
-    animation: spin 1s linear infinite;
-}
-
-@keyframes pulse {
-    0%, 100% {
-        opacity: 1;
-    }
-    50% {
-        opacity: 0.5;
-    }
-}
-
-.animate-pulse {
-    animation: pulse 2s ease-in-out infinite;
-}
-
-/* ========================================
-   Alerts / Upozornění
-   ======================================== */
-
-.alert {
-    padding: 1rem;
-    border-radius: 0.5rem;
-    border-left: 4px solid;
-    margin-bottom: 1rem;
-}
-
-.alert-warning {
-    background-color: #fef3c7;
-    border-color: var(--warning-color);
-    color: #92400e;
-}
-
-.alert-danger {
-    background-color: #fee2e2;
-    border-color: var(--danger-color);
-    color: #991b1b;
-}
-
-.alert-info {
-    background-color: #dbeafe;
-    border-color: var(--primary-color);
-    color: #1e40af;
-}
-
-.alert-success {
-    background-color: #dcfce7;
-    border-color: var(--success-color);
-    color: #166534;
-}
-
-/* ========================================
-   Progress bar
-   ======================================== */
-
-.progress {
-    height: 0.5rem;
-    background-color: var(--gray-200);
-    border-radius: 9999px;
-    overflow: hidden;
-}
-
-.progress-bar {
+.risk-bar-fill {
     height: 100%;
-    background-color: var(--success-color);
+    border-radius: var(--radius-full);
     transition: width var(--transition-slow);
 }
 
-/* ========================================
-   Badge / Štítky
-   ======================================== */
+.risk-low .risk-bar-fill {
+    background-color: var(--color-success);
+}
 
-.badge {
+.risk-medium .risk-bar-fill {
+    background-color: var(--color-warning);
+}
+
+.risk-high .risk-bar-fill {
+    background-color: var(--color-danger);
+}
+
+/* Tool list */
+.tool-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+}
+
+.tool-item {
     display: inline-flex;
     align-items: center;
-    padding: 0.25rem 0.75rem;
-    border-radius: 9999px;
-    font-size: 0.875rem;
-    font-weight: 600;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-3);
+    background-color: var(--color-bg-primary);
+    border-radius: var(--radius-full);
+    font-size: var(--text-sm);
 }
 
-.badge-success {
-    background-color: #dcfce7;
-    color: #166534;
+/* Repair steps timeline */
+.steps-timeline {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
 }
 
-.badge-warning {
-    background-color: #fef3c7;
-    color: #92400e;
+/* Empty state */
+.empty-state {
+    text-align: center;
+    padding: var(--space-12);
 }
 
-.badge-primary {
-    background-color: #dbeafe;
-    color: #1e40af;
+.empty-state-icon {
+    font-size: var(--text-6xl);
+    color: var(--color-text-light);
+    margin-bottom: var(--space-4);
 }
 
-/* ========================================
-   Formuláře
-   ======================================== */
-
-.form-group {
-    margin-bottom: 1rem;
+.empty-state-title {
+    font-size: var(--text-xl);
+    font-weight: var(--font-semibold);
+    color: var(--color-text-primary);
+    margin-bottom: var(--space-2);
 }
 
-.form-label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-weight: 600;
-    color: var(--gray-700);
-}
-
-.form-input {
-    width: 100%;
-    padding: 0.75rem 1rem;
-    border: 1px solid var(--gray-300);
-    border-radius: 0.5rem;
-    font-size: 1rem;
-    transition: all var(--transition-fast);
-}
-
-.form-input:focus {
-    outline: none;
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-}
-
-/* ========================================
-   Loading spinner
-   ======================================== */
-
-.spinner {
-    width: 4rem;
-    height: 4rem;
-    border: 4px solid var(--gray-200);
-    border-top-color: var(--primary-color);
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-}
-
-/* ========================================
-   Responzivní utility
-   ======================================== */
-
-@media (max-width: 768px) {
-    .hero h1 {
-        font-size: 2rem;
-    }
-
-    .hero p {
-        font-size: 1rem;
-    }
-
-    .section-title {
-        font-size: 1.5rem;
-    }
-
-    .stat-number {
-        font-size: 2rem;
-    }
+.empty-state-desc {
+    color: var(--color-text-muted);
 }
