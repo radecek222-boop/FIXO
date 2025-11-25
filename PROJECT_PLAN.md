@@ -179,12 +179,11 @@ FIXO/
 6. Spustit seed: npx prisma db seed
 ```
 
-### Krok 2: Testování
+### Krok 9: Dalsi vylepseni ✅ HOTOVO
 ```
-1. E2E testy hlavních flows
-2. Unit testy utilit
-3. Performance audit (Lighthouse)
-4. Accessibility audit
+- Pridat vyhledavani v databazi ✅
+- Pridat tmavý režim (dark mode) ✅
+- Pridat offline rezim (PWA) ✅
 ```
 
 ### Krok 3: Nasazení na doménu
