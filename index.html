@@ -9,6 +9,24 @@
     <meta name="description" content="FIXO aplikace - AI analýza fotografií domácích závad s návody na opravu krok za krokem.">
     <meta name="theme-color" content="#2563eb">
 
+    <!-- Google Analytics 4 (replace G-XXXXXXXXXX with your Measurement ID) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-XXXXXXXXXX');
+
+        // Custom events for FIXO
+        window.fixoAnalytics = {
+            trackRepair: (repairType, issue) => gtag('event', 'view_repair', { repair_type: repairType, issue: issue }),
+            trackSearch: (term) => gtag('event', 'search', { search_term: term }),
+            trackAffiliateClick: (shop, item) => gtag('event', 'affiliate_click', { shop: shop, item: item }),
+            trackCraftsmanContact: (category) => gtag('event', 'craftsman_contact', { category: category }),
+            trackPremiumView: (tier) => gtag('event', 'premium_view', { tier: tier })
+        };
+    </script>
+
     <!-- PWA Meta Tags -->
     <link rel="manifest" href="manifest.json">
     <meta name="mobile-web-app-capable" content="yes">
