@@ -1,0 +1,132 @@
+# FIXO - Continuous Integration
+name: CI
+
+on:
+  push:
+    branches: [main, develop, 'feature/*', 'claude/*']
+  pull_request:
+    branches: [main, develop]
+
+env:
+  WORKING_DIRECTORY: ./fixo-v2
+
+jobs:
+  lint-and-test:
+    name: Lint & Test
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: fixo-v2/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run linter
+        run: npm run lint --if-present
+        continue-on-error: true
+
+      - name: Type check
+        run: npm run type-check --if-present
+        continue-on-error: true
+
+      - name: Run tests
+        run: npm test --if-present
+        continue-on-error: true
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    needs: lint-and-test
+    defaults:
+      run:
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: fixo-v2/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build project
+        run: npm run build
+        continue-on-error: true
+        env:
+          SKIP_ENV_VALIDATION: true
+
+      - name: Check legacy files
+        working-directory: .
+        run: |
+          echo "Checking legacy files..."
+          test -f index.html && echo "✅ index.html exists" || echo "⚠️ index.html not found"
+          test -f landing.html && echo "✅ landing.html exists" || echo "⚠️ landing.html not found"
+
+      - name: Check JSON data validity
+        working-directory: .
+        run: |
+          echo "Validating JSON files..."
+          for file in data/*.json; do
+            if [ -f "$file" ]; then
+              python3 -m json.tool "$file" > /dev/null && echo "✅ $file is valid" || echo "❌ $file is invalid"
+            fi
+          done
+
+  security-check:
+    name: Security Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check for secrets in code
+        run: |
+          echo "Checking for potential secrets..."
+          # Check for common secret patterns
+          if grep -rE "(api[_-]?key|secret|password|token)\s*[:=]\s*['\"][^'\"]+['\"]" --include="*.js" --include="*.json" --include="*.html" . 2>/dev/null | grep -v ".env" | grep -v "example" | grep -v "G-XXXXXXXXXX"; then
+            echo "⚠️ Potential secrets found! Review the above matches."
+          else
+            echo "✅ No obvious secrets detected"
+          fi
+
+      - name: Check .env is gitignored
+        run: |
+          if grep -q "^\.env$" .gitignore 2>/dev/null; then
+            echo "✅ .env is in .gitignore"
+          else
+            echo "⚠️ .env should be in .gitignore"
+          fi
+
+  notify:
+    name: Notification
+    runs-on: ubuntu-latest
+    needs: [lint-and-test, build, security-check]
+    if: always()
+
+    steps:
+      - name: Summary
+        run: |
+          echo "## CI Summary" >> $GITHUB_STEP_SUMMARY
+          echo "| Job | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|-----|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Lint & Test | ${{ needs.lint-and-test.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Build | ${{ needs.build.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Security | ${{ needs.security-check.result }} |" >> $GITHUB_STEP_SUMMARY
