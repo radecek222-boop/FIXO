@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { resetExpiredUsageLimits } from "@/lib/usage-limits";
 
 // This endpoint is called by Vercel Cron at midnight daily
-// It resets monthly usage counts on the first day of each month
+// It handles cleanup tasks and usage limit resets
 export async function GET(request: NextRequest) {
   // Verify cron secret (set in Vercel dashboard)
   const authHeader = request.headers.get("authorization");
@@ -14,27 +15,11 @@ export async function GET(request: NextRequest) {
 
   try {
     const now = new Date();
-    const isFirstDayOfMonth = now.getDate() === 1;
 
-    if (isFirstDayOfMonth) {
-      // Reset monthly analyses for all FREE users
-      const result = await prisma.user.updateMany({
-        where: {
-          plan: "FREE",
-        },
-        data: {
-          monthlyAnalysesUsed: 0,
-          analysesResetDate: now,
-        },
-      });
-
-      console.log(`[Cron] Reset monthly analyses for ${result.count} users`);
-
-      return NextResponse.json({
-        success: true,
-        message: `Reset monthly analyses for ${result.count} users`,
-        timestamp: now.toISOString(),
-      });
+    // Reset expired usage limits (users whose reset date has passed)
+    const resetCount = await resetExpiredUsageLimits();
+    if (resetCount > 0) {
+      console.log(`[Cron] Reset usage limits for ${resetCount} users`);
     }
 
     // Daily cleanup tasks
@@ -59,6 +44,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({
       success: true,
       message: "Daily cleanup completed",
+      usageLimitsReset: resetCount,
       deletedTokens: deletedTokens.count,
       deletedSessions: deletedSessions.count,
       timestamp: now.toISOString(),

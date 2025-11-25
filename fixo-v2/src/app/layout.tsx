@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { SessionProvider } from "@/components/providers/session-provider";
 import { Toaster } from "@/components/ui/toaster";
+import { CookieConsent } from "@/components/cookie-consent";
 import "@/styles/globals.css";
 
 export const metadata: Metadata = {
@@ -94,6 +95,7 @@ export default function RootLayout({
         <SessionProvider>
           {children}
           <Toaster />
+          <CookieConsent />
         </SessionProvider>
       </body>
     </html>

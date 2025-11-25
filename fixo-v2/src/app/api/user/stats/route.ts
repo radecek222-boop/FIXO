@@ -1,11 +1,20 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { withRateLimit, RATE_LIMITS, getClientIdentifier } from "@/lib/rate-limit";
 
 // GET /api/user/stats - Get user statistics
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
+    // Rate limiting
+    const clientId = `api:${getClientIdentifier(request)}`;
+    const rateLimitResult = withRateLimit(request, RATE_LIMITS.api, clientId);
+
+    if (!rateLimitResult.success && rateLimitResult.response) {
+      return rateLimitResult.response;
+    }
+
     const session = await getServerSession(authOptions);
 
     if (!session?.user?.id) {

@@ -1,5 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import OpenAI from "openai";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
+import { withRateLimit, RATE_LIMITS, getClientIdentifier } from "@/lib/rate-limit";
+import { AnalyzeRequestSchema, getFirstError } from "@/lib/validation/schemas";
+import { canUserAnalyze, incrementAnalysisCount } from "@/lib/usage-limits";
 
 // Initialize OpenAI client
 const openai = new OpenAI({
@@ -8,18 +13,73 @@ const openai = new OpenAI({
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
-    const { image, description } = body;
+    // Rate limiting - restrict AI analysis to prevent abuse
+    const clientId = `analyze:${getClientIdentifier(request)}`;
+    const rateLimitResult = withRateLimit(request, RATE_LIMITS.analyze, clientId);
+
+    if (!rateLimitResult.success && rateLimitResult.response) {
+      return rateLimitResult.response;
+    }
+
+    // Get user session for usage limits
+    const session = await getServerSession(authOptions);
+    const userId = session?.user?.id;
+
+    // Check usage limits for authenticated users
+    if (userId) {
+      const usageCheck = await canUserAnalyze(userId);
+      if (!usageCheck.allowed) {
+        return NextResponse.json(
+          {
+            success: false,
+            error: usageCheck.reason,
+            usage: {
+              used: usageCheck.status.used,
+              limit: usageCheck.status.limit,
+              remaining: usageCheck.status.remaining,
+            },
+          },
+          { status: 429 }
+        );
+      }
+    }
+
+    // Parse and validate request body
+    let body;
+    try {
+      body = await request.json();
+    } catch {
+      return NextResponse.json(
+        { success: false, error: "Neplatný JSON formát" },
+        { status: 400 }
+      );
+    }
+
+    // Zod validation
+    const validation = AnalyzeRequestSchema.safeParse(body);
+    if (!validation.success) {
+      return NextResponse.json(
+        { success: false, error: getFirstError(validation.error) },
+        { status: 400 }
+      );
+    }
+
+    const { image, description } = validation.data;
 
     if (!image && !description) {
       return NextResponse.json(
-        { success: false, error: "No image or description provided" },
+        { success: false, error: "Obrázek nebo popis je povinný" },
         { status: 400 }
       );
     }
 
     // Check if OpenAI API key is configured
     if (!process.env.OPENAI_API_KEY) {
+      // Increment usage for authenticated users even in demo mode
+      if (userId) {
+        await incrementAnalysisCount(userId);
+      }
+
       // Return mock response for development/demo
       return NextResponse.json({
         success: true,
@@ -93,6 +153,11 @@ Odpověz POUZE ve formátu JSON:
     } catch {
       // Return fallback response if parsing fails
       result = getMockAnalysisResult();
+    }
+
+    // Increment usage count after successful analysis
+    if (userId) {
+      await incrementAnalysisCount(userId);
     }
 
     return NextResponse.json({

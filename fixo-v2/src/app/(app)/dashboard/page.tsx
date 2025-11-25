@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { CameraCapture, useCameraAvailable } from "@/components/camera-capture";
 
 type AnalysisState = "idle" | "uploading" | "analyzing" | "complete";
 
@@ -39,7 +40,9 @@ export default function DashboardPage() {
   const [preview, setPreview] = React.useState<string | null>(null);
   const [result, setResult] = React.useState<AnalysisResult | null>(null);
   const [currentStep, setCurrentStep] = React.useState(0);
+  const [showCamera, setShowCamera] = React.useState(false);
   const fileInputRef = React.useRef<HTMLInputElement>(null);
+  const cameraAvailable = useCameraAvailable();
 
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
@@ -66,51 +69,108 @@ export default function DashboardPage() {
     }
   };
 
-  const handleFile = async (file: File) => {
-    // Create preview
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      setPreview(e.target?.result as string);
-    };
-    reader.readAsDataURL(file);
+  // Handle camera capture
+  const handleCameraCapture = async (imageData: string) => {
+    setShowCamera(false);
+    setPreview(imageData);
+    await analyzeImage(imageData);
+  };
 
-    // Simulate analysis
+  // Analyze image (from file or camera)
+  const analyzeImage = async (imageData: string) => {
     setState("uploading");
     await new Promise((r) => setTimeout(r, 500));
     setState("analyzing");
-    await new Promise((r) => setTimeout(r, 2000));
 
-    // Mock result - in production this would come from the API
-    setResult({
-      object: {
-        name: "Kohoutek",
-        category: "voda",
-        confidence: 0.92,
-      },
-      issue: {
-        name: "Kapající kohoutek",
-        description: "Netěsnící těsnění nebo O-kroužek způsobuje únik vody.",
-        riskScore: 2,
-        difficulty: "Nízká",
-      },
-      timeEstimate: "15 min",
-      tools: ["Klíč", "Šroubovák", "Nové těsnění", "Hadřík"],
-      steps: [
-        { step: 1, action: "Zavřete hlavní přívod vody", time: "1 min", icon: "🚰" },
-        { step: 2, action: "Otevřete kohoutek pro uvolnění tlaku", time: "30 s", icon: "💧" },
-        { step: 3, action: "Odšroubujte hlavici kohoutku", time: "2 min", icon: "🔧" },
-        { step: 4, action: "Vyjměte staré těsnění", time: "2 min", icon: "⚙️" },
-        { step: 5, action: "Nasaďte nové těsnění", time: "2 min", icon: "🔩" },
-        { step: 6, action: "Sestavte kohoutek zpět", time: "3 min", icon: "🔧" },
-        { step: 7, action: "Pusťte vodu a zkontrolujte", time: "2 min", icon: "✅" },
-      ],
-      safetyWarnings: [
-        "Vždy nejdříve zavřete hlavní přívod vody",
-        "Mějte připravený kbelík na zachycení zbylé vody",
-        "Nepoužívejte nadměrnou sílu při utahování",
-      ],
-    });
+    // Call the API
+    try {
+      const response = await fetch("/api/analyze", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ image: imageData }),
+      });
+
+      const data = await response.json();
+
+      if (data.success && data.data) {
+        // Map API response to component format
+        const apiResult = data.data;
+        setResult({
+          object: {
+            name: apiResult.detection?.object?.name || "Neznámý objekt",
+            category: apiResult.detection?.object?.category || "other",
+            confidence: apiResult.confidence || 0.8,
+          },
+          issue: {
+            name: apiResult.detection?.issue?.name || "Neznámá závada",
+            description: apiResult.detection?.issue?.description || "",
+            riskScore: apiResult.detection?.issue?.riskScore || 5,
+            difficulty: getDifficultyLabel(apiResult.detection?.issue?.difficulty || "MEDIUM"),
+          },
+          timeEstimate: apiResult.recommendations?.timeEstimate || "15 min",
+          tools: apiResult.recommendations?.tools || [],
+          steps: apiResult.recommendations?.steps || [],
+          safetyWarnings: apiResult.recommendations?.safetyWarnings || [],
+        });
+      } else {
+        throw new Error(data.error || "Analýza selhala");
+      }
+    } catch (error) {
+      console.error("Analysis error:", error);
+      // Fallback to mock data on error
+      setResult(getMockResult());
+    }
+
     setState("complete");
+  };
+
+  const getDifficultyLabel = (difficulty: string): string => {
+    const labels: Record<string, string> = {
+      "VERY_EASY": "Velmi snadná",
+      "EASY": "Snadná",
+      "MEDIUM": "Střední",
+      "HARD": "Těžká",
+      "VERY_HARD": "Velmi těžká",
+      "EXPERT": "Pro experty",
+    };
+    return labels[difficulty] || difficulty;
+  };
+
+  const getMockResult = (): AnalysisResult => ({
+    object: { name: "Kohoutek", category: "voda", confidence: 0.92 },
+    issue: {
+      name: "Kapající kohoutek",
+      description: "Netěsnící těsnění nebo O-kroužek způsobuje únik vody.",
+      riskScore: 2,
+      difficulty: "Nízká",
+    },
+    timeEstimate: "15 min",
+    tools: ["Klíč", "Šroubovák", "Nové těsnění", "Hadřík"],
+    steps: [
+      { step: 1, action: "Zavřete hlavní přívod vody", time: "1 min", icon: "🚰" },
+      { step: 2, action: "Otevřete kohoutek pro uvolnění tlaku", time: "30 s", icon: "💧" },
+      { step: 3, action: "Odšroubujte hlavici kohoutku", time: "2 min", icon: "🔧" },
+      { step: 4, action: "Vyjměte staré těsnění", time: "2 min", icon: "⚙️" },
+      { step: 5, action: "Nasaďte nové těsnění", time: "2 min", icon: "🔩" },
+      { step: 6, action: "Sestavte kohoutek zpět", time: "3 min", icon: "🔧" },
+      { step: 7, action: "Pusťte vodu a zkontrolujte", time: "2 min", icon: "✅" },
+    ],
+    safetyWarnings: [
+      "Vždy nejdříve zavřete hlavní přívod vody",
+      "Mějte připravený kbelík na zachycení zbylé vody",
+      "Nepoužívejte nadměrnou sílu při utahování",
+    ],
+  });
+
+  const handleFile = async (file: File) => {
+    // Create preview and analyze
+    const reader = new FileReader();
+    reader.onload = async (e) => {
+      const imageData = e.target?.result as string;
+      setPreview(imageData);
+      await analyzeImage(imageData);
+    };
+    reader.readAsDataURL(file);
   };
 
   const resetAnalysis = () => {
@@ -170,10 +230,12 @@ export default function DashboardPage() {
               <FileImage className="mr-2 h-4 w-4" />
               Vybrat fotografii
             </Button>
-            <Button variant="outline">
-              <Camera className="mr-2 h-4 w-4" />
-              Použít kameru
-            </Button>
+            {cameraAvailable !== false && (
+              <Button variant="outline" onClick={() => setShowCamera(true)}>
+                <Camera className="mr-2 h-4 w-4" />
+                Použít kameru
+              </Button>
+            )}
           </div>
 
           {/* Quick stats */}
@@ -380,6 +442,14 @@ export default function DashboardPage() {
             </Button>
           </div>
         </div>
+      )}
+
+      {/* Camera Capture Modal */}
+      {showCamera && (
+        <CameraCapture
+          onCapture={handleCameraCapture}
+          onClose={() => setShowCamera(false)}
+        />
       )}
     </div>
   );

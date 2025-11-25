@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { withRateLimit, RATE_LIMITS, getClientIdentifier } from "@/lib/rate-limit";
 
 // Mock repair data - in production this would come from Prisma
 const mockRepairs = {
@@ -137,6 +138,14 @@ const mockRepairs = {
 
 // GET /api/repairs - Get all repairs or filter by category
 export async function GET(request: NextRequest) {
+  // Rate limiting
+  const clientId = `api:${getClientIdentifier(request)}`;
+  const rateLimitResult = withRateLimit(request, RATE_LIMITS.api, clientId);
+
+  if (!rateLimitResult.success && rateLimitResult.response) {
+    return rateLimitResult.response;
+  }
+
   const searchParams = request.nextUrl.searchParams;
   const category = searchParams.get("category");
   const search = searchParams.get("q");

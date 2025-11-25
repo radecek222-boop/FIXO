@@ -218,7 +218,7 @@ export default function PricingPage() {
                   },
                   {
                     q: "Podporujete platbu kartou?",
-                    a: "Ano, přijímáme všechny hlavní platební karty (Visa, Mastercard, Maestro) přes zabezpečenou platební bránu Stripe.",
+                    a: "Ano, přijímáme všechny hlavní platební karty (Visa, Mastercard, Maestro) přes zabezpečenou platební bránu.",
                   },
                 ].map((faq) => (
                   <div key={faq.q} className="border-b pb-6">

@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { withRateLimit, RATE_LIMITS, getClientIdentifier } from "@/lib/rate-limit";
+import { UserUpdateSchema, getFirstError } from "@/lib/validation/schemas";
 
 // GET /api/user - Get current user data
 export async function GET() {
@@ -58,28 +60,59 @@ export async function GET() {
 // PATCH /api/user - Update current user data
 export async function PATCH(request: NextRequest) {
   try {
+    // Rate limiting
+    const clientId = `userUpdate:${getClientIdentifier(request)}`;
+    const rateLimitResult = withRateLimit(request, RATE_LIMITS.userUpdate, clientId);
+
+    if (!rateLimitResult.success && rateLimitResult.response) {
+      return rateLimitResult.response;
+    }
+
     const session = await getServerSession(authOptions);
 
     if (!session?.user?.id) {
       return NextResponse.json(
-        { success: false, error: "Unauthorized" },
+        { success: false, error: "Neautorizováno" },
         { status: 401 }
       );
     }
 
-    const body = await request.json();
-    const { name } = body;
+    // Parse and validate request body
+    let body;
+    try {
+      body = await request.json();
+    } catch {
+      return NextResponse.json(
+        { success: false, error: "Neplatný JSON formát" },
+        { status: 400 }
+      );
+    }
+
+    // Zod validation
+    const validation = UserUpdateSchema.safeParse(body);
+    if (!validation.success) {
+      return NextResponse.json(
+        { success: false, error: getFirstError(validation.error) },
+        { status: 400 }
+      );
+    }
+
+    const { name, image } = validation.data;
 
     // Only allow updating certain fields
-    const updateData: { name?: string } = {};
+    const updateData: { name?: string; image?: string | null } = {};
 
     if (name !== undefined) {
       updateData.name = name;
     }
 
+    if (image !== undefined) {
+      updateData.image = image;
+    }
+
     if (Object.keys(updateData).length === 0) {
       return NextResponse.json(
-        { success: false, error: "No valid fields to update" },
+        { success: false, error: "Žádná platná pole k aktualizaci" },
         { status: 400 }
       );
     }

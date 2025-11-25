@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { withRateLimit, RATE_LIMITS, getClientIdentifier } from "@/lib/rate-limit";
 
 // Mock repair data - same as in /api/repairs/route.ts
 // In production, this would be fetched from Prisma
@@ -43,6 +44,14 @@ export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
+  // Rate limiting
+  const clientId = `api:${getClientIdentifier(request)}`;
+  const rateLimitResult = withRateLimit(request, RATE_LIMITS.api, clientId);
+
+  if (!rateLimitResult.success && rateLimitResult.response) {
+    return rateLimitResult.response;
+  }
+
   const repair = mockRepairs[params.id];
 
   if (!repair) {
