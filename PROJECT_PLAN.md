@@ -10,10 +10,10 @@
 ```
 📅 Posledni aktualizace: 2025-11-25
 👤 Aktualizoval: Claude AI
-📍 Aktualni faze: FAZE 8 PROBIHA - Testovani
-✅ Posledni dokonceny krok: Testovani - opraveny chyby (rok 2024->2025, technologie badge)
-⏳ Aktualne se dela: Revize kodu a oprava nalezenych chyb
-🔜 Dalsi krok: FAZE 9 - Optimalizace nebo FAZE 10 - Finalizace
+📍 Aktualni faze: FAZE 9 PROBIHA - Optimalizace
+✅ Posledni dokonceny krok: Refaktoring - data extrahována do samostatných souborů (JSON + JS)
+⏳ Aktualne se dela: Optimalizace backendu a dat
+🔜 Dalsi krok: FAZE 10 - Finalizace
 ```
 
 ---
@@ -47,23 +47,32 @@
 
 ```
 FIXO/
-├── index.html              # Landing page (hlavni informacni stranka)
-├── app.html                # FIXO aplikace (React)
+├── index.html              # Hlavni aplikace (React)
+├── landing.html            # Landing page
 ├── .env                    # ⚠️ TAJNE - API klice (NIKDY NECOMMITOVAT!)
 ├── .env.example            # Sablona pro .env soubor
 ├── PROJECT_PLAN.md         # TENTO DOKUMENT - ridici plan
 ├── README.md               # Dokumentace projektu
+├── data/                   # 📦 JSON DATA (pro API a offline)
+│   ├── languages.json      # Seznam 50+ jazyků
+│   ├── translations.json   # Překlady UI (cs, en, de, sk, pl, es, fr)
+│   └── repairs.json        # Databáze oprav a kategorií
 ├── public/
 │   ├── css/
-│   │   ├── design-system.css   # ✅ CSS promenne, barvy, fonty (312 radku)
-│   │   ├── components.css      # ✅ Komponenty (tlacitka, karty) (660 radku)
-│   │   ├── layout.css          # ✅ Layout (header, footer, grid) (603 radku)
+│   │   ├── design-system.css   # ✅ CSS promenne, barvy, fonty
+│   │   ├── components.css      # ✅ Komponenty (tlacitka, karty)
+│   │   ├── layout.css          # ✅ Layout (header, footer, grid)
 │   │   └── styles.css          # ✅ Hlavni soubor - importuje ostatni
 │   ├── js/
-│   │   └── app.js              # JavaScript aplikace
+│   │   ├── app.js              # JavaScript aplikace
+│   │   ├── fixo-data-loader.js # Loader pro data (API/JSON fallback)
+│   │   └── data/               # JS moduly s daty
+│   │       ├── languages.js    # Seznam jazyků
+│   │       ├── translations.js # Překlady
+│   │       └── repair-database.js # Databáze oprav
 │   └── images/
-│       └── [prazdne]           # Obrazky a ikony
-├── server.js               # Backend (pro lokalni vyvoj, NE pro GitHub Pages)
+│       └── [obrazky]           # Obrazky a ikony
+├── server.js               # Backend s API endpointy
 ├── package.json
 ├── Dockerfile
 ├── docker-compose.yml
@@ -224,6 +233,9 @@ FIXO/
 
 | Datum | Autor | Zmena |
 |-------|-------|-------|
+| 2025-11-25 | Claude AI | **FAZE 9** - Extrakce dat do JSON souborů (languages, translations, repairs) |
+| 2025-11-25 | Claude AI | **FAZE 9** - Nové API endpointy (/api/languages, /api/translations, /api/repairs) |
+| 2025-11-25 | Claude AI | **FAZE 9** - JS data moduly pro frontend (fixo-data-loader.js) |
 | 2025-11-25 | Claude AI | **FAZE 8** - Testovani, oprava roku 2024->2025, presun jazykoveho volice |
 | 2025-11-25 | Claude AI | **FAZE 6 HOTOVA** - Historie oprav (filtrovani, export CSV, detaily) |
 | 2025-11-25 | Claude AI | Predgenerovane preklady pro GitHub Pages (7 jazyku offline) |
