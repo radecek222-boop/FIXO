@@ -2964,40 +2964,42 @@
                                     <span className="logo">{t('appName')}</span>
                                 </div>
 
-                                {/* Desktop Dark Mode Toggle */}
-                                <button
-                                    onClick={toggleDarkMode}
-                                    className="dark-mode-toggle-desktop"
-                                    title={darkMode ? 'Přepnout na světlý režim' : 'Přepnout na tmavý režim'}
-                                    style={{
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                        width: '40px',
-                                        height: '40px',
-                                        background: 'var(--color-bg-secondary)',
-                                        border: '1px solid var(--color-border)',
-                                        borderRadius: 'var(--radius-lg)',
-                                        cursor: 'pointer',
-                                        transition: 'var(--transition-fast)',
-                                        marginRight: 'var(--space-3)'
-                                    }}
-                                >
-                                    <i
-                                        className={`fas ${darkMode ? 'fa-sun' : 'fa-moon'}`}
+                                {/* Right side - Dark Mode Toggle + Hamburger */}
+                                <div style={{display: 'flex', alignItems: 'center', gap: 'var(--space-2)'}}>
+                                    {/* Desktop Dark Mode Toggle */}
+                                    <button
+                                        onClick={toggleDarkMode}
+                                        className="dark-mode-toggle-desktop"
+                                        title={darkMode ? 'Přepnout na světlý režim' : 'Přepnout na tmavý režim'}
                                         style={{
-                                            color: darkMode ? '#fbbf24' : '#6366f1',
-                                            fontSize: 'var(--text-lg)'
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            width: '40px',
+                                            height: '40px',
+                                            background: 'var(--color-bg-secondary)',
+                                            border: '1px solid var(--color-border)',
+                                            borderRadius: 'var(--radius-lg)',
+                                            cursor: 'pointer',
+                                            transition: 'var(--transition-fast)'
                                         }}
-                                    ></i>
-                                </button>
+                                    >
+                                        <i
+                                            className={`fas ${darkMode ? 'fa-sun' : 'fa-moon'}`}
+                                            style={{
+                                                color: darkMode ? '#fbbf24' : '#6366f1',
+                                                fontSize: 'var(--text-lg)'
+                                            }}
+                                        ></i>
+                                    </button>
 
-                                {/* Hamburger Button */}
-                                <button className={`hamburger-btn ${menuOpen ? 'open' : ''}`} onClick={toggleMenu}>
-                                    <span></span>
-                                    <span></span>
-                                    <span></span>
-                                </button>
+                                    {/* Hamburger Button */}
+                                    <button className={`hamburger-btn ${menuOpen ? 'open' : ''}`} onClick={toggleMenu}>
+                                        <span></span>
+                                        <span></span>
+                                        <span></span>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </header>
