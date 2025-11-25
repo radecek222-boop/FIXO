@@ -3349,7 +3349,7 @@
                                         </div>
 
                                         {/* 💰 Savings Calculator - DIY vs Professional */}
-                                        {analysisResult.issue.costEstimate && (
+                                        {analysisResult.issue.materialCost && analysisResult.issue.professionalCost && (
                                             <div style={{
                                                 background: 'linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%)',
                                                 border: '2px solid #10b981',
@@ -3382,7 +3382,7 @@
                                                             <i className="fas fa-hand-paper mr-1"></i> DIY oprava
                                                         </div>
                                                         <div style={{fontSize: 'var(--text-2xl)', fontWeight: 'var(--font-bold)', color: '#065f46'}}>
-                                                            {analysisResult.issue.costEstimate.min}-{analysisResult.issue.costEstimate.max} Kč
+                                                            {analysisResult.issue.materialCost.min}-{analysisResult.issue.materialCost.max} Kč
                                                         </div>
                                                         <div style={{fontSize: 'var(--text-xs)', color: 'var(--color-text-muted)'}}>
                                                             pouze materiál
@@ -3401,7 +3401,7 @@
                                                             <i className="fas fa-user-tie mr-1"></i> Profesionál
                                                         </div>
                                                         <div style={{fontSize: 'var(--text-2xl)', fontWeight: 'var(--font-bold)', color: 'var(--color-text-secondary)'}}>
-                                                            {Math.round((analysisResult.issue.costEstimate.min + analysisResult.issue.costEstimate.max) / 2 * 5)}-{Math.round((analysisResult.issue.costEstimate.min + analysisResult.issue.costEstimate.max) / 2 * 8)} Kč
+                                                            {analysisResult.issue.professionalCost.min}-{analysisResult.issue.professionalCost.max} Kč
                                                         </div>
                                                         <div style={{fontSize: 'var(--text-xs)', color: 'var(--color-text-muted)'}}>
                                                             materiál + práce
@@ -3421,10 +3421,10 @@
                                                         <i className="fas fa-star mr-1"></i> Tvoje úspora s FIXO
                                                     </div>
                                                     <div style={{fontSize: 'var(--text-3xl)', fontWeight: 'var(--font-bold)'}}>
-                                                        {Math.round((analysisResult.issue.costEstimate.min + analysisResult.issue.costEstimate.max) / 2 * 4)}-{Math.round((analysisResult.issue.costEstimate.min + analysisResult.issue.costEstimate.max) / 2 * 7)} Kč
+                                                        {analysisResult.issue.professionalCost.min - analysisResult.issue.materialCost.max}-{analysisResult.issue.professionalCost.max - analysisResult.issue.materialCost.min} Kč
                                                     </div>
                                                     <div style={{fontSize: 'var(--text-xs)', opacity: 0.9}}>
-                                                        To je {Math.round(((analysisResult.issue.costEstimate.min + analysisResult.issue.costEstimate.max) / 2 * 5.5) / 79)} měsíců FIXO Premium zdarma! 💪
+                                                        To je {Math.round((analysisResult.issue.professionalCost.min + analysisResult.issue.professionalCost.max) / 2 / 79)} měsíců FIXO Premium zdarma! 💪
                                                     </div>
                                                 </div>
                                             </div>
