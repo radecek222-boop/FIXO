@@ -8,12 +8,12 @@
 ## AKTUALNI STAV
 
 ```
-📅 Posledni aktualizace: 2024-11-25
+📅 Posledni aktualizace: 2025-11-25
 👤 Aktualizoval: Claude AI
-📍 Aktualni faze: FAZE 3 - Design system
-✅ Posledni dokonceny krok: Presun HTML do korene pro GitHub Pages
-⏳ Aktualne se dela: Vytvoreni PROJECT_PLAN.md
-🔜 Dalsi krok: Vytvorit design-system.css
+📍 Aktualni faze: FAZE 5 - Hlavni stranka
+✅ Posledni dokonceny krok: FAZE 3 - Design system kompletne hotov
+⏳ Aktualne se dela: Aplikace design systemu na HTML stranky
+🔜 Dalsi krok: Upravit index.html a app.html s novymi CSS tridami
 ```
 
 ---
@@ -52,10 +52,10 @@ FIXO/
 ├── README.md               # Dokumentace projektu
 ├── public/
 │   ├── css/
-│   │   ├── design-system.css   # [VYTVORIT] CSS promenne, barvy, fonty
-│   │   ├── components.css      # [VYTVORIT] Komponenty (tlacitka, karty)
-│   │   ├── layout.css          # [VYTVORIT] Layout (header, footer, grid)
-│   │   └── styles.css          # Stary soubor - NAHRADIT
+│   │   ├── design-system.css   # ✅ CSS promenne, barvy, fonty (312 radku)
+│   │   ├── components.css      # ✅ Komponenty (tlacitka, karty) (660 radku)
+│   │   ├── layout.css          # ✅ Layout (header, footer, grid) (603 radku)
+│   │   └── styles.css          # ✅ Hlavni soubor - importuje ostatni
 │   ├── js/
 │   │   └── app.js              # JavaScript aplikace
 │   └── images/
@@ -82,19 +82,16 @@ FIXO/
 - [x] Struktura projektu vytvorena
 - [x] GitHub Pages nakonfigurovano
 
-### FAZE 3: UI/UX Design system ⏳ PROBIHA
-- [ ] **design-system.css** - CSS promenne (barvy, fonty, spacing, radius)
-- [ ] **components.css** - Tlacitka, karty, formulare, alerty, badges
-- [ ] **layout.css** - Header, footer, grid system, kontejnery
-- [ ] Dokumentace komponent
+### FAZE 3: UI/UX Design system ✅ HOTOVO
+- [x] **design-system.css** - CSS promenne (barvy, fonty, spacing, radius)
+- [x] **components.css** - Tlacitka, karty, formulare, alerty, badges
+- [x] **layout.css** - Header, footer, grid system, kontejnery
+- [x] **styles.css** - Hlavni vstupni bod s importy
 
-### FAZE 4: Sablony (Templates) 🔜 DALSI
-- [ ] Zakladni layout stranka (header + content + footer)
-- [ ] Sablona pro formulare
-- [ ] Sablona pro seznamy/karty
-- [ ] Sablona pro modaly
+### FAZE 4: Sablony (Templates) ⏭️ PRESKOCENO
+> Sablony budou vytvoreny podle potreby v ramci FAZE 5-6
 
-### FAZE 5: Hlavni stranka ⬚ CEKA
+### FAZE 5: Hlavni stranka ⏳ PROBIHA
 - [ ] Aplikovat design system na index.html
 - [ ] Aplikovat design system na app.html
 - [ ] Otestovat na GitHub Pages
@@ -133,54 +130,31 @@ FIXO/
 
 ## DALSI KROKY (co delat ted)
 
-### Krok 1: Vytvorit design-system.css
+### Krok 1: Aplikovat design system na index.html ⏳
 ```
-Soubor: public/css/design-system.css
-Obsah:
-- CSS promenne (:root)
-- Barvy (primary, secondary, success, warning, danger)
-- Texty (primary, secondary, muted)
-- Pozadi (primary, secondary, tertiary)
-- Fonty (family, sizes, weights)
-- Spacing (xs, sm, md, lg, xl, 2xl)
-- Border radius (sm, md, lg, full)
-- Shadows (sm, md, lg, xl)
-- Transitions
-- Z-index vrstvy
+Soubor: index.html
+Ukoly:
+- Zmenit <link> z styles.css na public/css/styles.css
+- Nahradit Tailwind tridy vlastnimi tridami z design systemu
+- Pouzit: .header, .nav, .hero, .section, .card, .btn-primary, .footer
+- Otestovat lokalne a na GitHub Pages
 ```
 
-### Krok 2: Vytvorit components.css
+### Krok 2: Aplikovat design system na app.html
 ```
-Soubor: public/css/components.css
-Obsah:
-- Tlacitka (.btn, .btn-primary, .btn-secondary, .btn-success, .btn-danger)
-- Karty (.card, .card-header, .card-body, .card-footer)
-- Formulare (.form-group, .form-label, .form-input, .form-select)
-- Alerty (.alert, .alert-success, .alert-warning, .alert-danger)
-- Badges (.badge, .badge-primary, .badge-success)
-- Progress bar (.progress, .progress-bar)
-- Spinner (.spinner)
+Soubor: app.html
+Ukoly:
+- Zmenit <link> na public/css/styles.css
+- Nahradit Tailwind tridy vlastnimi CSS tridami
+- Upravit React komponenty aby pouzivaly nove tridy
 ```
 
-### Krok 3: Vytvorit layout.css
+### Krok 3: Otestovat responzivitu
 ```
-Soubor: public/css/layout.css
-Obsah:
-- Reset zakladni
-- Container (.container, .container-sm, .container-lg)
-- Grid system (.grid, .grid-2, .grid-3, .grid-4)
-- Flexbox helpers (.flex, .flex-center, .flex-between)
-- Header (.header, .header-content, .logo, .nav)
-- Footer (.footer)
-- Sekce (.section, .section-gray)
-- Spacing utility classes (.mt-1, .mb-2, .p-4, atd.)
-```
-
-### Krok 4: Upravit HTML soubory
-```
-- Pridat <link> na nove CSS soubory
-- Nahradit Tailwind tridy vlastnimi tridami
-- Otestovat
+- Mobil (< 768px)
+- Tablet (768px - 1024px)
+- Desktop (> 1024px)
+- Opravit pripadne problemy
 ```
 
 ---
@@ -242,6 +216,11 @@ Obsah:
 
 | Datum | Autor | Zmena |
 |-------|-------|-------|
+| 2025-11-25 | Claude AI | **FAZE 3 HOTOVA** - Kompletni design system |
+| 2025-11-25 | Claude AI | Vytvoreni design-system.css (CSS promenne) |
+| 2025-11-25 | Claude AI | Vytvoreni components.css (tlacitka, karty, formulare) |
+| 2025-11-25 | Claude AI | Vytvoreni layout.css (grid, header, footer, sekce) |
+| 2025-11-25 | Claude AI | Aktualizace styles.css s importy |
 | 2024-11-25 | Claude AI | Vytvoreni PROJECT_PLAN.md |
 | 2024-11-25 | Claude AI | Presun HTML do korene pro GitHub Pages |
 | 2024-11-25 | Claude AI | Restrukturace projektu (public/ slozka) |
