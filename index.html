@@ -9,6 +9,14 @@
     <meta name="description" content="FIXO aplikace - AI analýza fotografií domácích závad s návody na opravu krok za krokem.">
     <meta name="theme-color" content="#2563eb">
 
+    <!-- PWA Meta Tags -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="FIXO">
+    <link rel="apple-touch-icon" href="public/icons/icon-192x192.png">
+
     <!-- Preconnect for faster CDN loading -->
     <link rel="preconnect" href="https://unpkg.com" crossorigin>
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
@@ -226,6 +234,127 @@
             border-radius: var(--radius-xl);
             text-align: center;
             box-shadow: var(--shadow-xl);
+        }
+
+        /* Hamburger Menu */
+        .hamburger-btn {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            width: 30px;
+            height: 24px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            z-index: 1001;
+        }
+        .hamburger-btn span {
+            width: 30px;
+            height: 3px;
+            background: var(--color-text-primary);
+            border-radius: 3px;
+            transition: all 0.3s ease;
+        }
+        .hamburger-btn.open span:nth-child(1) {
+            transform: rotate(45deg) translate(6px, 6px);
+        }
+        .hamburger-btn.open span:nth-child(2) {
+            opacity: 0;
+        }
+        .hamburger-btn.open span:nth-child(3) {
+            transform: rotate(-45deg) translate(6px, -6px);
+        }
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 80%;
+            max-width: 320px;
+            height: 100vh;
+            background: var(--color-bg-primary);
+            box-shadow: var(--shadow-xl);
+            transition: right 0.3s ease;
+            z-index: 1000;
+            padding-top: 80px;
+            overflow-y: auto;
+        }
+        .mobile-menu.open {
+            right: 0;
+        }
+        .mobile-menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 999;
+        }
+        .mobile-menu-overlay.open {
+            opacity: 1;
+            visibility: visible;
+        }
+        .mobile-menu-item {
+            display: flex;
+            align-items: center;
+            padding: var(--space-4) var(--space-6);
+            color: var(--color-text-primary);
+            text-decoration: none;
+            border-bottom: 1px solid var(--color-border);
+            transition: background 0.2s;
+            cursor: pointer;
+        }
+        .mobile-menu-item:hover, .mobile-menu-item.active {
+            background: var(--color-primary-light);
+            color: var(--color-primary);
+        }
+        .mobile-menu-item i {
+            width: 24px;
+            margin-right: var(--space-3);
+        }
+
+        /* Hero section for single page */
+        .hero-section {
+            background: linear-gradient(135deg, var(--color-primary) 0%, #1e40af 100%);
+            color: white;
+            padding: var(--space-8) var(--space-4);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: pulse 4s ease-in-out infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        /* PWA Install Banner */
+        .pwa-install-banner {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--color-bg-primary);
+            padding: var(--space-4);
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.15);
+            z-index: 998;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: var(--space-3);
         }
     </style>
 </head>
@@ -1270,6 +1399,47 @@
             const [brushSize, setBrushSize] = useState(5);
             const [annotatedImage, setAnnotatedImage] = useState(null);
 
+            // Hamburger menu state
+            const [menuOpen, setMenuOpen] = useState(false);
+
+            // PWA install state
+            const [deferredPrompt, setDeferredPrompt] = useState(null);
+            const [showInstallBanner, setShowInstallBanner] = useState(false);
+
+            // PWA Service Worker registration
+            useEffect(() => {
+                if ('serviceWorker' in navigator) {
+                    navigator.serviceWorker.register('service-worker.js')
+                        .then(reg => console.log('FIXO: Service Worker registrován', reg))
+                        .catch(err => console.log('FIXO: Service Worker chyba', err));
+                }
+
+                // PWA install prompt
+                window.addEventListener('beforeinstallprompt', (e) => {
+                    e.preventDefault();
+                    setDeferredPrompt(e);
+                    setShowInstallBanner(true);
+                });
+            }, []);
+
+            const handleInstallClick = async () => {
+                if (!deferredPrompt) return;
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                console.log('FIXO: Instalace:', outcome);
+                setDeferredPrompt(null);
+                setShowInstallBanner(false);
+            };
+
+            const toggleMenu = () => {
+                setMenuOpen(!menuOpen);
+            };
+
+            const navigateTo = (view) => {
+                setCurrentView(view);
+                setMenuOpen(false);
+            };
+
             // Filtrovat historii podle stavu
             const getFilteredHistory = () => {
                 if (historyFilter === 'all') return repairHistory;
@@ -1769,91 +1939,124 @@
                         </div>
                     )}
 
-                    {/* Header */}
-                    <header className="header">
+                    {/* Header s Hamburger Menu */}
+                    <header className="header" style={{position: 'fixed', top: 0, left: 0, right: 0, zIndex: 100}}>
                         <div className="container">
                             <div className="header-content">
-                                <div className="flex items-center" style={{cursor: 'pointer'}} onClick={() => setCurrentView('home')}>
-                                    <span className="logo mr-4">{t('appName')}</span>
-                                    <span className="text-secondary hide-mobile" style={{fontSize: 'var(--text-sm)'}}>
-                                        {t('appSlogan')}
-                                    </span>
+                                <div className="flex items-center" style={{cursor: 'pointer'}} onClick={() => navigateTo('home')}>
+                                    <span className="logo">{t('appName')}</span>
                                 </div>
 
-                                <nav className="nav">
-                                    <button
-                                        onClick={() => setCurrentView('home')}
-                                        className={currentView === 'home' ? 'nav-link nav-link-active' : 'nav-link'}
-                                    >
-                                        <i className="fas fa-camera mr-2"></i>
-                                        {t('navAnalyze')}
-                                    </button>
-                                    <button
-                                        onClick={() => setCurrentView('history')}
-                                        className={currentView === 'history' ? 'nav-link nav-link-active' : 'nav-link'}
-                                    >
-                                        <i className="fas fa-history mr-2"></i>
-                                        {t('navHistory')}
-                                    </button>
-                                    <button
-                                        onClick={() => setCurrentView('knowledge')}
-                                        className={currentView === 'knowledge' ? 'nav-link nav-link-active' : 'nav-link'}
-                                    >
-                                        <i className="fas fa-book mr-2"></i>
-                                        {t('navDatabase')}
-                                    </button>
-                                </nav>
-
-                                {/* Jazykový přepínač - vpravo */}
-                                <div className="language-selector" style={{marginLeft: 'var(--space-4)'}}>
-                                    <button
-                                        className="language-btn"
-                                        onClick={() => setLangDropdownOpen(!langDropdownOpen)}
-                                    >
-                                        <span className="language-flag">{getCurrentLanguageData().flag}</span>
-                                        <span className="hide-mobile">{getCurrentLanguageData().native}</span>
-                                        <i className={`fas fa-chevron-${langDropdownOpen ? 'up' : 'down'}`} style={{fontSize: 'var(--text-xs)'}}></i>
-                                    </button>
-
-                                    <div className={`language-dropdown ${langDropdownOpen ? '' : 'language-dropdown-hidden'}`}>
-                                        <div style={{padding: 'var(--space-2)', borderBottom: '1px solid var(--color-border)', background: 'var(--color-bg-secondary)'}}>
-                                            <span style={{fontSize: 'var(--text-xs)', color: 'var(--color-text-muted)'}}>
-                                                📚 Slovník: {getTranslatedLanguagesCount()} jazyků
-                                            </span>
-                                        </div>
-                                        {languages.map(lang => (
-                                            <div
-                                                key={lang.code}
-                                                className={`language-option ${currentLanguage === lang.code ? 'active' : ''}`}
-                                                onClick={() => changeLanguage(lang.code)}
-                                            >
-                                                <span className="language-flag">{lang.flag}</span>
-                                                <span>{lang.native}</span>
-                                                {isLanguageCached(lang.code) && (
-                                                    <i className="fas fa-check-circle" style={{marginLeft: 'auto', color: 'var(--color-success)', fontSize: 'var(--text-xs)'}}></i>
-                                                )}
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
+                                {/* Hamburger Button */}
+                                <button className={`hamburger-btn ${menuOpen ? 'open' : ''}`} onClick={toggleMenu}>
+                                    <span></span>
+                                    <span></span>
+                                    <span></span>
+                                </button>
                             </div>
                         </div>
                     </header>
 
+                    {/* Mobile Menu Overlay */}
+                    <div className={`mobile-menu-overlay ${menuOpen ? 'open' : ''}`} onClick={() => setMenuOpen(false)}></div>
+
+                    {/* Mobile Menu */}
+                    <div className={`mobile-menu ${menuOpen ? 'open' : ''}`}>
+                        <div className="mobile-menu-item" onClick={() => navigateTo('home')} style={currentView === 'home' ? {background: 'var(--color-primary-light)', color: 'var(--color-primary)'} : {}}>
+                            <i className="fas fa-camera"></i>
+                            <span>{t('navAnalyze')}</span>
+                        </div>
+                        <div className="mobile-menu-item" onClick={() => navigateTo('history')} style={currentView === 'history' ? {background: 'var(--color-primary-light)', color: 'var(--color-primary)'} : {}}>
+                            <i className="fas fa-history"></i>
+                            <span>{t('navHistory')}</span>
+                        </div>
+                        <div className="mobile-menu-item" onClick={() => navigateTo('knowledge')} style={currentView === 'knowledge' ? {background: 'var(--color-primary-light)', color: 'var(--color-primary)'} : {}}>
+                            <i className="fas fa-book"></i>
+                            <span>{t('navDatabase')}</span>
+                        </div>
+
+                        {/* Jazyky v menu */}
+                        <div style={{padding: 'var(--space-4) var(--space-6)', borderTop: '1px solid var(--color-border)', marginTop: 'var(--space-4)'}}>
+                            <div style={{fontSize: 'var(--text-sm)', color: 'var(--color-text-muted)', marginBottom: 'var(--space-3)'}}>
+                                <i className="fas fa-globe mr-2"></i>Jazyk
+                            </div>
+                            <div style={{display: 'flex', flexWrap: 'wrap', gap: 'var(--space-2)'}}>
+                                {languages.slice(0, 8).map(lang => (
+                                    <button
+                                        key={lang.code}
+                                        onClick={() => { changeLanguage(lang.code); setMenuOpen(false); }}
+                                        style={{
+                                            padding: 'var(--space-2)',
+                                            borderRadius: 'var(--radius-lg)',
+                                            border: currentLanguage === lang.code ? '2px solid var(--color-primary)' : '1px solid var(--color-border)',
+                                            background: currentLanguage === lang.code ? 'var(--color-primary-light)' : 'transparent',
+                                            cursor: 'pointer',
+                                            fontSize: 'var(--text-xl)'
+                                        }}
+                                        title={lang.native}
+                                    >
+                                        {lang.flag}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* PWA Install v menu */}
+                        {showInstallBanner && (
+                            <div style={{padding: 'var(--space-4) var(--space-6)', borderTop: '1px solid var(--color-border)'}}>
+                                <button
+                                    onClick={handleInstallClick}
+                                    className="btn btn-primary w-full"
+                                >
+                                    <i className="fas fa-download mr-2"></i>
+                                    Nainstalovat aplikaci
+                                </button>
+                            </div>
+                        )}
+                    </div>
+
                     {/* Main Content */}
-                    <main className="main container py-8">
-                        {/* Home View - Camera/Upload */}
+                    <main style={{paddingTop: '70px'}}>
+                        {/* Home View - Single Page s Hero */}
                         {currentView === 'home' && (
-                            <div className="center-content">
-                                <div className="upload-card max-w-md w-full">
-                                    <div className="text-center mb-6">
-                                        <h1 style={{fontSize: 'var(--text-2xl)', fontWeight: 'var(--font-bold)', color: 'var(--color-text-primary)', marginBottom: 'var(--space-2)'}}>
-                                            {t('homeTitle')}
+                            <div>
+                                {/* Hero Section */}
+                                <div className="hero-section">
+                                    <div style={{position: 'relative', zIndex: 1}}>
+                                        <h1 style={{fontSize: 'var(--text-4xl)', fontWeight: 'var(--font-bold)', marginBottom: 'var(--space-2)'}}>
+                                            FIXO
                                         </h1>
-                                        <p className="text-secondary">
-                                            {t('homeSubtitle')}
+                                        <p style={{fontSize: 'var(--text-lg)', opacity: 0.9, marginBottom: 'var(--space-4)'}}>
+                                            {t('appSlogan')}
                                         </p>
+                                        <div style={{display: 'flex', justifyContent: 'center', gap: 'var(--space-4)', flexWrap: 'wrap'}}>
+                                            <div style={{textAlign: 'center'}}>
+                                                <div style={{fontSize: 'var(--text-2xl)', fontWeight: 'var(--font-bold)'}}>500+</div>
+                                                <div style={{fontSize: 'var(--text-sm)', opacity: 0.8}}>Závad</div>
+                                            </div>
+                                            <div style={{textAlign: 'center'}}>
+                                                <div style={{fontSize: 'var(--text-2xl)', fontWeight: 'var(--font-bold)'}}>30s</div>
+                                                <div style={{fontSize: 'var(--text-sm)', opacity: 0.8}}>Analýza</div>
+                                            </div>
+                                            <div style={{textAlign: 'center'}}>
+                                                <div style={{fontSize: 'var(--text-2xl)', fontWeight: 'var(--font-bold)'}}>AI</div>
+                                                <div style={{fontSize: 'var(--text-sm)', opacity: 0.8}}>Powered</div>
+                                            </div>
+                                        </div>
                                     </div>
+                                </div>
+
+                                {/* Main Upload Section */}
+                                <div className="container py-8">
+                                    <div className="upload-card max-w-md w-full mx-auto">
+                                        <div className="text-center mb-6">
+                                            <h2 style={{fontSize: 'var(--text-xl)', fontWeight: 'var(--font-bold)', color: 'var(--color-text-primary)', marginBottom: 'var(--space-2)'}}>
+                                                {t('homeTitle')}
+                                            </h2>
+                                            <p className="text-secondary">
+                                                {t('homeSubtitle')}
+                                            </p>
+                                        </div>
 
                                     <input
                                         ref={fileInputRef}
@@ -1912,21 +2115,79 @@
                                             <div style={{fontSize: 'var(--text-sm)'}}>{t('stat500repairs')}</div>
                                         </div>
                                     </div>
+
+                                    {/* Quick Examples */}
+                                    <div className="grid grid-4 mt-6 gap-3">
+                                            {[
+                                                { icon: '🚰', name: 'Kohoutek' },
+                                                { icon: '🚽', name: 'WC' },
+                                                { icon: '🔌', name: 'Zásuvka' },
+                                                { icon: '🚪', name: 'Dveře' }
+                                            ].map((item, idx) => (
+                                                <div key={idx} className="example-card">
+                                                    <div style={{fontSize: 'var(--text-2xl)'}}>{ item.icon}</div>
+                                                    <div style={{fontSize: 'var(--text-xs)', color: 'var(--color-text-secondary)'}}>{item.name}</div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
                                 </div>
 
-                                {/* Quick Examples */}
-                                <div className="grid grid-4 mt-8 max-w-lg w-full gap-4">
-                                    {[
-                                        { icon: '🚰', name: 'Kapající kohoutek' },
-                                        { icon: '🚽', name: 'Protékající WC' },
-                                        { icon: '🔌', name: 'Nefunkční zásuvka' },
-                                        { icon: '🚪', name: 'Vrzající dveře' }
-                                    ].map((item, idx) => (
-                                        <div key={idx} className="example-card">
-                                            <div style={{fontSize: 'var(--text-3xl)', marginBottom: 'var(--space-2)'}}>{item.icon}</div>
-                                            <div style={{fontSize: 'var(--text-sm)', color: 'var(--color-text-secondary)'}}>{item.name}</div>
+                                {/* Info Section - Jak to funguje */}
+                                <div style={{background: 'var(--color-bg-secondary)', padding: 'var(--space-8) var(--space-4)'}}>
+                                    <div className="container">
+                                        <h3 style={{textAlign: 'center', fontSize: 'var(--text-xl)', fontWeight: 'var(--font-bold)', marginBottom: 'var(--space-6)'}}>
+                                            Jak to funguje?
+                                        </h3>
+                                        <div className="grid grid-3 gap-6" style={{maxWidth: '800px', margin: '0 auto'}}>
+                                            <div style={{textAlign: 'center'}}>
+                                                <div style={{
+                                                    width: '60px', height: '60px', borderRadius: '50%',
+                                                    background: 'var(--color-primary)', color: 'white',
+                                                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                                    fontSize: 'var(--text-xl)', fontWeight: 'var(--font-bold)',
+                                                    margin: '0 auto var(--space-3)'
+                                                }}>1</div>
+                                                <h4 style={{fontWeight: 'var(--font-semibold)', marginBottom: 'var(--space-2)'}}>Vyfoťte</h4>
+                                                <p style={{fontSize: 'var(--text-sm)', color: 'var(--color-text-muted)'}}>
+                                                    Nafoťte poškozenou věc nebo nahrajte fotku
+                                                </p>
+                                            </div>
+                                            <div style={{textAlign: 'center'}}>
+                                                <div style={{
+                                                    width: '60px', height: '60px', borderRadius: '50%',
+                                                    background: 'var(--color-primary)', color: 'white',
+                                                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                                    fontSize: 'var(--text-xl)', fontWeight: 'var(--font-bold)',
+                                                    margin: '0 auto var(--space-3)'
+                                                }}>2</div>
+                                                <h4 style={{fontWeight: 'var(--font-semibold)', marginBottom: 'var(--space-2)'}}>AI Analýza</h4>
+                                                <p style={{fontSize: 'var(--text-sm)', color: 'var(--color-text-muted)'}}>
+                                                    Umělá inteligence identifikuje závadu
+                                                </p>
+                                            </div>
+                                            <div style={{textAlign: 'center'}}>
+                                                <div style={{
+                                                    width: '60px', height: '60px', borderRadius: '50%',
+                                                    background: 'var(--color-primary)', color: 'white',
+                                                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                                    fontSize: 'var(--text-xl)', fontWeight: 'var(--font-bold)',
+                                                    margin: '0 auto var(--space-3)'
+                                                }}>3</div>
+                                                <h4 style={{fontWeight: 'var(--font-semibold)', marginBottom: 'var(--space-2)'}}>Opravte</h4>
+                                                <p style={{fontSize: 'var(--text-sm)', color: 'var(--color-text-muted)'}}>
+                                                    Postupujte podle návodu krok za krokem
+                                                </p>
+                                            </div>
                                         </div>
-                                    ))}
+                                    </div>
+                                </div>
+
+                                {/* Footer */}
+                                <div style={{background: 'var(--color-bg-tertiary)', padding: 'var(--space-6) var(--space-4)', textAlign: 'center'}}>
+                                    <p style={{fontSize: 'var(--text-sm)', color: 'var(--color-text-muted)'}}>
+                                        © 2025 FIXO • "Fix Anything. Anywhere. Instantly."
+                                    </p>
                                 </div>
                             </div>
                         )}
