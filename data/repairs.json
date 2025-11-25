@@ -310,6 +310,173 @@
           "safetyWarnings": ["Ujistěte se, že je hadice suchá před lepením"]
         }
       ]
+    },
+    "sifon": {
+      "name": "Sifon/Odpad",
+      "category": "koupelna",
+      "icon": "🔄",
+      "issues": [
+        {
+          "id": "clogged",
+          "name": "Ucpaný odpad",
+          "description": "Pomalý odtok vody z umyvadla nebo vany",
+          "riskScore": 2,
+          "difficulty": "Nízká",
+          "timeEstimate": "20 min",
+          "tools": ["Zvon (pumpa)", "Gumové rukavice", "Kbelík", "Čistič odpadů"],
+          "steps": [
+            { "step": 1, "action": "Zkuste nejdřív zvon (pumpu)", "time": "3 min", "icon": "🪠", "hint": "Naplňte umyvadlo vodou asi 5 cm. Přitiskněte zvon k odpadu a rychle pumpujte nahoru-dolů.", "checkQuestion": { "question": "Odtéká voda lépe?", "options": ["Ano, je to v pořádku", "Ne, stále je ucpaný"], "correctAnswer": 0, "failMessage": "Pokračujte dalším krokem - rozebráním sifonu." } },
+            { "step": 2, "action": "Položte kbelík pod sifon", "time": "1 min", "icon": "🪣", "hint": "Sifon je ta zahnutá trubka pod umyvadlem. V kbelíku zachytíte vodu a nečistoty.", "checkQuestion": null },
+            { "step": 3, "action": "Odšroubujte sifon", "time": "3 min", "icon": "🔧", "hint": "Většina sifonů má plastové matice, které povolíte rukou. Otáčejte proti směru hodinových ručiček.", "checkQuestion": null },
+            { "step": 4, "action": "Vyčistěte sifon od nečistot", "time": "10 min", "icon": "🧹", "hint": "Odstraňte vlasy, mýdlo a další usazeniny. Propláchněte sifon horkou vodou.", "checkQuestion": { "question": "Je sifon čistý?", "options": ["Ano, je vyčištěný", "Ucpávka je hlouběji v trubce"], "correctAnswer": 0, "failMessage": "Zkuste použít chemický čistič odpadů nebo zavolejte instalatéra." } },
+            { "step": 5, "action": "Sifon vraťte zpět a otestujte", "time": "3 min", "icon": "✅", "hint": "Utáhněte matice rukou. Pusťte vodu a zkontrolujte, zda nikde neprosakuje.", "checkQuestion": { "question": "Odtéká voda správně a sifon netěsní?", "options": ["Ano, vše funguje", "Ne, někde kape"], "correctAnswer": 0, "failMessage": "Zkontrolujte, zda jsou těsnění správně usazena a matice dotaženy." } }
+          ],
+          "safetyWarnings": ["Použijte gumové rukavice", "Větrejte při použití chemických čističů"]
+        }
+      ]
+    },
+    "mycka": {
+      "name": "Myčka nádobí",
+      "category": "spotrebice",
+      "icon": "🍽️",
+      "issues": [
+        {
+          "id": "not-cleaning",
+          "name": "Myčka špatně myje",
+          "description": "Nádobí zůstává špinavé nebo mastné",
+          "riskScore": 2,
+          "difficulty": "Nízká",
+          "timeEstimate": "25 min",
+          "tools": ["Hadřík", "Ocet", "Kartáček na zuby", "Párátko"],
+          "steps": [
+            { "step": 1, "action": "Vyčistěte filtr myčky", "time": "5 min", "icon": "🔍", "hint": "Filtr je na dně myčky. Vytáhněte ho, rozeberte a propláchněte pod tekoucí vodou.", "checkQuestion": { "question": "Byl filtr zanesený?", "options": ["Ano, byl hodně špinavý", "Ne, vypadal čistě"], "correctAnswer": null, "failMessage": "I tak pokračujte dalšími kroky pro kompletní údržbu." } },
+            { "step": 2, "action": "Zkontrolujte a vyčistěte ostřikovací ramena", "time": "8 min", "icon": "💫", "hint": "Ramena mají dírky, které se ucpávají. Vyčistěte je párátkem nebo jehlou. Ramena většinou jdou vyjmout.", "checkQuestion": null },
+            { "step": 3, "action": "Otřete těsnění dveří", "time": "3 min", "icon": "🧽", "hint": "Na těsnění se hromadí mastnota a plíseň. Otřete ho hadříkem s octem.", "checkQuestion": null },
+            { "step": 4, "action": "Spusťte prázdný cyklus s octem", "time": "5 min", "icon": "🧴", "hint": "Dejte hrnek octa na horní koš a spusťte nejkratší program na nejvyšší teplotě.", "checkQuestion": null },
+            { "step": 5, "action": "Zkontrolujte dávkování leštidla a soli", "time": "3 min", "icon": "✅", "hint": "Doplňte speciální sůl a leštidlo, pokud jsou zásobníky prázdné.", "checkQuestion": { "question": "Jsou zásobníky doplněny?", "options": ["Ano, vše doplněno", "Nemám sůl/leštidlo"], "correctAnswer": 0, "failMessage": "Sůl a leštidlo jsou důležité pro kvalitu mytí. Dokupte je." } }
+          ],
+          "safetyWarnings": ["Před čištěním odpojte myčku od elektřiny", "Pozor na ostré hrany filtru"]
+        }
+      ]
+    },
+    "klika": {
+      "name": "Klika dveří",
+      "category": "dvere_okna",
+      "icon": "🚪",
+      "issues": [
+        {
+          "id": "loose",
+          "name": "Uvolněná klika",
+          "description": "Klika se viklá nebo propadá",
+          "riskScore": 1,
+          "difficulty": "Nízká",
+          "timeEstimate": "10 min",
+          "tools": ["Šroubovák", "Imbusový klíč"],
+          "steps": [
+            { "step": 1, "action": "Najděte zajišťovací šroub", "time": "1 min", "icon": "🔍", "hint": "Šroub je obvykle na spodní straně kliky nebo pod dekorativní krytkou na štítku.", "checkQuestion": { "question": "Našli jste šroub?", "options": ["Ano, vidím ho", "Ne, nemohu najít"], "correctAnswer": 0, "failMessage": "Zkuste odklopit/odšroubovat dekorativní krytku na štítku kolem kliky." } },
+            { "step": 2, "action": "Dotáhněte zajišťovací šroub", "time": "2 min", "icon": "🔧", "hint": "Obvykle je to malý imbusový nebo křížový šroub. Dotáhněte ho, ale nepřetahujte.", "checkQuestion": null },
+            { "step": 3, "action": "Zkontrolujte štítek kliky", "time": "2 min", "icon": "🔩", "hint": "Pokud se viklá celý štítek, dotáhněte i šrouby, které ho drží ke dveřím.", "checkQuestion": null },
+            { "step": 4, "action": "Otestujte kliku", "time": "2 min", "icon": "✅", "hint": "Několikrát stiskněte kliku a zkontrolujte, zda se neviklá a zda správně ovládá zámek.", "checkQuestion": { "question": "Je klika pevná a funkční?", "options": ["Ano, vše je v pořádku", "Ne, stále se viklá"], "correctAnswer": 0, "failMessage": "Může být poškozený vnitřní mechanismus. Zvažte výměnu celé kliky." } }
+          ],
+          "safetyWarnings": ["Při práci držte dveře otevřené, abyste se nezamkli"]
+        }
+      ]
+    },
+    "lednice": {
+      "name": "Lednice",
+      "category": "spotrebice",
+      "icon": "🧊",
+      "issues": [
+        {
+          "id": "seal-problem",
+          "name": "Netěsnící dvířka",
+          "description": "Lednice nechladí dobře kvůli úniku chladu",
+          "riskScore": 1,
+          "difficulty": "Nízká",
+          "timeEstimate": "15 min",
+          "tools": ["Hadřík", "Teplá voda s mycím prostředkem", "Fén"],
+          "steps": [
+            { "step": 1, "action": "Zkontrolujte těsnění papírem", "time": "2 min", "icon": "📄", "hint": "Vložte list papíru mezi dvířka a zavřete. Pokud papír snadno vytáhnete, těsnění netěsní.", "checkQuestion": { "question": "Drží papír pevně?", "options": ["Ano, nejde vytáhnout", "Ne, vytáhne se snadno"], "correctAnswer": 0, "failMessage": "Těsnění potřebuje opravu. Pokračujte dalšími kroky." } },
+            { "step": 2, "action": "Vyčistěte těsnění", "time": "5 min", "icon": "🧽", "hint": "Omyjte těsnění teplou vodou s mycím prostředkem. Odstraňte všechny nečistoty ze záhybů.", "checkQuestion": null },
+            { "step": 3, "action": "Narovnejte deformované těsnění fénem", "time": "5 min", "icon": "💨", "hint": "Zahřejte těsnění fénem na nízký stupeň a rukou ho vytvarujte do správné polohy.", "checkQuestion": null },
+            { "step": 4, "action": "Zkontrolujte vyrovnání dvířek", "time": "2 min", "icon": "📐", "hint": "Dvířka musí být rovná. Pokud jsou šikmá, upravte výšku nožiček lednice.", "checkQuestion": null },
+            { "step": 5, "action": "Otestujte těsnost znovu", "time": "1 min", "icon": "✅", "hint": "Zopakujte test s papírem na několika místech po obvodu dvířek.", "checkQuestion": { "question": "Těsní dvířka správně?", "options": ["Ano, papír drží pevně", "Ne, stále netěsní"], "correctAnswer": 0, "failMessage": "Těsnění může být trvale poškozené a bude nutné ho vyměnit." } }
+          ],
+          "safetyWarnings": ["Při použití fénu dejte pozor na vodu", "Nepoužívejte ostré nástroje na těsnění"]
+        }
+      ]
+    },
+    "podlaha": {
+      "name": "Dřevěná podlaha",
+      "category": "steny_podlahy",
+      "icon": "🪵",
+      "issues": [
+        {
+          "id": "squeaky",
+          "name": "Vrzající podlaha",
+          "description": "Podlaha vrže při chůzi",
+          "riskScore": 1,
+          "difficulty": "Nízká",
+          "timeEstimate": "20 min",
+          "tools": ["Mastek nebo dětský pudr", "Kartáč", "Hadřík"],
+          "steps": [
+            { "step": 1, "action": "Najděte místo vrzání", "time": "3 min", "icon": "🔍", "hint": "Pomalu procházejte místnost a označte si místa, kde podlaha vrže (např. kouskem pásky).", "checkQuestion": { "question": "Našli jste vrzající místa?", "options": ["Ano, mám je označená", "Vrže to všude"], "correctAnswer": 0, "failMessage": "Pokud vrže celá podlaha, může být problém v podkladu. Zvažte konzultaci s odborníkem." } },
+            { "step": 2, "action": "Nasypte mastek do spár", "time": "5 min", "icon": "🧴", "hint": "Nasypte mastek nebo dětský pudr do spár mezi prkny v místě vrzání.", "checkQuestion": null },
+            { "step": 3, "action": "Zameťte mastek do spár", "time": "5 min", "icon": "🧹", "hint": "Kartáčem nebo hadříkem vtlačte mastek hluboko do spár. Pohybujte se po podlaze, aby se dostal dovnitř.", "checkQuestion": null },
+            { "step": 4, "action": "Setřete přebytečný mastek", "time": "3 min", "icon": "✨", "hint": "Hadříkem nebo mopem odstraňte přebytečný pudr z povrchu podlahy.", "checkQuestion": null },
+            { "step": 5, "action": "Otestujte podlahu", "time": "2 min", "icon": "✅", "hint": "Projděte se po opravených místech a zkontrolujte, zda vrzání ustalo.", "checkQuestion": { "question": "Přestala podlaha vrzat?", "options": ["Ano, je ticho", "Ne, stále vrže"], "correctAnswer": 0, "failMessage": "Zkuste postup zopakovat nebo použít speciální mazivo na podlahy. U silného vrzání může být nutné prkna přišroubovat." } }
+          ],
+          "safetyWarnings": ["Mastek může být kluzký - buďte opatrní při chůzi"]
+        }
+      ]
+    },
+    "wc_ucpane": {
+      "name": "Ucpaná toaleta",
+      "category": "voda",
+      "icon": "🚽",
+      "issues": [
+        {
+          "id": "blocked",
+          "name": "Ucpaný záchod",
+          "description": "Voda neodtéká nebo se vrací zpět",
+          "riskScore": 3,
+          "difficulty": "Střední",
+          "timeEstimate": "20 min",
+          "tools": ["Zvon na WC", "Gumové rukavice", "Kbelík", "Horká voda"],
+          "steps": [
+            { "step": 1, "action": "Nepokračujte ve splachování!", "time": "1 min", "icon": "⚠️", "hint": "Další splachování by mohlo způsobit přetečení. Pokud hladina stoupá, zavřete přívod vody.", "checkQuestion": { "question": "Je hladina vody stabilní?", "options": ["Ano, nestoupá", "Ne, stále stoupá"], "correctAnswer": 0, "failMessage": "Okamžitě zavřete přívod vody (ventil za WC) a počkejte, až hladina klesne." } },
+            { "step": 2, "action": "Nalijte horkou vodu", "time": "5 min", "icon": "🫖", "hint": "Nalijte kbelík horké (ne vařící!) vody z výšky pasu. Teplota a tlak mohou uvolnit ucpání.", "checkQuestion": { "question": "Začala voda odtékat?", "options": ["Ano, problém vyřešen", "Ne, stále ucpáno"], "correctAnswer": 0, "failMessage": "Pokračujte použitím zvonu." } },
+            { "step": 3, "action": "Použijte zvon (pumpu) na WC", "time": "5 min", "icon": "🪠", "hint": "Ponořte zvon do vody (musí být ponořený!). Pomalu zatlačte dolů, pak rychle vytáhněte. Opakujte 10-15x.", "checkQuestion": null },
+            { "step": 4, "action": "Spláchněte a zkontrolujte", "time": "2 min", "icon": "🚽", "hint": "Opatrně spláchněte. Mějte připravenou ruku na zavření přívodu, kdyby voda stoupala.", "checkQuestion": { "question": "Odtéká voda normálně?", "options": ["Ano, je odcpaný", "Ne, stále problém"], "correctAnswer": 0, "failMessage": "Ucpání může být hluboko v potrubí. Zkuste enzymatický čistič přes noc nebo zavolejte instalatéra." } },
+            { "step": 5, "action": "Vyčistěte nástroje a umyjte si ruce", "time": "3 min", "icon": "🧼", "hint": "Dezinfikujte zvon a důkladně si umyjte ruce.", "checkQuestion": null }
+          ],
+          "safetyWarnings": ["Vždy používejte gumové rukavice", "Dbejte na hygienu", "Nepoužívejte chemické čističe po použití zvonu"]
+        }
+      ]
+    },
+    "zaluzie": {
+      "name": "Žaluzie",
+      "category": "dvere_okna",
+      "icon": "🪟",
+      "issues": [
+        {
+          "id": "stuck",
+          "name": "Zaseknuté žaluzie",
+          "description": "Žaluzie nejdou vytáhnout, spustit nebo naklápět",
+          "riskScore": 1,
+          "difficulty": "Střední",
+          "timeEstimate": "20 min",
+          "tools": ["Šroubovák", "WD-40 nebo silikonový sprej", "Hadřík"],
+          "steps": [
+            { "step": 1, "action": "Identifikujte typ problému", "time": "2 min", "icon": "🔍", "hint": "Zkuste, zda nejdou vytáhnout, spustit, nebo naklápět. Podle toho určíte, kde je problém.", "checkQuestion": { "question": "Jaký je problém?", "options": ["Nejdou vytáhnout/spustit", "Nejdou naklápět", "Padají samy dolů"], "correctAnswer": null, "failMessage": "Pokračujte podle zjištěného problému." } },
+            { "step": 2, "action": "Zkontrolujte šňůru a mechanismus", "time": "5 min", "icon": "🧵", "hint": "Podívejte se, zda není šňůra zamotaná nebo vyskočená z kladky. U starších žaluzií může být přetržená.", "checkQuestion": null },
+            { "step": 3, "action": "Nastříkejte mazivo na mechanismus", "time": "3 min", "icon": "🔧", "hint": "Nastříkejte WD-40 nebo silikonový sprej na horní lištu, kde je ovládací mechanismus.", "checkQuestion": null },
+            { "step": 4, "action": "Uvolněte a znovu napněte šňůru", "time": "8 min", "icon": "⚙️", "hint": "Pokud šňůra vyskočila, otevřete kryt horní lišty a vraťte ji do správné polohy v kladce.", "checkQuestion": null },
+            { "step": 5, "action": "Otestujte funkčnost", "time": "2 min", "icon": "✅", "hint": "Vyzkoušejte vytahování, spouštění i naklápění lamel.", "checkQuestion": { "question": "Fungují žaluzie správně?", "options": ["Ano, vše funguje", "Ne, stále mají problém"], "correctAnswer": 0, "failMessage": "Mechanismus může být poškozen. Zvažte výměnu ovládacího dílu nebo celých žaluzií." } }
+          ],
+          "safetyWarnings": ["Při práci s výškou použijte stabilní schůdky", "Opatrně s ostrými hranami lamel"]
+        }
+      ]
     }
   },
   "categories": [
