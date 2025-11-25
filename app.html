@@ -1629,8 +1629,32 @@
                                     </span>
                                 </div>
 
-                                {/* Jazykový přepínač */}
-                                <div className="language-selector" style={{marginRight: 'var(--space-4)'}}>
+                                <nav className="nav">
+                                    <button
+                                        onClick={() => setCurrentView('home')}
+                                        className={currentView === 'home' ? 'nav-link nav-link-active' : 'nav-link'}
+                                    >
+                                        <i className="fas fa-camera mr-2"></i>
+                                        {t('navAnalyze')}
+                                    </button>
+                                    <button
+                                        onClick={() => setCurrentView('history')}
+                                        className={currentView === 'history' ? 'nav-link nav-link-active' : 'nav-link'}
+                                    >
+                                        <i className="fas fa-history mr-2"></i>
+                                        {t('navHistory')}
+                                    </button>
+                                    <button
+                                        onClick={() => setCurrentView('knowledge')}
+                                        className={currentView === 'knowledge' ? 'nav-link nav-link-active' : 'nav-link'}
+                                    >
+                                        <i className="fas fa-book mr-2"></i>
+                                        {t('navDatabase')}
+                                    </button>
+                                </nav>
+
+                                {/* Jazykový přepínač - vpravo */}
+                                <div className="language-selector" style={{marginLeft: 'var(--space-4)'}}>
                                     <button
                                         className="language-btn"
                                         onClick={() => setLangDropdownOpen(!langDropdownOpen)}
@@ -1661,30 +1685,6 @@
                                         ))}
                                     </div>
                                 </div>
-
-                                <nav className="nav">
-                                    <button
-                                        onClick={() => setCurrentView('home')}
-                                        className={currentView === 'home' ? 'nav-link nav-link-active' : 'nav-link'}
-                                    >
-                                        <i className="fas fa-camera mr-2"></i>
-                                        {t('navAnalyze')}
-                                    </button>
-                                    <button
-                                        onClick={() => setCurrentView('history')}
-                                        className={currentView === 'history' ? 'nav-link nav-link-active' : 'nav-link'}
-                                    >
-                                        <i className="fas fa-history mr-2"></i>
-                                        {t('navHistory')}
-                                    </button>
-                                    <button
-                                        onClick={() => setCurrentView('knowledge')}
-                                        className={currentView === 'knowledge' ? 'nav-link nav-link-active' : 'nav-link'}
-                                    >
-                                        <i className="fas fa-book mr-2"></i>
-                                        {t('navDatabase')}
-                                    </button>
-                                </nav>
                             </div>
                         </div>
                     </header>
