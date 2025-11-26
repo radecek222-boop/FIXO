@@ -2398,196 +2398,33 @@
                         </div>
                     )}
 
-                    {/* Desktop Header */}
-                    <header className="desktop-header" style={{
-                        position: 'fixed',
-                        top: 0,
-                        left: 0,
-                        right: 0,
-                        zIndex: 100,
-                        background: 'var(--color-bg-primary)',
-                        borderBottom: '1px solid var(--color-border)',
-                        padding: 'var(--space-4) var(--space-6)',
-                        boxShadow: 'var(--shadow-md)'
-                    }}>
-                        <div style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'space-between',
-                            maxWidth: '1400px',
-                            margin: '0 auto',
-                            gap: 'var(--space-6)'
-                        }}>
-                            {/* Logo - Left */}
-                            <div
-                                className="logo-section"
-                                style={{
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    gap: 'var(--space-3)',
-                                    cursor: 'pointer',
-                                    flexShrink: 0
-                                }}
-                                onClick={() => navigateTo('home')}
-                            >
-                                <div style={{
-                                    fontSize: 'var(--text-3xl)',
-                                    fontWeight: 'var(--font-black)',
-                                    background: 'var(--gradient-primary)',
-                                    WebkitBackgroundClip: 'text',
-                                    WebkitTextFillColor: 'transparent',
-                                    backgroundClip: 'text'
-                                }}>
-                                    {t('appName')}
-                                </div>
+                    {/* NEW: Top Header - Kompaktní, centralizovaný */}
+                    <header className="top-header">
+                        <div className="top-header-content">
+                            {/* Logo */}
+                            <div className="logo" onClick={() => navigateTo('home')}>
+                                FIXO
                             </div>
 
-                            {/* Navigation - Center */}
-                            <nav className="desktop-nav" style={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: 'var(--space-2)',
-                                flex: 1,
-                                justifyContent: 'center'
-                            }}>
-                                <button
-                                    onClick={() => navigateTo('home')}
-                                    style={{
-                                        padding: 'var(--space-3) var(--space-5)',
-                                        borderRadius: 'var(--radius-xl)',
-                                        background: currentView === 'home' ? 'var(--color-primary)' : 'transparent',
-                                        color: currentView === 'home' ? 'white' : 'var(--color-text-primary)',
-                                        border: currentView === 'home' ? 'none' : '1px solid var(--color-border)',
-                                        cursor: 'pointer',
-                                        fontSize: 'var(--text-base)',
-                                        fontWeight: currentView === 'home' ? 'var(--font-semibold)' : 'var(--font-medium)',
-                                        transition: 'var(--transition-fast)',
-                                        boxShadow: currentView === 'home' ? 'var(--shadow-md)' : 'none'
-                                    }}
-                                >
-                                    Analyzovat
-                                </button>
-
-                                <button
-                                    onClick={() => navigateTo('history')}
-                                    style={{
-                                        padding: 'var(--space-3) var(--space-5)',
-                                        borderRadius: 'var(--radius-xl)',
-                                        background: currentView === 'history' ? 'var(--color-primary)' : 'transparent',
-                                        color: currentView === 'history' ? 'white' : 'var(--color-text-primary)',
-                                        border: currentView === 'history' ? 'none' : '1px solid var(--color-border)',
-                                        cursor: 'pointer',
-                                        fontSize: 'var(--text-base)',
-                                        fontWeight: currentView === 'history' ? 'var(--font-semibold)' : 'var(--font-medium)',
-                                        transition: 'var(--transition-fast)',
-                                        boxShadow: currentView === 'history' ? 'var(--shadow-md)' : 'none'
-                                    }}
-                                >
-                                    Historie
-                                </button>
-
-                                <button
-                                    onClick={() => navigateTo('knowledge')}
-                                    style={{
-                                        padding: 'var(--space-3) var(--space-5)',
-                                        borderRadius: 'var(--radius-xl)',
-                                        background: currentView === 'knowledge' ? 'var(--color-primary)' : 'transparent',
-                                        color: currentView === 'knowledge' ? 'white' : 'var(--color-text-primary)',
-                                        border: currentView === 'knowledge' ? 'none' : '1px solid var(--color-border)',
-                                        cursor: 'pointer',
-                                        fontSize: 'var(--text-base)',
-                                        fontWeight: currentView === 'knowledge' ? 'var(--font-semibold)' : 'var(--font-medium)',
-                                        transition: 'var(--transition-fast)',
-                                        boxShadow: currentView === 'knowledge' ? 'var(--shadow-md)' : 'none'
-                                    }}
-                                >
-                                    Databáze
-                                </button>
-
-                                <button
-                                    onClick={() => navigateTo('offline')}
-                                    style={{
-                                        padding: 'var(--space-3) var(--space-5)',
-                                        borderRadius: 'var(--radius-xl)',
-                                        background: currentView === 'offline' ? 'var(--color-primary)' : 'transparent',
-                                        color: currentView === 'offline' ? 'white' : 'var(--color-text-primary)',
-                                        border: currentView === 'offline' ? 'none' : '1px solid var(--color-border)',
-                                        cursor: 'pointer',
-                                        fontSize: 'var(--text-base)',
-                                        fontWeight: currentView === 'offline' ? 'var(--font-semibold)' : 'var(--font-medium)',
-                                        transition: 'var(--transition-fast)',
-                                        position: 'relative',
-                                        boxShadow: currentView === 'offline' ? 'var(--shadow-md)' : 'none'
-                                    }}
-                                >
-                                    Offline
-                                    {savedGuides.length > 0 && (
-                                        <span style={{
-                                            position: 'absolute',
-                                            top: '-6px',
-                                            right: '-6px',
-                                            background: 'var(--color-success)',
-                                            color: 'white',
-                                            padding: '3px 7px',
-                                            borderRadius: 'var(--radius-full)',
-                                            fontSize: '11px',
-                                            fontWeight: 'var(--font-bold)',
-                                            minWidth: '20px',
-                                            textAlign: 'center',
-                                            boxShadow: 'var(--shadow-md)'
-                                        }}>{savedGuides.length}</span>
-                                    )}
-                                </button>
-                            </nav>
-
-                            {/* Right Side - Language & Dark Mode */}
-                            <div style={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: 'var(--space-3)',
-                                flexShrink: 0
-                            }}>
+                            {/* Header Actions */}
+                            <div className="header-actions">
                                 {/* Dark Mode Toggle */}
                                 <button
+                                    className="header-btn"
                                     onClick={toggleDarkMode}
-                                    style={{
-                                        padding: 'var(--space-2)',
-                                        background: 'var(--color-bg-secondary)',
-                                        border: '1px solid var(--color-border)',
-                                        borderRadius: 'var(--radius-lg)',
-                                        cursor: 'pointer',
-                                        transition: 'var(--transition-fast)',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                        width: '36px',
-                                        height: '36px'
-                                    }}
-                                    title={darkMode ? 'Přepnout na světlý režim' : 'Přepnout na tmavý režim'}
+                                    title={darkMode ? 'Světlý režim' : 'Tmavý režim'}
                                 >
-                                    <i className={`fas ${darkMode ? 'fa-sun' : 'fa-moon'}`} style={{color: darkMode ? '#fbbf24' : '#6366f1', fontSize: 'var(--text-lg)'}}></i>
+                                    <i className={`fas ${darkMode ? 'fa-sun' : 'fa-moon'}`} style={{color: darkMode ? '#fbbf24' : '#6366f1'}}></i>
                                 </button>
 
                                 {/* Language Selector */}
                                 <div style={{position: 'relative'}}>
                                     <button
+                                        className="header-btn"
                                         onClick={() => setLangMenuOpen(!langMenuOpen)}
-                                        style={{
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            gap: 'var(--space-2)',
-                                            padding: 'var(--space-2) var(--space-3)',
-                                            background: 'var(--color-bg-secondary)',
-                                            border: '1px solid var(--color-border)',
-                                            borderRadius: 'var(--radius-lg)',
-                                            cursor: 'pointer',
-                                            fontSize: 'var(--text-sm)',
-                                            transition: 'var(--transition-fast)',
-                                            height: '36px'
-                                        }}
+                                        style={{width: 'auto', padding: '0 var(--space-2)'}}
                                     >
                                         <span style={{fontSize: 'var(--text-lg)'}}>{getCurrentLanguageData().flag}</span>
-                                        <i className={`fas fa-chevron-${langMenuOpen ? 'up' : 'down'}`} style={{fontSize: 'var(--text-xs)', color: 'var(--color-text-muted)'}}></i>
                                     </button>
 
                                     {/* Language Dropdown */}
@@ -2601,8 +2438,8 @@
                                             borderRadius: 'var(--radius-xl)',
                                             boxShadow: 'var(--shadow-xl)',
                                             padding: 'var(--space-3)',
-                                            minWidth: '320px',
-                                            maxHeight: '400px',
+                                            minWidth: '280px',
+                                            maxHeight: '350px',
                                             overflowY: 'auto',
                                             zIndex: 1000
                                         }}>
@@ -2621,7 +2458,7 @@
                                                             border: currentLanguage === lang.code ? '2px solid var(--color-primary)' : '1px solid var(--color-border)',
                                                             background: currentLanguage === lang.code ? 'var(--color-primary-light)' : 'var(--color-bg-secondary)',
                                                             cursor: 'pointer',
-                                                            fontSize: 'var(--text-xl)',
+                                                            fontSize: 'var(--text-lg)',
                                                             textAlign: 'center',
                                                             transition: 'var(--transition-fast)'
                                                         }}
@@ -2634,194 +2471,107 @@
                                         </div>
                                     )}
                                 </div>
-
-                                {/* Hamburger Button - Mobile only */}
-                                <button
-                                    className={`hamburger-btn ${menuOpen ? 'open' : ''}`}
-                                    onClick={toggleMenu}
-                                >
-                                    <span></span>
-                                    <span></span>
-                                    <span></span>
-                                </button>
                             </div>
                         </div>
                     </header>
 
-                    {/* Mobile Menu Overlay */}
-                    <div className={`mobile-menu-overlay ${menuOpen ? 'open' : ''}`} onClick={() => setMenuOpen(false)}></div>
-
-                    {/* Mobile Menu */}
-                    <div className={`mobile-menu ${menuOpen ? 'open' : ''}`}>
-                        {/* Hlavní navigace */}
-                        <div className="mobile-menu-item" onClick={() => navigateTo('home')} style={currentView === 'home' ? {background: 'var(--color-primary-light)', color: 'var(--color-primary)'} : {}}>
-                            <i className="fas fa-camera"></i>
-                            <span>Analyzovat</span>
-                        </div>
-                        <div className="mobile-menu-item" onClick={() => navigateTo('history')} style={currentView === 'history' ? {background: 'var(--color-primary-light)', color: 'var(--color-primary)'} : {}}>
-                            <i className="fas fa-history"></i>
-                            <span>Historie</span>
-                        </div>
-                        <div className="mobile-menu-item" onClick={() => navigateTo('knowledge')} style={currentView === 'knowledge' ? {background: 'var(--color-primary-light)', color: 'var(--color-primary)'} : {}}>
-                            <i className="fas fa-book"></i>
-                            <span>Databáze</span>
-                        </div>
-                        <div className="mobile-menu-item" onClick={() => navigateTo('offline')} style={currentView === 'offline' ? {background: 'var(--color-primary-light)', color: 'var(--color-primary)'} : {}}>
-                            <i className="fas fa-cloud-download-alt" style={{color: savedGuides.length > 0 ? 'var(--color-success)' : undefined}}></i>
-                            <span>Offline návody</span>
-                            {savedGuides.length > 0 && (
-                                <span style={{
-                                    marginLeft: 'auto',
-                                    background: 'var(--color-success)',
-                                    color: 'white',
-                                    padding: '2px 8px',
-                                    borderRadius: 'var(--radius-full)',
-                                    fontSize: 'var(--text-xs)',
-                                    fontWeight: 'var(--font-bold)'
-                                }}>{savedGuides.length}</span>
-                            )}
-                        </div>
-
-                        {/* Oddělovač */}
-                        <div style={{borderTop: '1px solid var(--color-border)', margin: 'var(--space-2) 0'}}></div>
-
-                        {/* Nové stránky */}
-                        <div className="mobile-menu-item" onClick={() => navigateTo('about')} style={currentView === 'about' ? {background: 'var(--color-primary-light)', color: 'var(--color-primary)'} : {}}>
-                            <i className="fas fa-info-circle"></i>
-                            <span>O nás</span>
-                        </div>
-                        <div className="mobile-menu-item" onClick={() => navigateTo('premium')} style={currentView === 'premium' ? {background: 'var(--color-primary-light)', color: 'var(--color-primary)'} : {}}>
-                            <i className="fas fa-crown" style={{color: '#f59e0b'}}></i>
-                            <span>Premium</span>
-                        </div>
-                        <div className="mobile-menu-item" onClick={() => navigateTo('partnership')} style={currentView === 'partnership' ? {background: 'var(--color-primary-light)', color: 'var(--color-primary)'} : {}}>
-                            <i className="fas fa-handshake"></i>
-                            <span>Partnerství</span>
-                        </div>
-                        <div className="mobile-menu-item" onClick={() => navigateTo('suppliers')} style={currentView === 'suppliers' ? {background: 'var(--color-primary-light)', color: 'var(--color-primary)'} : {}}>
-                            <i className="fas fa-truck"></i>
-                            <span>Dodavatelé</span>
-                        </div>
-
-                        {/* Tmavý režim toggle */}
-                        <div
-                            className="mobile-menu-item"
-                            onClick={toggleDarkMode}
-                            style={{cursor: 'pointer'}}
+                    {/* NEW: Bottom Navigation Bar */}
+                    <nav className="bottom-nav">
+                        <button
+                            className={`bottom-nav-item ${currentView === 'home' || currentView === 'preview' || currentView === 'analyze' || currentView === 'repair' ? 'active' : ''}`}
+                            onClick={() => navigateTo('home')}
                         >
-                            <i className={`fas ${darkMode ? 'fa-sun' : 'fa-moon'}`} style={{color: darkMode ? '#fbbf24' : '#6366f1'}}></i>
-                            <span>{darkMode ? 'Světlý režim' : 'Tmavý režim'}</span>
-                            <div style={{
-                                marginLeft: 'auto',
-                                width: '44px',
-                                height: '24px',
-                                background: darkMode ? 'var(--color-primary)' : 'var(--color-border)',
-                                borderRadius: 'var(--radius-full)',
-                                position: 'relative',
-                                transition: 'var(--transition-fast)'
-                            }}>
-                                <div style={{
-                                    position: 'absolute',
-                                    top: '2px',
-                                    left: darkMode ? '22px' : '2px',
-                                    width: '20px',
-                                    height: '20px',
-                                    background: 'white',
-                                    borderRadius: 'var(--radius-full)',
-                                    transition: 'var(--transition-fast)',
-                                    boxShadow: 'var(--shadow-sm)'
-                                }}></div>
-                            </div>
-                        </div>
+                            <i className="fas fa-camera bottom-nav-icon"></i>
+                            <span className="bottom-nav-label">Scan</span>
+                        </button>
 
-                        {/* Jazyk - rozbalovací */}
-                        <div style={{borderTop: '1px solid var(--color-border)', marginTop: 'var(--space-2)'}}>
-                            <div
-                                className="mobile-menu-item"
-                                onClick={() => setLangMenuOpen(!langMenuOpen)}
-                                style={{justifyContent: 'space-between'}}
-                            >
-                                <div style={{display: 'flex', alignItems: 'center'}}>
-                                    <span style={{fontSize: 'var(--text-xl)', marginRight: 'var(--space-3)'}}>{getCurrentLanguageData().flag}</span>
-                                    <span>{getCurrentLanguageData().native}</span>
-                                </div>
-                                <i className={`fas fa-chevron-${langMenuOpen ? 'up' : 'down'}`}></i>
-                            </div>
+                        <button
+                            className={`bottom-nav-item ${currentView === 'knowledge' ? 'active' : ''}`}
+                            onClick={() => navigateTo('knowledge')}
+                        >
+                            <i className="fas fa-book bottom-nav-icon"></i>
+                            <span className="bottom-nav-label">Databáze</span>
+                        </button>
 
-                            {langMenuOpen && (
-                                <div style={{background: 'var(--color-bg-secondary)', padding: 'var(--space-3)'}}>
-                                    <div style={{display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 'var(--space-2)'}}>
-                                        {languages.map(lang => (
-                                            <button
-                                                key={lang.code}
-                                                onClick={() => { changeLanguage(lang.code); setLangMenuOpen(false); }}
-                                                style={{
-                                                    padding: 'var(--space-2)',
-                                                    borderRadius: 'var(--radius-lg)',
-                                                    border: currentLanguage === lang.code ? '2px solid var(--color-primary)' : '1px solid var(--color-border)',
-                                                    background: currentLanguage === lang.code ? 'var(--color-primary-light)' : 'var(--color-bg-primary)',
-                                                    cursor: 'pointer',
-                                                    fontSize: 'var(--text-xl)',
-                                                    textAlign: 'center'
-                                                }}
-                                                title={lang.native}
-                                            >
-                                                {lang.flag}
-                                            </button>
-                                        ))}
-                                    </div>
-                                </div>
+                        <button
+                            className={`bottom-nav-item ${currentView === 'history' ? 'active' : ''}`}
+                            onClick={() => navigateTo('history')}
+                        >
+                            <i className="fas fa-history bottom-nav-icon"></i>
+                            <span className="bottom-nav-label">Historie</span>
+                        </button>
+
+                        <button
+                            className={`bottom-nav-item ${currentView === 'offline' ? 'active' : ''}`}
+                            onClick={() => navigateTo('offline')}
+                        >
+                            <i className="fas fa-cloud-download-alt bottom-nav-icon"></i>
+                            <span className="bottom-nav-label">Offline</span>
+                            {savedGuides.length > 0 && (
+                                <span className="bottom-nav-badge">{savedGuides.length}</span>
                             )}
-                        </div>
+                        </button>
+                    </nav>
 
-                        {/* PWA Install v menu */}
-                        {showInstallBanner && (
-                            <div style={{padding: 'var(--space-4) var(--space-6)', borderTop: '1px solid var(--color-border)'}}>
-                                <button
-                                    onClick={handleInstallClick}
-                                    className="btn btn-primary w-full"
-                                >
-                                    <i className="fas fa-download mr-2"></i>
-                                    Nainstalovat aplikaci
-                                </button>
+                    {/* NEW: Floating Action Button - Quick Camera */}
+                    {currentView === 'home' && (
+                        <button
+                            className="fab ripple"
+                            onClick={() => fileInputRef.current?.click()}
+                            title="Vyfotit závadu"
+                        >
+                            <i className="fas fa-camera"></i>
+                        </button>
+                    )}
+
+                    {/* PWA Install Banner */}
+                    {showInstallBanner && (
+                        <div className="install-banner">
+                            <div className="install-banner-text">
+                                <div className="install-banner-title">Nainstalovat FIXO</div>
+                                <div className="install-banner-subtitle">Rychlý přístup přímo z plochy</div>
                             </div>
-                        )}
-                    </div>
+                            <button className="install-banner-btn" onClick={handleInstallClick}>
+                                Instalovat
+                            </button>
+                            <button className="install-banner-close" onClick={() => setShowInstallBanner(false)}>
+                                <i className="fas fa-times"></i>
+                            </button>
+                        </div>
+                    )}
 
                     {/* Main Content */}
-                    <main style={{paddingTop: '70px'}}>
+                    <main className="main-content">
                         {/* Home View - Single Page s Hero */}
                         {currentView === 'home' && (
-                            <div>
-                                {/* Hero Section */}
+                            <div className="app-container">
+                                {/* Hero Section - Animated */}
                                 <div className="hero-section">
-                                    <div style={{position: 'relative', zIndex: 1}}>
-                                        <h1 style={{fontSize: 'var(--text-4xl)', fontWeight: 'var(--font-bold)', marginBottom: 'var(--space-2)'}}>
-                                            FIXO
-                                        </h1>
-                                        <p style={{fontSize: 'var(--text-lg)', opacity: 0.9, marginBottom: 'var(--space-4)'}}>
-                                            {t('appSlogan')}
-                                        </p>
-                                        <div style={{display: 'flex', justifyContent: 'center', gap: 'var(--space-4)', flexWrap: 'wrap'}}>
-                                            <div style={{textAlign: 'center'}}>
-                                                <div style={{fontSize: 'var(--text-2xl)', fontWeight: 'var(--font-bold)'}}>500+</div>
-                                                <div style={{fontSize: 'var(--text-sm)', opacity: 0.8}}>Závad</div>
-                                            </div>
-                                            <div style={{textAlign: 'center'}}>
-                                                <div style={{fontSize: 'var(--text-2xl)', fontWeight: 'var(--font-bold)'}}>30s</div>
-                                                <div style={{fontSize: 'var(--text-sm)', opacity: 0.8}}>Analýza</div>
-                                            </div>
-                                            <div style={{textAlign: 'center'}}>
-                                                <div style={{fontSize: 'var(--text-2xl)', fontWeight: 'var(--font-bold)'}}>AI</div>
-                                                <div style={{fontSize: 'var(--text-sm)', opacity: 0.8}}>Powered</div>
-                                            </div>
+                                    <h1 className="hero-title">
+                                        FIXO
+                                    </h1>
+                                    <p className="hero-subtitle">
+                                        {t('appSlogan')}
+                                    </p>
+                                    <div style={{display: 'flex', justifyContent: 'center', gap: 'var(--space-6)', flexWrap: 'wrap', marginTop: 'var(--space-4)'}}>
+                                        <div style={{textAlign: 'center'}}>
+                                            <div style={{fontSize: 'var(--text-2xl)', fontWeight: 'var(--font-bold)'}}>500+</div>
+                                            <div style={{fontSize: 'var(--text-xs)', opacity: 0.8}}>Závad</div>
+                                        </div>
+                                        <div style={{textAlign: 'center'}}>
+                                            <div style={{fontSize: 'var(--text-2xl)', fontWeight: 'var(--font-bold)'}}>30s</div>
+                                            <div style={{fontSize: 'var(--text-xs)', opacity: 0.8}}>Analýza</div>
+                                        </div>
+                                        <div style={{textAlign: 'center'}}>
+                                            <div style={{fontSize: 'var(--text-2xl)', fontWeight: 'var(--font-bold)'}}>AI</div>
+                                            <div style={{fontSize: 'var(--text-xs)', opacity: 0.8}}>Powered</div>
                                         </div>
                                     </div>
                                 </div>
 
-                                {/* Main Upload Section */}
-                                <div className="container py-8">
-                                    <div className="upload-card max-w-md w-full mx-auto">
+                                {/* Main Upload Section - Centralizovaná */}
+                                <div style={{padding: 'var(--space-6) 0'}}>
+                                    <div className="upload-card glass-card">
                                         <div className="text-center mb-6">
                                             <h2 style={{fontSize: 'var(--text-xl)', fontWeight: 'var(--font-bold)', color: 'var(--color-text-primary)', marginBottom: 'var(--space-2)'}}>
                                                 {t('homeTitle')}
@@ -2899,59 +2649,44 @@
                                 </div>
 
                                 {/* Info Section - Jak to funguje */}
-                                <div style={{background: 'var(--color-bg-secondary)', padding: 'var(--space-8) var(--space-4)'}}>
-                                    <div className="container">
-                                        <h3 style={{textAlign: 'center', fontSize: 'var(--text-xl)', fontWeight: 'var(--font-bold)', marginBottom: 'var(--space-6)'}}>
-                                            Jak to funguje?
-                                        </h3>
-                                        <div className="grid grid-3 gap-6" style={{maxWidth: '800px', margin: '0 auto'}}>
-                                            <div style={{textAlign: 'center'}}>
+                                <div className="glass-card" style={{marginTop: 'var(--space-6)'}}>
+                                    <h3 className="section-title" style={{justifyContent: 'center'}}>
+                                        <i className="fas fa-magic section-title-icon"></i>
+                                        Jak to funguje?
+                                    </h3>
+                                    <div style={{display: 'flex', flexDirection: 'column', gap: 'var(--space-4)'}}>
+                                        {[
+                                            { num: '1', icon: 'fa-camera', title: 'Vyfoťte', desc: 'Nafoťte poškozenou věc nebo nahrajte fotku' },
+                                            { num: '2', icon: 'fa-brain', title: 'AI Analýza', desc: 'Umělá inteligence identifikuje závadu' },
+                                            { num: '3', icon: 'fa-tools', title: 'Opravte', desc: 'Postupujte podle návodu krok za krokem' }
+                                        ].map((step, idx) => (
+                                            <div key={idx} className="info-box ripple" style={{flexDirection: 'row', justifyContent: 'flex-start', gap: 'var(--space-4)', textAlign: 'left', minHeight: 'auto', padding: 'var(--space-4)'}}>
                                                 <div style={{
-                                                    width: '60px', height: '60px', borderRadius: '50%',
-                                                    background: 'var(--color-primary)', color: 'white',
+                                                    width: '50px', height: '50px', borderRadius: 'var(--radius-xl)',
+                                                    background: 'var(--gradient-primary)', color: 'white',
                                                     display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                                    fontSize: 'var(--text-xl)', fontWeight: 'var(--font-bold)',
-                                                    margin: '0 auto var(--space-3)'
-                                                }}>1</div>
-                                                <h4 style={{fontWeight: 'var(--font-semibold)', marginBottom: 'var(--space-2)'}}>Vyfoťte</h4>
-                                                <p style={{fontSize: 'var(--text-sm)', color: 'var(--color-text-muted)'}}>
-                                                    Nafoťte poškozenou věc nebo nahrajte fotku
-                                                </p>
+                                                    fontSize: 'var(--text-lg)', fontWeight: 'var(--font-bold)',
+                                                    flexShrink: 0
+                                                }}>
+                                                    <i className={`fas ${step.icon}`}></i>
+                                                </div>
+                                                <div>
+                                                    <h4 style={{fontWeight: 'var(--font-semibold)', marginBottom: 'var(--space-1)', color: 'var(--color-text-primary)'}}>{step.title}</h4>
+                                                    <p style={{fontSize: 'var(--text-sm)', color: 'var(--color-text-muted)', margin: 0}}>{step.desc}</p>
+                                                </div>
                                             </div>
-                                            <div style={{textAlign: 'center'}}>
-                                                <div style={{
-                                                    width: '60px', height: '60px', borderRadius: '50%',
-                                                    background: 'var(--color-primary)', color: 'white',
-                                                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                                    fontSize: 'var(--text-xl)', fontWeight: 'var(--font-bold)',
-                                                    margin: '0 auto var(--space-3)'
-                                                }}>2</div>
-                                                <h4 style={{fontWeight: 'var(--font-semibold)', marginBottom: 'var(--space-2)'}}>AI Analýza</h4>
-                                                <p style={{fontSize: 'var(--text-sm)', color: 'var(--color-text-muted)'}}>
-                                                    Umělá inteligence identifikuje závadu
-                                                </p>
-                                            </div>
-                                            <div style={{textAlign: 'center'}}>
-                                                <div style={{
-                                                    width: '60px', height: '60px', borderRadius: '50%',
-                                                    background: 'var(--color-primary)', color: 'white',
-                                                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                                    fontSize: 'var(--text-xl)', fontWeight: 'var(--font-bold)',
-                                                    margin: '0 auto var(--space-3)'
-                                                }}>3</div>
-                                                <h4 style={{fontWeight: 'var(--font-semibold)', marginBottom: 'var(--space-2)'}}>Opravte</h4>
-                                                <p style={{fontSize: 'var(--text-sm)', color: 'var(--color-text-muted)'}}>
-                                                    Postupujte podle návodu krok za krokem
-                                                </p>
-                                            </div>
-                                        </div>
+                                        ))}
                                     </div>
                                 </div>
 
-                                {/* Footer */}
-                                <div style={{background: 'var(--color-bg-tertiary)', padding: 'var(--space-6) var(--space-4)', textAlign: 'center'}}>
-                                    <p style={{fontSize: 'var(--text-sm)', color: 'var(--color-text-muted)'}}>
-                                        © 2025 FIXO • "Fix Anything. Anywhere. Instantly."
+                                {/* Footer - Kompaktní */}
+                                <div className="app-footer" style={{marginTop: 'var(--space-6)', background: 'transparent', padding: 'var(--space-8) 0'}}>
+                                    <div className="footer-logo">FIXO</div>
+                                    <p className="footer-text">
+                                        "Fix Anything. Anywhere. Instantly."
+                                    </p>
+                                    <p className="footer-copyright">
+                                        © 2025 FIXO • Váš domácí pomocník
                                     </p>
                                 </div>
                             </div>
@@ -2959,8 +2694,8 @@
 
                         {/* Preview View - Náhled s možností kreslení */}
                         {currentView === 'preview' && selectedImage && (
-                            <div className="center-content">
-                                <div className="upload-card max-w-lg w-full">
+                            <div className="app-container" style={{paddingTop: 'var(--space-4)'}}>
+                                <div className="upload-card glass-card">
                                     <div className="text-center mb-4">
                                         <h2 style={{fontSize: 'var(--text-xl)', fontWeight: 'var(--font-bold)', marginBottom: 'var(--space-2)'}}>
                                             <i className="fas fa-edit mr-2"></i>
@@ -3151,8 +2886,8 @@
 
                         {/* Results View */}
                         {currentView === 'results' && analysisResult && (
-                            <div className="max-w-lg mx-auto">
-                                <div className="card">
+                            <div className="app-container" style={{paddingTop: 'var(--space-4)'}}>
+                                <div className="glass-card" style={{padding: 0, overflow: 'hidden'}}>
                                     {/* Detection Header */}
                                     <div className="result-header">
                                         <div className="flex-between">
@@ -3467,8 +3202,8 @@
 
                         {/* Repair Steps View */}
                         {currentView === 'repair' && selectedIssue && (
-                            <div className="max-w-lg mx-auto">
-                                <div className="card">
+                            <div className="app-container" style={{paddingTop: 'var(--space-4)'}}>
+                                <div className="glass-card" style={{padding: 0, overflow: 'hidden'}}>
                                     {/* Progress Bar */}
                                     <div className="progress" style={{borderRadius: 0}}>
                                         <div
@@ -3909,8 +3644,11 @@
 
                         {/* History View */}
                         {currentView === 'history' && (
-                            <div className="max-w-lg mx-auto">
-                                <h2 className="page-title">{t('historyTitle')}</h2>
+                            <div className="app-container" style={{paddingTop: 'var(--space-4)'}}>
+                                <h2 className="section-title" style={{marginBottom: 'var(--space-4)'}}>
+                                    <i className="fas fa-history section-title-icon"></i>
+                                    {t('historyTitle')}
+                                </h2>
 
                                 {repairHistory.length === 0 ? (
                                     <div className="empty-state card">
@@ -4149,8 +3887,11 @@
 
                         {/* Knowledge Base View */}
                         {currentView === 'knowledge' && (
-                            <div className="max-w-2xl mx-auto">
-                                <h2 className="page-title">{t('databaseTitle')}</h2>
+                            <div className="app-container" style={{paddingTop: 'var(--space-4)'}}>
+                                <h2 className="section-title" style={{marginBottom: 'var(--space-4)'}}>
+                                    <i className="fas fa-book section-title-icon"></i>
+                                    {t('databaseTitle')}
+                                </h2>
 
                                 {/* Search Input */}
                                 <div style={{marginBottom: 'var(--space-6)'}}>
@@ -4275,8 +4016,11 @@
 
                         {/* About Page View */}
                         {currentView === 'about' && (
-                            <div className="max-w-2xl mx-auto">
-                                <h2 className="page-title">O nás</h2>
+                            <div className="app-container" style={{paddingTop: 'var(--space-4)'}}>
+                                <h2 className="section-title" style={{marginBottom: 'var(--space-4)'}}>
+                                    <i className="fas fa-info-circle section-title-icon"></i>
+                                    O nás
+                                </h2>
 
                                 <div className="card mb-6">
                                     <div className="card-body text-center" style={{padding: 'var(--space-8)'}}>
@@ -4351,9 +4095,9 @@
 
                         {/* Premium Page View - Freemium Tiers */}
                         {currentView === 'premium' && (
-                            <div className="max-w-4xl mx-auto">
-                                <h2 className="page-title">
-                                    <i className="fas fa-crown mr-2" style={{color: '#f59e0b'}}></i>
+                            <div className="app-container" style={{paddingTop: 'var(--space-4)'}}>
+                                <h2 className="section-title" style={{marginBottom: 'var(--space-4)'}}>
+                                    <i className="fas fa-crown section-title-icon" style={{color: '#f59e0b'}}></i>
                                     Vyberte si plán
                                 </h2>
 
@@ -4597,9 +4341,9 @@
 
                         {/* Partnership Page View */}
                         {currentView === 'partnership' && (
-                            <div className="max-w-2xl mx-auto">
-                                <h2 className="page-title">
-                                    <i className="fas fa-handshake mr-2" style={{color: 'var(--color-primary)'}}></i>
+                            <div className="app-container" style={{paddingTop: 'var(--space-4)'}}>
+                                <h2 className="section-title" style={{marginBottom: 'var(--space-4)'}}>
+                                    <i className="fas fa-handshake section-title-icon"></i>
                                     Partnerský program
                                 </h2>
 
@@ -4738,9 +4482,9 @@
 
                         {/* Suppliers Page View */}
                         {currentView === 'suppliers' && (
-                            <div className="max-w-2xl mx-auto">
-                                <h2 className="page-title">
-                                    <i className="fas fa-truck mr-2" style={{color: 'var(--color-primary)'}}></i>
+                            <div className="app-container" style={{paddingTop: 'var(--space-4)'}}>
+                                <h2 className="section-title" style={{marginBottom: 'var(--space-4)'}}>
+                                    <i className="fas fa-truck section-title-icon"></i>
                                     Dodavatelé a partneři
                                 </h2>
 
@@ -4875,9 +4619,9 @@
 
                         {/* Offline Guides View */}
                         {currentView === 'offline' && (
-                            <div className="max-w-2xl mx-auto">
-                                <h2 className="page-title">
-                                    <i className="fas fa-cloud-download-alt mr-2" style={{color: 'var(--color-primary)'}}></i>
+                            <div className="app-container" style={{paddingTop: 'var(--space-4)'}}>
+                                <h2 className="section-title" style={{marginBottom: 'var(--space-4)'}}>
+                                    <i className="fas fa-cloud-download-alt section-title-icon"></i>
                                     Offline návody
                                 </h2>
 
