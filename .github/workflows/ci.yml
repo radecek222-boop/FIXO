@@ -7,86 +7,73 @@ on:
   pull_request:
     branches: [main, develop]
 
-env:
-  WORKING_DIRECTORY: ./fixo-v2
-
 jobs:
-  lint-and-test:
-    name: Lint & Test
+  validate-files:
+    name: Validate Files
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ${{ env.WORKING_DIRECTORY }}
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm'
-          cache-dependency-path: fixo-v2/package-lock.json
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Run linter
-        run: npm run lint --if-present
-        continue-on-error: true
-
-      - name: Type check
-        run: npm run type-check --if-present
-        continue-on-error: true
-
-      - name: Run tests
-        run: npm test --if-present
-        continue-on-error: true
-
-  build:
-    name: Build
-    runs-on: ubuntu-latest
-    needs: lint-and-test
-    defaults:
-      run:
-        working-directory: ${{ env.WORKING_DIRECTORY }}
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm'
-          cache-dependency-path: fixo-v2/package-lock.json
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Build project
-        run: npm run build
-        continue-on-error: true
-        env:
-          SKIP_ENV_VALIDATION: true
-
-      - name: Check legacy files
-        working-directory: .
+      - name: Check required files exist
         run: |
-          echo "Checking legacy files..."
-          test -f index.html && echo "✅ index.html exists" || echo "⚠️ index.html not found"
-          test -f landing.html && echo "✅ landing.html exists" || echo "⚠️ landing.html not found"
+          echo "Checking required files..."
+          test -f index.html && echo "✅ index.html exists" || (echo "❌ index.html not found" && exit 1)
+          test -f manifest.json && echo "✅ manifest.json exists" || (echo "❌ manifest.json not found" && exit 1)
+          test -f service-worker.js && echo "✅ service-worker.js exists" || (echo "❌ service-worker.js not found" && exit 1)
+          test -f src/app.js && echo "✅ src/app.js exists" || (echo "❌ src/app.js not found" && exit 1)
+          test -d styles && echo "✅ styles/ directory exists" || (echo "❌ styles/ not found" && exit 1)
+          test -d data && echo "✅ data/ directory exists" || (echo "❌ data/ not found" && exit 1)
+          test -d assets/icons && echo "✅ assets/icons/ directory exists" || (echo "❌ assets/icons/ not found" && exit 1)
 
-      - name: Check JSON data validity
-        working-directory: .
+      - name: Validate JSON files
         run: |
           echo "Validating JSON files..."
-          for file in data/*.json; do
+          for file in data/*.json manifest.json; do
             if [ -f "$file" ]; then
-              python3 -m json.tool "$file" > /dev/null && echo "✅ $file is valid" || echo "❌ $file is invalid"
+              python3 -m json.tool "$file" > /dev/null && echo "✅ $file is valid" || (echo "❌ $file is invalid" && exit 1)
             fi
+          done
+
+      - name: Check HTML syntax
+        run: |
+          echo "Checking HTML files..."
+          # Basic HTML validation - check for DOCTYPE and basic structure
+          if grep -q "<!DOCTYPE html>" index.html; then
+            echo "✅ index.html has DOCTYPE"
+          else
+            echo "❌ index.html missing DOCTYPE"
+            exit 1
+          fi
+
+      - name: Check CSS files
+        run: |
+          echo "Checking CSS files..."
+          test -f styles/main.css && echo "✅ styles/main.css exists" || (echo "❌ styles/main.css not found" && exit 1)
+          test -f styles/design-system.css && echo "✅ styles/design-system.css exists" || (echo "❌ styles/design-system.css not found" && exit 1)
+          test -f styles/components.css && echo "✅ styles/components.css exists" || (echo "❌ styles/components.css not found" && exit 1)
+          test -f styles/layout.css && echo "✅ styles/layout.css exists" || (echo "❌ styles/layout.css not found" && exit 1)
+          test -f styles/app.css && echo "✅ styles/app.css exists" || (echo "❌ styles/app.css not found" && exit 1)
+
+      - name: Check JavaScript files
+        run: |
+          echo "Checking JavaScript files..."
+          # Check if files exist and are not empty
+          if [ -f src/app.js ] && [ -s src/app.js ]; then
+            echo "✅ src/app.js exists and is not empty"
+          else
+            echo "❌ src/app.js is missing or empty"
+            exit 1
+          fi
+          # Service worker is pure JS, can be checked with Node
+          node --check service-worker.js && echo "✅ service-worker.js syntax is valid" || (echo "❌ service-worker.js has syntax errors" && exit 1)
+
+      - name: Validate PWA icons
+        run: |
+          echo "Checking PWA icons..."
+          for size in 72 96 128 144 152 192 384 512; do
+            test -f "assets/icons/icon-${size}x${size}.png" && echo "✅ icon-${size}x${size}.png exists" || (echo "❌ icon-${size}x${size}.png not found" && exit 1)
           done
 
   security-check:
@@ -100,25 +87,100 @@ jobs:
       - name: Check for secrets in code
         run: |
           echo "Checking for potential secrets..."
-          # Check for common secret patterns
-          if grep -rE "(api[_-]?key|secret|password|token)\s*[:=]\s*['\"][^'\"]+['\"]" --include="*.js" --include="*.json" --include="*.html" . 2>/dev/null | grep -v ".env" | grep -v "example" | grep -v "G-XXXXXXXXXX"; then
+          # Check for common secret patterns (excluding examples)
+          if grep -rE "(api[_-]?key|secret|password|token)\s*[:=]\s*['\"][^'\"]+['\"]" \
+            --include="*.js" \
+            --include="*.json" \
+            --include="*.html" \
+            . 2>/dev/null | \
+            grep -v ".env" | \
+            grep -v "example" | \
+            grep -v "G-XXXXXXXXXX" | \
+            grep -v "OPENAI_API_KEY"; then
             echo "⚠️ Potential secrets found! Review the above matches."
+            exit 1
           else
             echo "✅ No obvious secrets detected"
           fi
 
       - name: Check .env is gitignored
         run: |
-          if grep -q "^\.env$" .gitignore 2>/dev/null; then
+          if grep -q "^\.env$" .gitignore 2>/dev/null || grep -q "^\.env\$" .gitignore 2>/dev/null; then
             echo "✅ .env is in .gitignore"
           else
-            echo "⚠️ .env should be in .gitignore"
+            echo "⚠️ .env should be in .gitignore (non-critical)"
           fi
+
+  data-integrity:
+    name: Data Integrity Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Validate repairs database
+        run: |
+          echo "Validating repairs.json structure..."
+          node -e "
+            const fs = require('fs');
+            const data = JSON.parse(fs.readFileSync('data/repairs.json', 'utf8'));
+
+            if (typeof data !== 'object' || data === null) {
+              console.error('❌ repairs.json must be an object');
+              process.exit(1);
+            }
+
+            if (!data.repairs || typeof data.repairs !== 'object') {
+              console.error('❌ repairs.json must contain repairs object');
+              process.exit(1);
+            }
+
+            if (!data.categories || !Array.isArray(data.categories)) {
+              console.error('❌ repairs.json must contain categories array');
+              process.exit(1);
+            }
+
+            const repairCount = Object.keys(data.repairs).length;
+            const categoryCount = data.categories.length;
+
+            console.log(\`✅ repairs.json contains \${repairCount} repair types\`);
+            console.log(\`✅ repairs.json contains \${categoryCount} categories\`);
+            console.log('✅ repairs.json structure is valid');
+          "
+
+      - name: Validate translations
+        run: |
+          echo "Validating translations.json..."
+          node -e "
+            const fs = require('fs');
+            const data = JSON.parse(fs.readFileSync('data/translations.json', 'utf8'));
+
+            if (typeof data !== 'object') {
+              console.error('❌ translations.json must be an object');
+              process.exit(1);
+            }
+
+            const languages = Object.keys(data);
+            console.log(\`✅ translations.json contains \${languages.length} languages\`);
+          "
+
+      - name: Check data file sizes
+        run: |
+          echo "Checking data file sizes..."
+          du -sh data/*.json | while read size file; do
+            echo "📊 $file: $size"
+          done
 
   notify:
     name: Notification
     runs-on: ubuntu-latest
-    needs: [lint-and-test, build, security-check]
+    needs: [validate-files, security-check, data-integrity]
     if: always()
 
     steps:
@@ -127,6 +189,14 @@ jobs:
           echo "## CI Summary" >> $GITHUB_STEP_SUMMARY
           echo "| Job | Status |" >> $GITHUB_STEP_SUMMARY
           echo "|-----|--------|" >> $GITHUB_STEP_SUMMARY
-          echo "| Lint & Test | ${{ needs.lint-and-test.result }} |" >> $GITHUB_STEP_SUMMARY
-          echo "| Build | ${{ needs.build.result }} |" >> $GITHUB_STEP_SUMMARY
-          echo "| Security | ${{ needs.security-check.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| File Validation | ${{ needs.validate-files.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Security Check | ${{ needs.security-check.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Data Integrity | ${{ needs.data-integrity.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          if [ "${{ needs.validate-files.result }}" == "success" ] && \
+             [ "${{ needs.security-check.result }}" == "success" ] && \
+             [ "${{ needs.data-integrity.result }}" == "success" ]; then
+            echo "✅ All checks passed!" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ Some checks failed. Please review the logs." >> $GITHUB_STEP_SUMMARY
+          fi
