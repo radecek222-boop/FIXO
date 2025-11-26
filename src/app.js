@@ -905,6 +905,23 @@
                 }));
             };
 
+            // Navigační tlačítka pro databázi (otevřou kartu a posunou pohled)
+            const focusDatabaseSection = (sectionKey) => {
+                setExpandedSections(prev => ({
+                    ...prev,
+                    [sectionKey]: true
+                }));
+
+                requestAnimationFrame(() => {
+                    const sectionEl = document.getElementById(`database-card-${sectionKey}`);
+                    if (sectionEl) {
+                        sectionEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        sectionEl.classList.add('nav-highlight');
+                        setTimeout(() => sectionEl.classList.remove('nav-highlight'), 1200);
+                    }
+                });
+            };
+
             const getCategoryLabel = (categoryId) => {
                 const found = getCategories().find(cat => cat.id === categoryId);
                 return found ? found.name : categoryId;
@@ -4152,6 +4169,38 @@
                                         <p className="text-center text-secondary mb-0" className="text-sm">
                                             {t('showing')} {getFilteredDatabase().length} {t('outOf')} {Object.keys(repairDatabase).length} {t('items')}
                                         </p>
+
+                                        <div className="card navigation-card mt-4">
+                                            <div className="navigation-card-header">
+                                                <div className="navigation-card-title">
+                                                    <i className="fas fa-compass mr-2"></i>
+                                                    Navigace sekcí
+                                                </div>
+                                                <span className="navigation-card-hint">Klikněte pro otevření detailu</span>
+                                            </div>
+                                            <div className="database-nav-grid">
+                                                {getFilteredDatabase().map(([key, item]) => (
+                                                    <button
+                                                        key={key}
+                                                        className="nav-chip"
+                                                        onClick={() => focusDatabaseSection(key)}
+                                                    >
+                                                        <span className="nav-chip-icon">
+                                                            <i className={`fas ${getCategoryIcon(item.category)}`}></i>
+                                                        </span>
+                                                        <span className="nav-chip-text">
+                                                            <strong>{item.name}</strong>
+                                                            <small>{item.issues.length} oprav</small>
+                                                        </span>
+                                                        <i className="fas fa-arrow-right nav-chip-caret"></i>
+                                                    </button>
+                                                ))}
+
+                                                {getFilteredDatabase().length === 0 && (
+                                                    <p className="text-secondary text-sm m-0">Vyberte kategorii nebo zkuste vyhledávání.</p>
+                                                )}
+                                            </div>
+                                        </div>
                                     </section>
 
                                     <section className="information-block" data-block="information_block">
@@ -4159,7 +4208,11 @@
                                             {getFilteredDatabase().map(([key, item]) => {
                                                 const isOpen = expandedSections[key];
                                                 return (
-                                                    <div key={key} className={`database-card ${isOpen ? 'open' : ''}`}>
+                                                    <div
+                                                        key={key}
+                                                        id={`database-card-${key}`}
+                                                        className={`database-card ${isOpen ? 'open' : ''}`}
+                                                    >
                                                         <button className="database-card-toggle" onClick={() => toggleDatabaseSection(key)}>
                                                             <div className="database-card-headline">
                                                                 <div className="database-card-icon">
@@ -4814,19 +4867,48 @@
 
                         {/* Offline Guides View */}
                         {currentView === 'offline' && (
-                            <div className="app-container" className="pt-4">
-                                {/* Desktop: AI Learning + Guides vedle sebe */}
-                                <div className="offline-desktop-layout">
-                                    {/* AI Learning Stats - levý sloupec na desktopu */}
-                                    <div>
+                            <div className="app-container">
+                                <div className="page-frame" data-block="layout_shell">
+                                    {/* action_block */}
+                                    <section className="action-block" data-block="action_block">
+                                        <h2 className="section-title mb-4">
+                                            <i className="fas fa-cloud-download-alt section-title-icon"></i>
+                                            Uložené návody offline
+                                        </h2>
+
+                                        <div className="card mb-4">
+                                            <div className="card-body p-5">
+                                                <div className="flex items-start gap-3">
+                                                    <div className="flex-none text-3xl text-primary">
+                                                        <i className="fas fa-plug-circle-bolt"></i>
+                                                    </div>
+                                                    <div className="flex-1">
+                                                        <h3 className="font-semibold mb-1">Používejte FIXO bez signálu</h3>
+                                                        <p className="text-sm text-secondary mb-3">
+                                                            Každý návod můžeš uložit pro offline použití. Kliknutím níže otevřeš databázi a přidáš další řešení do své knihovny.
+                                                        </p>
+                                                        <div className="flex gap-2 flex-wrap">
+                                                            <button onClick={() => navigateTo('knowledge')} className="btn btn-primary btn-sm">
+                                                                <i className="fas fa-book mr-2"></i>
+                                                                Procházet databázi
+                                                            </button>
+                                                            <button onClick={() => navigateTo('home')} className="btn btn-secondary btn-sm">
+                                                                <i className="fas fa-camera mr-2"></i>
+                                                                Nová analýza
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
                                         {analyzerStats && (
-                                            <div className="card mb-4">
-                                                <div className="card-body" className="p-4">
+                                            <div className="card">
+                                                <div className="card-body p-4">
                                                     <h3 className="font-semibold mb-3 flex items-center gap-2 text-base">
-                                                        <i className="fas fa-brain" className="text-primary"></i>
+                                                        <i className="fas fa-brain text-primary"></i>
                                                         AI Učení
                                                     </h3>
-                                                    {/* Desktop: 6 sloupců, mobil: 3 */}
                                                     <div className="analyze-stats-grid">
                                                         <div className="text-center p-2 bg-success-light rounded-md">
                                                             <div className="text-lg font-bold text-success">
@@ -4883,18 +4965,26 @@
                                                 </div>
                                             </div>
                                         )}
-                                    </div>
+                                    </section>
 
-                                    {/* Offline guides - pravý sloupec na desktopu */}
-                                    <div>
-                                        <h2 className="section-title section-title-compact" className="mb-3">
-                                            <i className="fas fa-cloud-download-alt section-title-icon"></i>
-                                            Offline návody
-                                        </h2>
+                                    {/* information_block */}
+                                    <section className="information-block" data-block="information_block">
+                                        <div className="flex items-center justify-between gap-3">
+                                            <h3 className="section-title">
+                                                <i className="fas fa-folder-open section-title-icon"></i>
+                                                Moje uložené návody
+                                            </h3>
+                                            {savedGuides.length > 0 && (
+                                                <button onClick={() => navigateTo('knowledge')} className="btn btn-outline btn-sm">
+                                                    <i className="fas fa-plus mr-2"></i>
+                                                    Přidat další
+                                                </button>
+                                            )}
+                                        </div>
 
                                         {savedGuides.length === 0 ? (
                                             <div className="card">
-                                                <div className="card-body text-center" className="p-6">
+                                                <div className="card-body text-center p-6">
                                                     <div className="text-6xl mb-3 opacity-30">
                                                         <i className="fas fa-cloud-download-alt"></i>
                                                     </div>
@@ -4904,7 +4994,7 @@
                                                     <p className="text-secondary mb-4 text-sm">
                                                         Při prohlížení návodu klikni na "Uložit offline".
                                                     </p>
-                                                    <button onClick={() => navigateTo('knowledge')} className="btn btn-primary" className="py-2 px-4 text-sm">
+                                                    <button onClick={() => navigateTo('knowledge')} className="btn btn-primary py-2 px-4 text-sm">
                                                         <i className="fas fa-book mr-2"></i>
                                                         Procházet databázi
                                                     </button>
@@ -4912,7 +5002,7 @@
                                             </div>
                                         ) : (
                                             <>
-                                                <div className="alert alert-success alert-compact mb-4">
+                                                <div className="alert alert-success alert-compact">
                                                     <p className="m-0 text-sm">
                                                         <i className="fas fa-wifi-slash mr-2"></i>
                                                         <strong>Offline!</strong> Návody uložené v zařízení.
@@ -4920,74 +5010,73 @@
                                                 </div>
 
                                                 <div className="flex flex-col gap-3">
-                                            {savedGuides.map(guide => (
-                                                <div key={guide.id} className="card">
-                                                    <div className="card-body">
-                                                        <div className="flex justify-between items-start gap-3">
-                                                            <div className="flex-1">
-                                                                <h3 className="font-semibold mb-2">
-                                                                    {guide.name}
-                                                                </h3>
-                                                                <p className="text-sm text-secondary mb-3">
-                                                                    {guide.description}
-                                                                </p>
+                                                    {savedGuides.map(guide => (
+                                                        <div key={guide.id} className="card">
+                                                            <div className="card-body">
+                                                                <div className="flex justify-between items-start gap-3">
+                                                                    <div className="flex-1">
+                                                                        <h3 className="font-semibold mb-2">
+                                                                            {guide.name}
+                                                                        </h3>
+                                                                        <p className="text-sm text-secondary mb-3">
+                                                                            {guide.description}
+                                                                        </p>
 
-                                                                <div className="flex flex-wrap gap-2 mb-3">
-                                                                    <span className="badge">
-                                                                        <i className="fas fa-clock mr-1"></i>
-                                                                        {guide.timeEstimate}
-                                                                    </span>
-                                                                    <span className="badge">
-                                                                        <i className="fas fa-signal mr-1"></i>
-                                                                        {guide.difficulty}
-                                                                    </span>
-                                                                    <span className="badge">
-                                                                        <i className="fas fa-list mr-1"></i>
-                                                                        {guide.steps?.length || 0} kroků
-                                                                    </span>
+                                                                        <div className="flex flex-wrap gap-2 mb-3">
+                                                                            <span className="badge">
+                                                                                <i className="fas fa-clock mr-1"></i>
+                                                                                {guide.timeEstimate}
+                                                                            </span>
+                                                                            <span className="badge">
+                                                                                <i className="fas fa-signal mr-1"></i>
+                                                                                {guide.difficulty}
+                                                                            </span>
+                                                                            <span className="badge">
+                                                                                <i className="fas fa-list mr-1"></i>
+                                                                                {guide.steps?.length || 0} kroků
+                                                                            </span>
+                                                                        </div>
+
+                                                                        <p className="text-xs text-muted">
+                                                                            <i className="fas fa-save mr-1"></i>
+                                                                            Uloženo: {new Date(guide.savedAt).toLocaleDateString('cs-CZ')}
+                                                                        </p>
+                                                                    </div>
+
+                                                                    <div className="flex flex-col gap-2">
+                                                                        <button
+                                                                            onClick={() => loadOfflineGuide(guide)}
+                                                                            className="btn btn-success btn-sm"
+                                                                        >
+                                                                            <i className="fas fa-play mr-1"></i>
+                                                                            Spustit
+                                                                        </button>
+                                                                        <button
+                                                                            onClick={() => {
+                                                                                if (confirm('Opravdu smazat tento uložený návod?')) {
+                                                                                    deleteOfflineGuide(guide.id);
+                                                                                }
+                                                                            }}
+                                                                            className="btn btn-secondary btn-sm opacity-70"
+                                                                        >
+                                                                            <i className="fas fa-trash"></i>
+                                                                        </button>
+                                                                    </div>
                                                                 </div>
-
-                                                                <p className="text-xs text-muted">
-                                                                    <i className="fas fa-save mr-1"></i>
-                                                                    Uloženo: {new Date(guide.savedAt).toLocaleDateString('cs-CZ')}
-                                                                </p>
-                                                            </div>
-
-                                                            <div className="flex flex-col gap-2">
-                                                                <button
-                                                                    onClick={() => loadOfflineGuide(guide)}
-                                                                    className="btn btn-success btn-sm"
-                                                                >
-                                                                    <i className="fas fa-play mr-1"></i>
-                                                                    Spustit
-                                                                </button>
-                                                                <button
-                                                                    onClick={() => {
-                                                                        if (confirm('Opravdu smazat tento uložený návod?')) {
-                                                                            deleteOfflineGuide(guide.id);
-                                                                        }
-                                                                    }}
-                                                                    className="btn btn-secondary btn-sm"
-                                                                    className="opacity-70"
-                                                                >
-                                                                    <i className="fas fa-trash"></i>
-                                                                </button>
                                                             </div>
                                                         </div>
-                                                    </div>
+                                                    ))}
                                                 </div>
-                                            ))}
-                                        </div>
 
-                                        <div className="mt-4 text-center">
-                                            <button onClick={() => navigateTo('knowledge')} className="btn btn-secondary" className="py-2 px-4 text-sm">
-                                                <i className="fas fa-plus mr-2"></i>
-                                                Přidat další návody
-                                            </button>
-                                        </div>
-                                    </>
+                                                <div className="mt-4 text-center">
+                                                    <button onClick={() => navigateTo('knowledge')} className="btn btn-secondary py-2 px-4 text-sm">
+                                                        <i className="fas fa-plus mr-2"></i>
+                                                        Přidat další návody
+                                                    </button>
+                                                </div>
+                                            </>
                                         )}
-                                    </div>
+                                    </section>
                                 </div>
                             </div>
                         )}
