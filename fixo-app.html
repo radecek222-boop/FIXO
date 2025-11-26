@@ -79,7 +79,10 @@
 </head>
 <body>
     <div id="root"></div>
-    
+
+    <!-- Import SmartAnalyzer -->
+    <script src="src/smartAnalyzer.js"></script>
+
     <script type="text/babel">
         const { useState, useEffect, useRef } = React;
 
@@ -208,59 +211,85 @@
             const [isAnalyzing, setIsAnalyzing] = useState(false);
             const [repairHistory, setRepairHistory] = useState([]);
             const [currentStep, setCurrentStep] = useState(0);
+            const [showFeedbackModal, setShowFeedbackModal] = useState(false);
             const fileInputRef = useRef(null);
+            const smartAnalyzerRef = useRef(null);
 
-            // AI analýza fotky přes backend API
+            // Inicializace SmartAnalyzeru
+            useEffect(() => {
+                const initSmartAnalyzer = async () => {
+                    if (!smartAnalyzerRef.current && window.SmartAnalyzer) {
+                        smartAnalyzerRef.current = new window.SmartAnalyzer(API_BASE_URL);
+                        await smartAnalyzerRef.current.init();
+                        console.log('✅ SmartAnalyzer připraven');
+                    }
+                };
+                initSmartAnalyzer();
+            }, []);
+
+            // AI analýza fotky pomocí SmartAnalyzeru
             const analyzeImage = async (imageFile) => {
                 setIsAnalyzing(true);
                 setCurrentView('analyzing');
 
                 try {
-                    // Vytvoříme FormData pro upload
-                    const formData = new FormData();
-                    formData.append('image', imageFile);
-
-                    // Zavoláme backend API
-                    const response = await fetch(`${API_BASE_URL}/analyze`, {
-                        method: 'POST',
-                        body: formData
+                    // Převést soubor na base64
+                    const reader = new FileReader();
+                    const base64Image = await new Promise((resolve, reject) => {
+                        reader.onloadend = () => resolve(reader.result);
+                        reader.onerror = reject;
+                        reader.readAsDataURL(imageFile);
                     });
 
-                    if (!response.ok) {
-                        throw new Error('Chyba při analýze obrázku');
+                    // Použít SmartAnalyzer pro analýzu
+                    let result;
+                    if (smartAnalyzerRef.current) {
+                        console.log('🧠 Používám SmartAnalyzer...');
+                        result = await smartAnalyzerRef.current.analyze(base64Image);
+                    } else {
+                        // Fallback na backend API
+                        console.log('🌐 SmartAnalyzer není dostupný, používám backend API...');
+                        const formData = new FormData();
+                        formData.append('image', imageFile);
+
+                        const response = await fetch(`${API_BASE_URL}/analyze`, {
+                            method: 'POST',
+                            body: formData
+                        });
+
+                        if (!response.ok) {
+                            throw new Error('Chyba při analýze obrázku');
+                        }
+
+                        const apiResult = await response.json();
+
+                        // Transformujeme data z backend formátu
+                        result = {
+                            object: {
+                                name: apiResult.data.detection.object.name,
+                                category: apiResult.data.detection.object.category || 'voda',
+                                icon: 'fa-tint'
+                            },
+                            issue: {
+                                name: apiResult.data.detection.issue.name,
+                                description: apiResult.data.detection.issue.description,
+                                riskScore: apiResult.data.detection.issue.riskScore,
+                                difficulty: apiResult.data.recommendations.difficulty,
+                                timeEstimate: `${apiResult.data.recommendations.timeEstimate} min`,
+                                tools: apiResult.data.recommendations.requiredTools,
+                                steps: apiResult.data.recommendations.steps.map(step => ({
+                                    step: step.order,
+                                    action: step.description,
+                                    time: `${step.duration} min`,
+                                    icon: getStepIcon(step.action)
+                                })),
+                                safetyWarnings: apiResult.data.recommendations.safetyWarnings
+                            },
+                            confidence: Math.floor(apiResult.data.detection.issue.confidence * 100)
+                        };
                     }
 
-                    const result = await response.json();
-
-                    // Transformujeme data z backend formátu do frontend formátu
-                    const objectData = {
-                        name: result.data.detection.object.name,
-                        id: result.data.detection.object.id
-                    };
-
-                    const issueData = {
-                        id: result.data.detection.issue.id,
-                        name: result.data.detection.issue.name,
-                        description: result.data.detection.issue.description,
-                        riskScore: result.data.detection.issue.riskScore,
-                        difficulty: result.data.recommendations.difficulty,
-                        timeEstimate: `${result.data.recommendations.timeEstimate} min`,
-                        tools: result.data.recommendations.requiredTools,
-                        steps: result.data.recommendations.steps.map(step => ({
-                            step: step.order,
-                            action: step.description,
-                            time: `${step.duration} min`,
-                            icon: getStepIcon(step.action)
-                        })),
-                        safetyWarnings: result.data.recommendations.safetyWarnings
-                    };
-
-                    setAnalysisResult({
-                        object: objectData,
-                        issue: issueData,
-                        confidence: Math.floor(result.data.detection.issue.confidence * 100)
-                    });
-
+                    setAnalysisResult(result);
                     setIsAnalyzing(false);
                     setCurrentView('results');
 
@@ -595,9 +624,18 @@
                                     {/* Issue Details */}
                                     <div className="p-6">
                                         <div className="mb-6">
-                                            <h3 className="text-lg font-semibold text-gray-800 mb-2">
-                                                Identifikovaný problém
-                                            </h3>
+                                            <div className="flex items-center justify-between mb-2">
+                                                <h3 className="text-lg font-semibold text-gray-800">
+                                                    Identifikovaný problém
+                                                </h3>
+                                                <button
+                                                    onClick={() => setShowFeedbackModal(true)}
+                                                    className="text-sm text-blue-600 hover:text-blue-800 font-medium"
+                                                >
+                                                    <i className="fas fa-edit mr-1"></i>
+                                                    Nesouhlasíte? Opravit
+                                                </button>
+                                            </div>
                                             <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded">
                                                 <p className="font-semibold text-red-800">
                                                     {analysisResult.issue.name}
@@ -642,24 +680,180 @@
                                             </div>
                                         )}
 
-                                        {/* Action Buttons */}
-                                        <div className="flex gap-4">
-                                            <button
-                                                onClick={() => startRepair(analysisResult.issue)}
-                                                className="flex-1 bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-xl transition duration-200"
-                                            >
-                                                <i className="fas fa-wrench mr-2"></i>
-                                                Začít opravu
-                                            </button>
-                                            <button
-                                                onClick={() => setCurrentView('home')}
-                                                className="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-3 px-6 rounded-xl transition duration-200"
-                                            >
-                                                <i className="fas fa-phone mr-2"></i>
-                                                Zavolat odborníka
-                                            </button>
+                                        {/* Co dál? - Interaktivní panely */}
+                                        <div className="mb-4">
+                                            <h3 className="text-lg font-semibold text-gray-800 mb-4">
+                                                Co dál?
+                                            </h3>
+                                            <div className="grid grid-cols-1 gap-4">
+                                                {/* Základní návod ZDARMA */}
+                                                <button
+                                                    onClick={() => startRepair(analysisResult.issue)}
+                                                    className="bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-500 rounded-xl p-5 text-left hover:shadow-lg transition-all duration-200 transform hover:scale-[1.02] group"
+                                                >
+                                                    <div className="flex items-start justify-between">
+                                                        <div className="flex-1">
+                                                            <div className="flex items-center mb-2">
+                                                                <i className="fas fa-wrench text-green-600 text-2xl mr-3"></i>
+                                                                <div>
+                                                                    <h4 className="font-bold text-gray-800 text-lg group-hover:text-green-700">
+                                                                        Základní návod (3-6 kroků)
+                                                                    </h4>
+                                                                    <p className="text-sm text-gray-600">
+                                                                        Krok za krokem instrukce k opravě
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div className="flex flex-col items-end ml-4">
+                                                            <span className="bg-green-600 text-white px-3 py-1 rounded-full text-sm font-bold mb-2">
+                                                                ZDARMA
+                                                            </span>
+                                                            <i className="fas fa-arrow-right text-green-600 text-xl group-hover:translate-x-1 transition-transform"></i>
+                                                        </div>
+                                                    </div>
+                                                </button>
+
+                                                {/* Detailní návod + schémata 0.99€ */}
+                                                <button
+                                                    onClick={() => alert('Premium návod připravujeme! Bude k dispozici brzy.')}
+                                                    className="bg-gradient-to-r from-blue-50 to-cyan-50 border-2 border-blue-500 rounded-xl p-5 text-left hover:shadow-lg transition-all duration-200 transform hover:scale-[1.02] group"
+                                                >
+                                                    <div className="flex items-start justify-between">
+                                                        <div className="flex-1">
+                                                            <div className="flex items-center mb-2">
+                                                                <i className="fas fa-book-open text-blue-600 text-2xl mr-3"></i>
+                                                                <div>
+                                                                    <h4 className="font-bold text-gray-800 text-lg group-hover:text-blue-700">
+                                                                        Detailní návod + schémata
+                                                                    </h4>
+                                                                    <p className="text-sm text-gray-600">
+                                                                        Profesionální průvodce s diagramy a videi
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div className="flex flex-col items-end ml-4">
+                                                            <span className="bg-blue-600 text-white px-3 py-1 rounded-full text-sm font-bold mb-2">
+                                                                0.99 €
+                                                            </span>
+                                                            <i className="fas fa-arrow-right text-blue-600 text-xl group-hover:translate-x-1 transition-transform"></i>
+                                                        </div>
+                                                    </div>
+                                                </button>
+
+                                                {/* Zavolat odborníka ZDARMA */}
+                                                <button
+                                                    onClick={() => alert('Hledání odborníků v okolí připravujeme!')}
+                                                    className="bg-gradient-to-r from-orange-50 to-amber-50 border-2 border-orange-500 rounded-xl p-5 text-left hover:shadow-lg transition-all duration-200 transform hover:scale-[1.02] group"
+                                                >
+                                                    <div className="flex items-start justify-between">
+                                                        <div className="flex-1">
+                                                            <div className="flex items-center mb-2">
+                                                                <i className="fas fa-phone text-orange-600 text-2xl mr-3"></i>
+                                                                <div>
+                                                                    <h4 className="font-bold text-gray-800 text-lg group-hover:text-orange-700">
+                                                                        Zavolat odborníka v okolí
+                                                                    </h4>
+                                                                    <p className="text-sm text-gray-600">
+                                                                        Spojíme vás s ověřenými řemeslníky
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div className="flex flex-col items-end ml-4">
+                                                            <span className="bg-orange-600 text-white px-3 py-1 rounded-full text-sm font-bold mb-2">
+                                                                ZDARMA
+                                                            </span>
+                                                            <i className="fas fa-arrow-right text-orange-600 text-xl group-hover:translate-x-1 transition-transform"></i>
+                                                        </div>
+                                                    </div>
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Feedback Modal */}
+                        {showFeedbackModal && (
+                            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+                                <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6">
+                                    <div className="flex items-center justify-between mb-4">
+                                        <h3 className="text-xl font-bold text-gray-800">
+                                            <i className="fas fa-edit text-blue-600 mr-2"></i>
+                                            Opravit detekci
+                                        </h3>
+                                        <button
+                                            onClick={() => setShowFeedbackModal(false)}
+                                            className="text-gray-400 hover:text-gray-600"
+                                        >
+                                            <i className="fas fa-times text-2xl"></i>
+                                        </button>
+                                    </div>
+
+                                    <p className="text-gray-600 text-sm mb-4">
+                                        Pomoz AI se naučit! Vyber správnou kategorii a problém.
+                                    </p>
+
+                                    <div className="space-y-4 mb-6">
+                                        <div>
+                                            <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                                Správná kategorie:
+                                            </label>
+                                            <select className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500">
+                                                <option value="voda">💧 Voda</option>
+                                                <option value="elektrina">⚡ Elektřina</option>
+                                                <option value="topeni">🌡️ Topení</option>
+                                                <option value="okna">🪟 Okna</option>
+                                                <option value="dvere">🚪 Dveře</option>
+                                                <option value="spotrebice">🔌 Spotřebiče</option>
+                                                <option value="nabytek">🛋️ Nábytek</option>
+                                                <option value="steny">🧱 Stěny</option>
+                                                <option value="podlaha">📐 Podlaha</option>
+                                            </select>
+                                        </div>
+
+                                        <div>
+                                            <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                                Správný problém:
+                                            </label>
+                                            <input
+                                                type="text"
+                                                placeholder="Např.: Protékající kohoutek"
+                                                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500"
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div className="flex gap-3">
+                                        <button
+                                            onClick={() => {
+                                                // TODO: Implementovat odeslání feedbacku SmartAnalyzeru
+                                                if (smartAnalyzerRef.current) {
+                                                    // Zde bude volání smartAnalyzerRef.current.submitFeedback()
+                                                    alert('Děkujeme za feedback! AI se právě učí.');
+                                                }
+                                                setShowFeedbackModal(false);
+                                            }}
+                                            className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-xl transition duration-200"
+                                        >
+                                            <i className="fas fa-paper-plane mr-2"></i>
+                                            Odeslat opravu
+                                        </button>
+                                        <button
+                                            onClick={() => setShowFeedbackModal(false)}
+                                            className="px-6 py-3 bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold rounded-xl transition duration-200"
+                                        >
+                                            Zrušit
+                                        </button>
+                                    </div>
+
+                                    <p className="text-xs text-gray-500 mt-4 text-center">
+                                        <i className="fas fa-info-circle mr-1"></i>
+                                        Tvůj feedback pomůže zlepšit AI pro všechny uživatele
+                                    </p>
                                 </div>
                             </div>
                         )}
