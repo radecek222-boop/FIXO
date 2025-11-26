@@ -2221,7 +2221,7 @@
                                 {clarificationStep === 0 && (
                                     <>
                                         <h3 style={{fontSize: 'var(--text-xl)', fontWeight: 'var(--font-bold)', marginBottom: 'var(--space-4)', display: 'flex', alignItems: 'center', gap: 'var(--space-2)'}}>
-                                            <i className="fas fa-keyboard" style={{color: '#6366f1'}}></i>
+                                            <i className="fas fa-keyboard" style={{color: 'var(--color-primary)'}}></i>
                                             Popište problém
                                         </h3>
 
@@ -2271,15 +2271,15 @@
                                                         style={{
                                                             padding: 'var(--space-2)',
                                                             borderRadius: 'var(--radius-lg)',
-                                                            border: selectedProblemCategory === cat.id ? '2px solid #6366f1' : '1px solid var(--color-border)',
-                                                            background: selectedProblemCategory === cat.id ? '#e0e7ff' : 'var(--color-bg-secondary)',
+                                                            border: selectedProblemCategory === cat.id ? '2px solid var(--color-primary)' : '1px solid var(--color-border)',
+                                                            background: selectedProblemCategory === cat.id ? 'var(--color-primary-light)' : 'var(--color-bg-secondary)',
                                                             cursor: 'pointer',
                                                             textAlign: 'left',
                                                             fontSize: 'var(--text-sm)'
                                                         }}
                                                     >
                                                         <div style={{display: 'flex', alignItems: 'center', gap: 'var(--space-2)'}}>
-                                                            <i className={`fas ${cat.icon}`} style={{color: selectedProblemCategory === cat.id ? '#6366f1' : 'var(--color-text-muted)'}}></i>
+                                                            <i className={`fas ${cat.icon}`} style={{color: selectedProblemCategory === cat.id ? 'var(--color-primary)' : 'var(--color-text-muted)'}}></i>
                                                             <span style={{fontWeight: 'var(--font-medium)'}}>{cat.name}</span>
                                                         </div>
                                                     </button>
@@ -2700,7 +2700,7 @@
                                             padding: 'var(--space-4)',
                                             background: supplier.isPremium ? 'linear-gradient(135deg, #fef3c7 0%, #fde68a 100%)' : 'var(--color-bg-secondary)',
                                             borderRadius: 'var(--radius-lg)',
-                                            border: supplier.isPremium ? '2px solid #f59e0b' : '1px solid var(--color-border)'
+                                            border: supplier.isPremium ? '2px solid var(--color-warning)' : '1px solid var(--color-border)'
                                         }}>
                                             <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 'var(--space-2)'}}>
                                                 <div>
@@ -2708,7 +2708,7 @@
                                                         <span style={{fontWeight: 'var(--font-bold)'}}>{supplier.name}</span>
                                                         {supplier.isPremium && (
                                                             <span style={{
-                                                                background: '#f59e0b',
+                                                                background: 'var(--color-warning)',
                                                                 color: 'white',
                                                                 padding: '2px 6px',
                                                                 borderRadius: 'var(--radius-full)',
@@ -2724,7 +2724,7 @@
                                                     </div>
                                                 </div>
                                                 <div style={{textAlign: 'right'}}>
-                                                    <div style={{display: 'flex', alignItems: 'center', gap: '2px', color: '#f59e0b', fontSize: 'var(--text-sm)'}}>
+                                                    <div style={{display: 'flex', alignItems: 'center', gap: '2px', color: 'var(--color-warning)', fontSize: 'var(--text-sm)'}}>
                                                         <i className="fas fa-star"></i>
                                                         <span style={{fontWeight: 'var(--font-bold)'}}>{supplier.rating}</span>
                                                     </div>
@@ -3054,7 +3054,7 @@
                                                     <p style={{fontSize: 'var(--text-sm)', color: 'var(--color-text-secondary)'}}>{craftsman.company}</p>
                                                 </div>
                                                 <div style={{textAlign: 'right'}}>
-                                                    <div style={{display: 'flex', alignItems: 'center', gap: 'var(--space-1)', color: '#f59e0b'}}>
+                                                    <div style={{display: 'flex', alignItems: 'center', gap: 'var(--space-1)', color: 'var(--color-warning)'}}>
                                                         <i className="fas fa-star"></i>
                                                         <span style={{fontWeight: 'var(--font-bold)'}}>{craftsman.rating}</span>
                                                         <span style={{color: 'var(--color-text-secondary)', fontSize: 'var(--text-xs)'}}>
@@ -3334,7 +3334,7 @@
                                     onClick={toggleDarkMode}
                                     title={darkMode ? 'Světlý režim' : 'Tmavý režim'}
                                 >
-                                    <i className={`fas ${darkMode ? 'fa-sun' : 'fa-moon'}`} style={{color: darkMode ? '#fbbf24' : '#6366f1'}}></i>
+                                    <i className={`fas ${darkMode ? 'fa-sun' : 'fa-moon'}`} style={{color: darkMode ? 'var(--color-warning)' : 'var(--color-primary)'}}></i>
                                 </button>
 
                                 {/* Language Selector */}
@@ -3553,16 +3553,16 @@
                                             style={{
                                                 marginTop: 'var(--space-3)',
                                                 padding: 'var(--space-3)',
-                                                background: 'linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%)',
+                                                background: 'var(--color-primary-light)',
                                                 borderRadius: 'var(--radius-lg)',
                                                 cursor: 'pointer',
                                                 textAlign: 'center',
-                                                border: '1px dashed #6366f1'
+                                                border: '1px dashed var(--color-primary)'
                                             }}
                                         >
                                             <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 'var(--space-2)'}}>
-                                                <i className="fas fa-keyboard" style={{fontSize: 'var(--text-lg)', color: '#6366f1'}}></i>
-                                                <span style={{fontWeight: 'var(--font-semibold)', color: '#4338ca', fontSize: 'var(--text-sm)'}}>
+                                                <i className="fas fa-keyboard" style={{fontSize: 'var(--text-lg)', color: 'var(--color-primary)'}}></i>
+                                                <span style={{fontWeight: 'var(--font-semibold)', color: 'var(--color-primary-dark)', fontSize: 'var(--text-sm)'}}>
                                                     Nelze vyfotit? Popište problém
                                                 </span>
                                             </div>
@@ -4071,15 +4071,15 @@
                                         {/* 💰 Savings Calculator - DIY vs Professional */}
                                         {analysisResult.issue.materialCost && analysisResult.issue.professionalCost && (
                                             <div style={{
-                                                background: 'linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%)',
-                                                border: '2px solid #10b981',
+                                                background: 'var(--color-success-light)',
+                                                border: '2px solid var(--color-success)',
                                                 borderRadius: 'var(--radius-xl)',
                                                 padding: 'var(--space-6)',
                                                 marginBottom: 'var(--space-6)'
                                             }}>
                                                 <h3 style={{
                                                     fontWeight: 'var(--font-bold)',
-                                                    color: '#065f46',
+                                                    color: 'var(--color-success-text)',
                                                     marginBottom: 'var(--space-4)',
                                                     display: 'flex',
                                                     alignItems: 'center',
@@ -4096,12 +4096,12 @@
                                                         padding: 'var(--space-4)',
                                                         borderRadius: 'var(--radius-lg)',
                                                         textAlign: 'center',
-                                                        border: '2px solid #10b981'
+                                                        border: '2px solid var(--color-success)'
                                                     }}>
-                                                        <div style={{fontSize: 'var(--text-xs)', textTransform: 'uppercase', color: '#059669', fontWeight: 'var(--font-semibold)', marginBottom: 'var(--space-1)'}}>
+                                                        <div style={{fontSize: 'var(--text-xs)', textTransform: 'uppercase', color: 'var(--color-success)', fontWeight: 'var(--font-semibold)', marginBottom: 'var(--space-1)'}}>
                                                             <i className="fas fa-hand-paper mr-1"></i> DIY oprava
                                                         </div>
-                                                        <div style={{fontSize: 'var(--text-2xl)', fontWeight: 'var(--font-bold)', color: '#065f46'}}>
+                                                        <div style={{fontSize: 'var(--text-2xl)', fontWeight: 'var(--font-bold)', color: 'var(--color-success-text)'}}>
                                                             {analysisResult.issue.materialCost.min}-{analysisResult.issue.materialCost.max} Kč
                                                         </div>
                                                         <div style={{fontSize: 'var(--text-xs)', color: 'var(--color-text-muted)'}}>
@@ -4131,7 +4131,7 @@
 
                                                 {/* Savings highlight */}
                                                 <div style={{
-                                                    background: '#10b981',
+                                                    background: 'var(--color-success)',
                                                     color: 'white',
                                                     padding: 'var(--space-4)',
                                                     borderRadius: 'var(--radius-lg)',
@@ -4391,7 +4391,7 @@
                                     {/* Tools Needed with Affiliate Links */}
                                     <div style={{background: 'var(--color-info-light)', padding: 'var(--space-6)', borderBottom: '1px solid var(--color-border)'}}>
                                         <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--space-3)'}}>
-                                            <h3 style={{fontWeight: 'var(--font-semibold)', color: '#0c4a6e'}}>
+                                            <h3 style={{fontWeight: 'var(--font-semibold)', color: 'var(--color-info)'}}>
                                                 <i className="fas fa-toolbox mr-2"></i>
                                                 {t('toolsNeeded')}
                                             </h3>
@@ -4492,7 +4492,7 @@
                                                 {selectedIssue.steps[currentStep].tools_for_step && selectedIssue.steps[currentStep].tools_for_step.length > 0 && (
                                                     <div style={{background: 'var(--color-info-light)', padding: 'var(--space-3)', borderRadius: 'var(--radius-lg)', marginBottom: 'var(--space-3)', textAlign: 'left'}}>
                                                         <p style={{fontWeight: 'var(--font-semibold)', fontSize: 'var(--text-sm)', marginBottom: 'var(--space-1)'}}>
-                                                            <i className="fas fa-wrench mr-2" style={{color: '#0369a1'}}></i>Nástroje:
+                                                            <i className="fas fa-wrench mr-2" style={{color: 'var(--color-info)'}}></i>Nástroje:
                                                         </p>
                                                         <p style={{fontSize: 'var(--text-sm)'}}>{selectedIssue.steps[currentStep].tools_for_step.join(', ')}</p>
                                                     </div>
@@ -4502,7 +4502,7 @@
                                                 {selectedIssue.steps[currentStep].parts_for_step && selectedIssue.steps[currentStep].parts_for_step.length > 0 && (
                                                     <div style={{background: 'var(--color-warning-light)', padding: 'var(--space-3)', borderRadius: 'var(--radius-lg)', marginBottom: 'var(--space-3)', textAlign: 'left'}}>
                                                         <p style={{fontWeight: 'var(--font-semibold)', fontSize: 'var(--text-sm)', marginBottom: 'var(--space-1)'}}>
-                                                            <i className="fas fa-box mr-2" style={{color: '#b45309'}}></i>Potřebné díly:
+                                                            <i className="fas fa-box mr-2" style={{color: 'var(--color-warning)'}}></i>Potřebné díly:
                                                         </p>
                                                         <p style={{fontSize: 'var(--text-sm)'}}>{selectedIssue.steps[currentStep].parts_for_step.join(', ')}</p>
                                                     </div>
@@ -4512,7 +4512,7 @@
                                                 {selectedIssue.steps[currentStep].tip && (
                                                     <div style={{background: 'var(--color-success-light)', padding: 'var(--space-3)', borderRadius: 'var(--radius-lg)', marginBottom: 'var(--space-3)', textAlign: 'left'}}>
                                                         <p style={{fontWeight: 'var(--font-semibold)', fontSize: 'var(--text-sm)', marginBottom: 'var(--space-1)'}}>
-                                                            <i className="fas fa-lightbulb mr-2" style={{color: '#15803d'}}></i>Tip:
+                                                            <i className="fas fa-lightbulb mr-2" style={{color: 'var(--color-success)'}}></i>Tip:
                                                         </p>
                                                         <p style={{fontSize: 'var(--text-sm)'}}>{selectedIssue.steps[currentStep].tip}</p>
                                                     </div>
@@ -4760,7 +4760,7 @@
 
                                 <div className="card mb-6">
                                     <div className="card-header">
-                                        <h3 className="card-title"><i className="fas fa-lightbulb mr-2" style={{color: '#f59e0b'}}></i>Náš příběh</h3>
+                                        <h3 className="card-title"><i className="fas fa-lightbulb mr-2" style={{color: 'var(--color-warning)'}}></i>Náš příběh</h3>
                                     </div>
                                     <div className="card-body">
                                         <p style={{lineHeight: 1.7, marginBottom: 'var(--space-4)'}}>
@@ -4823,7 +4823,7 @@
                         {currentView === 'premium' && (
                             <div className="app-container" style={{paddingTop: 'var(--space-4)'}}>
                                 <h2 className="section-title" style={{marginBottom: 'var(--space-4)'}}>
-                                    <i className="fas fa-crown section-title-icon" style={{color: '#f59e0b'}}></i>
+                                    <i className="fas fa-crown section-title-icon" style={{color: 'var(--color-warning)'}}></i>
                                     Vyberte si plán
                                 </h2>
 
@@ -4915,12 +4915,12 @@
                                     </div>
 
                                     {/* PRO Tier */}
-                                    <div className="card" style={{border: '2px solid #f59e0b', background: 'linear-gradient(135deg, #fefce8 0%, #fef9c3 100%)'}}>
+                                    <div className="card" style={{border: '2px solid var(--color-warning)', background: 'linear-gradient(135deg, #fefce8 0%, #fef9c3 100%)'}}>
                                         <div className="card-body" style={{padding: 'var(--space-6)'}}>
                                             <div style={{textAlign: 'center', marginBottom: 'var(--space-4)'}}>
                                                 <span style={{fontSize: '2rem'}}>👑</span>
                                                 <h3 style={{fontSize: 'var(--text-xl)', fontWeight: 'var(--font-bold)', marginTop: 'var(--space-2)'}}>PRO</h3>
-                                                <div style={{fontSize: 'var(--text-3xl)', fontWeight: 'var(--font-bold)', color: '#d97706', margin: 'var(--space-2) 0'}}>99 Kč<span style={{fontSize: 'var(--text-base)', fontWeight: 'normal'}}>/měsíc</span></div>
+                                                <div style={{fontSize: 'var(--text-3xl)', fontWeight: 'var(--font-bold)', color: 'var(--color-warning-text)', margin: 'var(--space-2) 0'}}>99 Kč<span style={{fontSize: 'var(--text-base)', fontWeight: 'normal'}}>/měsíc</span></div>
                                                 <p style={{fontSize: 'var(--text-sm)', color: 'var(--color-text-secondary)'}}>nebo 799 Kč/rok (ušetříte 33%)</p>
                                             </div>
                                             <ul style={{listStyle: 'none', padding: 0, marginBottom: 'var(--space-4)'}}>
@@ -4979,7 +4979,7 @@
                                                 </div>
                                             </div>
                                             <div style={{display: 'flex', alignItems: 'flex-start', gap: 'var(--space-3)'}}>
-                                                <div style={{background: 'var(--color-warning-light)', color: '#d97706', padding: 'var(--space-2)', borderRadius: 'var(--radius-lg)'}}>
+                                                <div style={{background: 'var(--color-warning-light)', color: 'var(--color-warning-text)', padding: 'var(--space-2)', borderRadius: 'var(--radius-lg)'}}>
                                                     <i className="fas fa-map-marker-alt"></i>
                                                 </div>
                                                 <div>
@@ -5029,7 +5029,7 @@
                                 </div>
 
                                 {/* Social Pricing Info */}
-                                <div className="alert" style={{background: 'linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%)', border: 'none'}}>
+                                <div className="alert" style={{background: 'var(--color-primary-light)', border: 'none'}}>
                                     <div style={{display: 'flex', alignItems: 'flex-start', gap: 'var(--space-3)'}}>
                                         <i className="fas fa-heart" style={{color: 'var(--color-primary)', fontSize: 'var(--text-xl)'}}></i>
                                         <div>
@@ -5204,7 +5204,7 @@
                                 {/* Kategorie dodavatelů */}
                                 <div className="card mb-6">
                                     <div className="card-header">
-                                        <h3 className="card-title"><i className="fas fa-faucet mr-2" style={{color: '#3b82f6'}}></i>Vodoinstalace</h3>
+                                        <h3 className="card-title"><i className="fas fa-faucet mr-2" style={{color: 'var(--color-info)'}}></i>Vodoinstalace</h3>
                                     </div>
                                     <div className="card-body">
                                         <div style={{display: 'flex', flexDirection: 'column', gap: 'var(--space-3)'}}>
@@ -5228,7 +5228,7 @@
 
                                 <div className="card mb-6">
                                     <div className="card-header">
-                                        <h3 className="card-title"><i className="fas fa-bolt mr-2" style={{color: '#f59e0b'}}></i>Elektroinstalace</h3>
+                                        <h3 className="card-title"><i className="fas fa-bolt mr-2" style={{color: 'var(--color-warning)'}}></i>Elektroinstalace</h3>
                                     </div>
                                     <div className="card-body">
                                         <div style={{display: 'flex', flexDirection: 'column', gap: 'var(--space-3)'}}>
@@ -5252,7 +5252,7 @@
 
                                 <div className="card mb-6">
                                     <div className="card-header">
-                                        <h3 className="card-title"><i className="fas fa-tools mr-2" style={{color: '#10b981'}}></i>Nářadí a stavební materiál</h3>
+                                        <h3 className="card-title"><i className="fas fa-tools mr-2" style={{color: 'var(--color-success)'}}></i>Nářadí a stavební materiál</h3>
                                     </div>
                                     <div className="card-body">
                                         <div style={{display: 'flex', flexDirection: 'column', gap: 'var(--space-3)'}}>
@@ -5283,7 +5283,7 @@
 
                                 <div className="card mb-6">
                                     <div className="card-header">
-                                        <h3 className="card-title"><i className="fas fa-fire mr-2" style={{color: '#ef4444'}}></i>Topení a klimatizace</h3>
+                                        <h3 className="card-title"><i className="fas fa-fire mr-2" style={{color: 'var(--color-danger)'}}></i>Topení a klimatizace</h3>
                                     </div>
                                     <div className="card-body">
                                         <div style={{display: 'flex', flexDirection: 'column', gap: 'var(--space-3)'}}>
