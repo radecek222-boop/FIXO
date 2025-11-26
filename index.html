@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FIXO - Okamžité opravy domácích závad</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="public/icons/icon-72x72.png">
+
+    <!-- SEO -->
+    <meta name="description" content="FIXO - AI asistent pro opravu domácích závad. Vyfoťte problém a získejte okamžitý návod k opravě.">
+    <meta name="keywords" content="opravy, domácí závady, AI diagnostika, DIY">
+
+    <!-- PWA -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#2563eb">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body>
+    <!-- HEADER (Fixní nahoře) -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <!-- Logo -->
+                <a href="index.html" class="logo">
+                    <i class="fas fa-tools"></i>
+                    <span>FIXO</span>
+                </a>
+
+                <!-- Desktop Navigation -->
+                <nav>
+                    <a href="index.html" class="active">
+                        <i class="fas fa-home"></i>
+                        <span>Domů</span>
+                    </a>
+                    <a href="repair.html">
+                        <i class="fas fa-wrench"></i>
+                        <span>Databáze oprav</span>
+                    </a>
+                    <a href="partners.html">
+                        <i class="fas fa-handshake"></i>
+                        <span>Partneři</span>
+                    </a>
+                    <a href="about.html">
+                        <i class="fas fa-info-circle"></i>
+                        <span>O nás</span>
+                    </a>
+                    <a href="contacts.html">
+                        <i class="fas fa-envelope"></i>
+                        <span>Kontakt</span>
+                    </a>
+                </nav>
+
+                <!-- Mobile Menu Toggle -->
+                <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+
+            <!-- Mobile Navigation -->
+            <div class="mobile-nav" id="mobileNav">
+                <a href="index.html" class="active">
+                    <i class="fas fa-home"></i>
+                    <span>Domů</span>
+                </a>
+                <a href="repair.html">
+                    <i class="fas fa-wrench"></i>
+                    <span>Databáze oprav</span>
+                </a>
+                <a href="partners.html">
+                    <i class="fas fa-handshake"></i>
+                    <span>Partneři</span>
+                </a>
+                <a href="about.html">
+                    <i class="fas fa-info-circle"></i>
+                    <span>O nás</span>
+                </a>
+                <a href="contacts.html">
+                    <i class="fas fa-envelope"></i>
+                    <span>Kontakt</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT (Bloky A a I) -->
+    <main>
+        <div class="container" style="padding-top: var(--space-8); padding-bottom: var(--space-8);">
+            <div class="blocks-container">
+
+                <!-- BLOK A - ACTION -->
+                <div class="block-a">
+                    <div class="block-a-header">
+                        <h2>
+                            <i class="fas fa-bolt"></i>
+                            Nahrát fotku
+                        </h2>
+                    </div>
+                    <div class="block-a-body">
+                        <!-- Upload Section -->
+                        <div class="block-a-section">
+                            <h3><i class="fas fa-camera"></i> Vyfoťte závadu</h3>
+                            <div class="drop-placeholder" id="dropZone">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <p><strong>Klikněte</strong> nebo přetáhněte fotku</p>
+                                <p style="font-size: var(--font-size-sm); margin-top: var(--space-2);">
+                                    Podporované formáty: JPG, PNG, WEBP
+                                </p>
+                            </div>
+                            <input type="file" id="fileInput" accept="image/*" style="display: none;">
+                        </div>
+
+                        <!-- Quick Examples -->
+                        <div class="block-a-section">
+                            <h3><i class="fas fa-lightbulb"></i> Časté problémy</h3>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-2);">
+                                <div class="action-box" onclick="window.location.href='repair.html#faucet'">
+                                    <i class="fas fa-faucet"></i>
+                                    <span>Kohoutek</span>
+                                </div>
+                                <div class="action-box" onclick="window.location.href='repair.html#toilet'">
+                                    <i class="fas fa-toilet"></i>
+                                    <span>WC</span>
+                                </div>
+                                <div class="action-box" onclick="window.location.href='repair.html#electrical'">
+                                    <i class="fas fa-bolt"></i>
+                                    <span>Elektrika</span>
+                                </div>
+                                <div class="action-box" onclick="window.location.href='repair.html#door'">
+                                    <i class="fas fa-door-closed"></i>
+                                    <span>Dveře</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- BLOK I - INFORMATION -->
+                <div class="block-i">
+                    <!-- Horní část - Informace (2/3) -->
+                    <div class="block-i-info">
+                        <div class="block-i-header">
+                            <h2>
+                                <i class="fas fa-info-circle"></i>
+                                Jak to funguje?
+                            </h2>
+                        </div>
+                        <div class="block-i-content">
+                            <!-- Info Cards -->
+                            <div class="info-card">
+                                <h3>1️⃣ Vyfoťte problém</h3>
+                                <p>Stačí vyfotit mobil nebo nahrát existující fotku. AI systém automaticky rozpozná, o jaký problém se jedná.</p>
+                            </div>
+
+                            <div class="info-card">
+                                <h3>2️⃣ Získejte analýzu</h3>
+                                <p>Umělá inteligence během několika sekund identifikuje závadu a navrhne možná řešení seřazená podle pravděpodobnosti.</p>
+                            </div>
+
+                            <div class="info-card">
+                                <h3>3️⃣ Následujte návod</h3>
+                                <p>Získáte detailní krok-za-krokem návod s potřebnými nástroji, díly a bezpečnostními upozorněními.</p>
+                            </div>
+
+                            <div class="info-card" style="background: var(--color-success-light); border-left-color: var(--color-success);">
+                                <h3>✨ Ušetřete čas i peníze</h3>
+                                <p>Průměrné úspory: <strong>2000-5000 Kč</strong> za opravu. Čas opravy: <strong>15-60 minut</strong> místo čekání na řemeslníka.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Dolní část - Actions (1/3) -->
+                    <div class="block-i-actions">
+                        <h3 style="margin-bottom: var(--space-2); font-size: var(--font-size-base);">
+                            <i class="fas fa-rocket"></i> Rychlé akce
+                        </h3>
+                        <div class="block-i-actions-grid">
+                            <div class="action-box" onclick="document.getElementById('fileInput').click()">
+                                <i class="fas fa-upload"></i>
+                                <span>Nahrát fotku</span>
+                            </div>
+                            <div class="action-box" onclick="window.location.href='repair.html'">
+                                <i class="fas fa-book"></i>
+                                <span>Databáze</span>
+                            </div>
+                            <div class="action-box" onclick="window.location.href='partners.html'">
+                                <i class="fas fa-shopping-cart"></i>
+                                <span>E-shopy</span>
+                            </div>
+                            <div class="action-box" onclick="window.location.href='about.html'">
+                                <i class="fas fa-question"></i>
+                                <span>Nápověda</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- FOOTER - Navigační panel (Fixní dole) -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <!-- O aplikaci -->
+                <div class="footer-section">
+                    <h3>FIXO</h3>
+                    <p>AI asistent pro okamžité opravy domácích závad. Ušetřete čas i peníze s profesionálními návody.</p>
+                    <div class="footer-social">
+                        <a href="#" title="Facebook"><i class="fab fa-facebook"></i></a>
+                        <a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" title="YouTube"><i class="fab fa-youtube"></i></a>
+                        <a href="#" title="Twitter"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+
+                <!-- Odkazy -->
+                <div class="footer-section">
+                    <h3>Užitečné</h3>
+                    <ul class="footer-links">
+                        <li><a href="repair.html"><i class="fas fa-wrench"></i> Databáze oprav</a></li>
+                        <li><a href="partners.html"><i class="fas fa-store"></i> Partnerské e-shopy</a></li>
+                        <li><a href="about.html"><i class="fas fa-info"></i> O projektu</a></li>
+                        <li><a href="contacts.html"><i class="fas fa-envelope"></i> Kontakt</a></li>
+                    </ul>
+                </div>
+
+                <!-- Právní -->
+                <div class="footer-section">
+                    <h3>Právní informace</h3>
+                    <ul class="footer-links">
+                        <li><a href="contacts.html#gdpr"><i class="fas fa-shield-alt"></i> Ochrana osobních údajů</a></li>
+                        <li><a href="contacts.html#terms"><i class="fas fa-file-contract"></i> Obchodní podmínky</a></li>
+                        <li><a href="contacts.html#disclaimer"><i class="fas fa-exclamation-triangle"></i> Odmítnutí odpovědnosti</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2025 FIXO. Všechna práva vyhrazena.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="assets/js/api.js"></script>
+    <script>
+        // Mobile menu toggle
+        document.getElementById('mobileMenuToggle').addEventListener('click', function() {
+            this.classList.toggle('active');
+            document.getElementById('mobileNav').classList.toggle('active');
+        });
+
+        // File upload handling
+        const fileInput = document.getElementById('fileInput');
+        const dropZone = document.getElementById('dropZone');
+
+        // Click to upload
+        dropZone.addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        // Drag & Drop
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('active');
+        });
+
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.classList.remove('active');
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('active');
+
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                handleFile(files[0]);
+            }
+        });
+
+        // File input change
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                handleFile(e.target.files[0]);
+            }
+        });
+
+        // Handle file upload
+        async function handleFile(file) {
+            // Validace
+            if (!file.type.startsWith('image/')) {
+                FIXO_API.showNotification('Prosím nahrajte obrázek!', 'error');
+                return;
+            }
+
+            try {
+                // Zobrazit loading
+                FIXO_API.showLoading('Analyzuji fotografii...');
+
+                // Komprese obrázku
+                const compressedImage = await FIXO_API.compressImage(file);
+
+                // Uložit do sessionStorage pro použití na analytics.html
+                sessionStorage.setItem('uploadedImage', compressedImage);
+                sessionStorage.setItem('uploadedImageName', file.name);
+
+                // Přesměrovat na analytics.html
+                window.location.href = 'analytics.html';
+
+            } catch (error) {
+                console.error('Error:', error);
+                FIXO_API.hideLoading();
+                FIXO_API.showNotification('Chyba při zpracování obrázku', 'error');
+            }
+        }
+    </script>
+</body>
+</html>
