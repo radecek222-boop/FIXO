@@ -3395,6 +3395,30 @@
                         </div>
                     </header>
 
+                    {/* Sub-header info bar se stats */}
+                    <div className="sub-header-bar">
+                        <div className="sub-header-content">
+                            <div className="sub-header-info">
+                                <span className="sub-header-brand">FIXO</span>
+                                <span className="sub-header-tagline">První světový standard pro vizuální diagnostiku domácích závad</span>
+                            </div>
+                            <div className="sub-header-stats">
+                                <div className="sub-header-stat">
+                                    <span className="sub-header-stat-value">500+</span>
+                                    <span className="sub-header-stat-label">Závad</span>
+                                </div>
+                                <div className="sub-header-stat">
+                                    <span className="sub-header-stat-value">30s</span>
+                                    <span className="sub-header-stat-label">Analýza</span>
+                                </div>
+                                <div className="sub-header-stat">
+                                    <span className="sub-header-stat-value">AI</span>
+                                    <span className="sub-header-stat-label">Powered</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     {/* NEW: Bottom Navigation Bar */}
                     <nav className="bottom-nav">
                         <button
@@ -3457,22 +3481,6 @@
                         {/* Home View - Single Page s Hero */}
                         {currentView === 'home' && (
                             <div className="app-container">
-                                {/* Stats Bar - pod headerem, užší */}
-                                <div className="stats-bar">
-                                    <div className="stats-bar-item">
-                                        <div className="stats-bar-value">500+</div>
-                                        <div className="stats-bar-label">Závad</div>
-                                    </div>
-                                    <div className="stats-bar-item">
-                                        <div className="stats-bar-value">30s</div>
-                                        <div className="stats-bar-label">Analýza</div>
-                                    </div>
-                                    <div className="stats-bar-item">
-                                        <div className="stats-bar-value">AI</div>
-                                        <div className="stats-bar-label">Powered</div>
-                                    </div>
-                                </div>
-
                                 {/* Desktop: Upload + Jak to funguje vedle sebe */}
                                 <div className="home-two-columns">
                                     {/* Main Upload Section */}
@@ -5333,7 +5341,7 @@
                                                         AI Učení
                                                     </h3>
                                                     {/* Desktop: 6 sloupců, mobil: 3 */}
-                                                    <div className="analyze-stats-desktop" style={{display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 'var(--space-2)', marginBottom: 'var(--space-3)'}}>
+                                                    <div className="analyze-stats-grid">
                                                         <div style={{textAlign: 'center', padding: 'var(--space-2)', background: 'var(--color-success-light)', borderRadius: 'var(--radius-md)'}}>
                                                             <div style={{fontSize: 'var(--text-lg)', fontWeight: 'var(--font-bold)', color: 'var(--color-success)'}}>
                                                                 {analyzerStats.cacheHits || 0}
