@@ -3042,12 +3042,13 @@
                         </div>
                     )}
 
-                    {/* NEW: Top Header - Kompaktní, centralizovaný */}
+                    {/* Unified Header - Sloučený s taglinem */}
                     <header className="top-header header-block" data-block="header">
                         <div className="top-header-content">
-                            {/* Logo */}
-                            <div className="logo" onClick={() => navigateTo('home')}>
-                                FIXO
+                            {/* Logo & Tagline */}
+                            <div className="logo-section" onClick={() => navigateTo('home')}>
+                                <div className="logo">FIXO</div>
+                                <div className="logo-tagline hide-md">První světový standard pro vizuální diagnostiku</div>
                             </div>
 
                             {/* Stats - pouze na desktop */}
@@ -3108,30 +3109,6 @@
                             </div>
                         </div>
                     </header>
-
-                    {/* Sub-header info bar se stats */}
-                    <div className="sub-header-bar header-block" data-block="header">
-                        <div className="sub-header-content">
-                            <div className="sub-header-info">
-                                <span className="sub-header-brand">FIXO</span>
-                                <span className="sub-header-tagline">První světový standard pro vizuální diagnostiku domácích závad</span>
-                            </div>
-                            <div className="sub-header-stats">
-                                <div className="sub-header-stat">
-                                    <span className="sub-header-stat-value">500+</span>
-                                    <span className="sub-header-stat-label">Závad</span>
-                                </div>
-                                <div className="sub-header-stat">
-                                    <span className="sub-header-stat-value">30s</span>
-                                    <span className="sub-header-stat-label">Analýza</span>
-                                </div>
-                                <div className="sub-header-stat">
-                                    <span className="sub-header-stat-value">AI</span>
-                                    <span className="sub-header-stat-label">Powered</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
 
                     {/* NEW: Bottom Navigation Bar */}
                     <nav className="bottom-nav navigation-block" data-block="navigation_block">
