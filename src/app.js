@@ -790,6 +790,9 @@
             const [feedbackCategory, setFeedbackCategory] = useState('all');
             const [feedbackSearch, setFeedbackSearch] = useState('');
 
+            // Features modal
+            const [showFeaturesModal, setShowFeaturesModal] = useState(false);
+
             // Inicializace SmartAnalyzer
             useEffect(() => {
                 const initSmartAnalyzer = async () => {
@@ -2449,6 +2452,91 @@
                         </div>
                     )}
 
+                    {/* Modal s informacemi o funkcích FIXO */}
+                    {showFeaturesModal && (
+                        <div className="translating-overlay" onClick={() => setShowFeaturesModal(false)}>
+                            <div className="translating-box max-h-[80vh] overflow-auto" onClick={e => e.stopPropagation()}>
+                                <h3 className="text-2xl font-bold mb-6 flex items-center gap-2">
+                                    <span style={{
+                                        background: 'var(--gradient-primary)',
+                                        WebkitBackgroundClip: 'text',
+                                        WebkitTextFillColor: 'transparent',
+                                        backgroundClip: 'text'
+                                    }}>FIXO</span>
+                                    <span>Funkce</span>
+                                </h3>
+
+                                {/* AI analýza fotografií */}
+                                <div className="mb-6 p-4 rounded-lg bg-primary-light border border-primary">
+                                    <h4 className="font-bold text-lg mb-3 flex items-center gap-2">
+                                        <i className="fas fa-brain text-primary"></i>
+                                        AI Analýza fotografií
+                                    </h4>
+                                    <p className="text-sm text-secondary mb-3">
+                                        Pokročilá umělá inteligence analyzuje vaše fotografie a identifikuje závady s vysokou přesností.
+                                    </p>
+                                    <ul className="text-sm text-secondary m-0 p-0 pl-4 space-y-2">
+                                        <li>✓ Rozpoznávání 50+ typů spotřebičů a zařízení</li>
+                                        <li>✓ Detekce konkrétních závad a poruch</li>
+                                        <li>✓ Automatická kategorizace problémů</li>
+                                        <li>✓ Samoučící se systém - přesnost se neustále zlepšuje</li>
+                                        <li>✓ Okamžitá analýza - výsledky za sekundy</li>
+                                    </ul>
+                                </div>
+
+                                {/* 500+ návodů na opravy */}
+                                <div className="mb-6 p-4 rounded-lg bg-success-light border border-success">
+                                    <h4 className="font-bold text-lg mb-3 flex items-center gap-2">
+                                        <i className="fas fa-tools text-success"></i>
+                                        500+ Návodů na opravy
+                                    </h4>
+                                    <p className="text-sm text-secondary mb-3">
+                                        Rozsáhlá databáze krok za krokem návodů pro opravy domácích spotřebičů a zařízení.
+                                    </p>
+                                    <ul className="text-sm text-secondary m-0 p-0 pl-4 space-y-2">
+                                        <li>✓ Kuchyňské spotřebiče (lednice, trouby, mikrovlnky, myčky...)</li>
+                                        <li>✓ Pračky, sušičky a praní</li>
+                                        <li>✓ Elektronika (TV, audio, počítače...)</li>
+                                        <li>✓ Topení, klimatizace a ventilace</li>
+                                        <li>✓ Voda, elektřina a instalace</li>
+                                        <li>✓ Podrobné kroky s ilustracemi</li>
+                                        <li>✓ Časové odhady a potřebné nářadí</li>
+                                        <li>✓ Tipy od zkušených techniků</li>
+                                    </ul>
+                                </div>
+
+                                {/* Bezpečnostní upozornění */}
+                                <div className="mb-6 p-4 rounded-lg bg-danger-light border border-danger">
+                                    <h4 className="font-bold text-lg mb-3 flex items-center gap-2">
+                                        <i className="fas fa-exclamation-triangle text-danger"></i>
+                                        Bezpečnostní upozornění
+                                    </h4>
+                                    <p className="text-sm text-secondary mb-3">
+                                        FIXO vás chrání před nebezpečnými situacemi a radí, kdy je nutné zavolat odborníka.
+                                    </p>
+                                    <ul className="text-sm text-secondary m-0 p-0 pl-4 space-y-2">
+                                        <li>⚡ Varování při práci s elektřinou (vysoké napětí, zkraty)</li>
+                                        <li>🔥 Upozornění na riziko požáru nebo výbuchu</li>
+                                        <li>💧 Varování před únikem vody nebo plynu</li>
+                                        <li>☠️ Identifikace toxických látek (chladiva, azbestů...)</li>
+                                        <li>👨‍🔧 Doporučení, kdy je nutný certifikovaný technik</li>
+                                        <li>📋 Právní požadavky a záruční podmínky</li>
+                                        <li>🛡️ Ochranné pomůcky a bezpečnostní postupy</li>
+                                    </ul>
+                                </div>
+
+                                {/* Zavřít */}
+                                <button
+                                    onClick={() => setShowFeaturesModal(false)}
+                                    className="btn btn-primary w-full"
+                                >
+                                    <i className="fas fa-check mr-2"></i>
+                                    Rozumím
+                                </button>
+                            </div>
+                        </div>
+                    )}
+
                     {/* Modal pro opravu špatné analýzy (Feedback) */}
                     {showFeedbackModal && (
                         <div className="translating-overlay" onClick={() => setShowFeedbackModal(false)}>
@@ -3291,8 +3379,8 @@
                                         </div>
 
                                         <div className="glass-card">
-                                            {/* Horní sekce - Logo a popis */}
-                                            <div className="mb-6 flex items-baseline gap-3">
+                                            {/* Horní sekce - Logo */}
+                                            <div className="mb-6">
                                                 <div className="text-3xl font-bold">
                                                     <span style={{
                                                         background: 'var(--gradient-primary)',
@@ -3301,9 +3389,6 @@
                                                         backgroundClip: 'text'
                                                     }}>FIXO</span>
                                                 </div>
-                                                <p className="text-xs md:text-sm text-secondary m-0 leading-tight">
-                                                    První světový standard pro vizuální diagnostiku domácích závad.
-                                                </p>
                                             </div>
 
                                             {/* Spodní sekce - Dva sloupce */}
@@ -3311,10 +3396,10 @@
                                                 {/* Levý sloupec - Funkce */}
                                                 <div className="flex-1">
                                                     <h4 className="font-semibold text-sm mb-3">Funkce</h4>
-                                                    <ul className="text-sm text-secondary m-0 p-0">
-                                                        <li className="mb-1">• AI analýza fotografií</li>
-                                                        <li className="mb-1">• 500+ návodů na opravy</li>
-                                                        <li className="m-0">• Bezpečnostní upozornění</li>
+                                                    <ul className="text-sm text-secondary m-0 p-0 cursor-pointer" onClick={() => setShowFeaturesModal(true)}>
+                                                        <li className="mb-1 hover:text-primary transition-colors">• AI analýza fotografií</li>
+                                                        <li className="mb-1 hover:text-primary transition-colors">• 500+ návodů na opravy</li>
+                                                        <li className="m-0 hover:text-primary transition-colors">• Bezpečnostní upozornění</li>
                                                     </ul>
                                                 </div>
 
