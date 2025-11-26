@@ -33,87 +33,87 @@
        oklch(lightness chroma hue)
        ========================================== */
 
-    /* Primary - Modrá */
+    /* Primary - Indigo */
     --color-primary-h: 264;
-    --color-primary: oklch(55% 0.22 var(--color-primary-h));
-    --color-primary-hover: oklch(48% 0.22 var(--color-primary-h));
-    --color-primary-light: oklch(95% 0.05 var(--color-primary-h));
-    --color-primary-dark: oklch(40% 0.22 var(--color-primary-h));
+    --color-primary: oklch(60% 0.20 var(--color-primary-h));
+    --color-primary-hover: oklch(68% 0.22 var(--color-primary-h));
+    --color-primary-light: oklch(20% 0.10 var(--color-primary-h));
+    --color-primary-dark: oklch(45% 0.18 var(--color-primary-h));
 
     /* Secondary - Cyan */
     --color-secondary-h: 195;
-    --color-secondary: oklch(65% 0.15 var(--color-secondary-h));
-    --color-secondary-hover: oklch(58% 0.15 var(--color-secondary-h));
-    --color-secondary-light: oklch(95% 0.04 var(--color-secondary-h));
+    --color-secondary: oklch(60% 0.15 var(--color-secondary-h));
+    --color-secondary-hover: oklch(68% 0.17 var(--color-secondary-h));
+    --color-secondary-light: oklch(18% 0.08 var(--color-secondary-h));
 
     /* Success - Zelená */
     --color-success-h: 145;
-    --color-success: oklch(55% 0.18 var(--color-success-h));
-    --color-success-hover: oklch(48% 0.18 var(--color-success-h));
-    --color-success-light: oklch(95% 0.05 var(--color-success-h));
+    --color-success: oklch(58% 0.18 var(--color-success-h));
+    --color-success-hover: oklch(65% 0.20 var(--color-success-h));
+    --color-success-light: oklch(18% 0.10 var(--color-success-h));
 
     /* Warning - Žlutá */
     --color-warning-h: 85;
-    --color-warning: oklch(75% 0.18 var(--color-warning-h));
-    --color-warning-hover: oklch(68% 0.18 var(--color-warning-h));
-    --color-warning-light: oklch(96% 0.06 var(--color-warning-h));
+    --color-warning: oklch(70% 0.18 var(--color-warning-h));
+    --color-warning-hover: oklch(78% 0.20 var(--color-warning-h));
+    --color-warning-light: oklch(20% 0.10 var(--color-warning-h));
 
     /* Danger - Červená */
     --color-danger-h: 25;
-    --color-danger: oklch(55% 0.22 var(--color-danger-h));
-    --color-danger-hover: oklch(48% 0.22 var(--color-danger-h));
-    --color-danger-light: oklch(95% 0.05 var(--color-danger-h));
+    --color-danger: oklch(58% 0.22 var(--color-danger-h));
+    --color-danger-hover: oklch(65% 0.24 var(--color-danger-h));
+    --color-danger-light: oklch(18% 0.10 var(--color-danger-h));
 
     /* Info - Světle modrá */
     --color-info-h: 220;
     --color-info: oklch(60% 0.18 var(--color-info-h));
-    --color-info-light: oklch(95% 0.04 var(--color-info-h));
+    --color-info-light: oklch(18% 0.08 var(--color-info-h));
 
     /* ==========================================
-       BARVY - Neutrals (Light Mode)
+       BARVY - Dark Indigo Theme (Default)
        ========================================== */
-    --color-text-primary: oklch(20% 0.02 260);
-    --color-text-secondary: oklch(35% 0.02 260);
-    --color-text-muted: oklch(50% 0.01 260);
-    --color-text-light: oklch(65% 0.01 260);
-    --color-text-inverse: oklch(100% 0 0);
+    --color-text-primary: oklch(98% 0.005 264);
+    --color-text-secondary: oklch(85% 0.01 264);
+    --color-text-muted: oklch(70% 0.01 264);
+    --color-text-light: oklch(55% 0.02 264);
+    --color-text-inverse: oklch(10% 0.03 264);
 
-    --color-bg-primary: oklch(100% 0 0);
-    --color-bg-secondary: oklch(98% 0.005 260);
-    --color-bg-tertiary: oklch(96% 0.008 260);
-    --color-bg-elevated: oklch(100% 0 0);
-    --color-bg-dark: oklch(20% 0.02 260);
-    --color-bg-darker: oklch(12% 0.02 260);
+    --color-bg-primary: oklch(8% 0.04 264);
+    --color-bg-secondary: oklch(12% 0.05 264);
+    --color-bg-tertiary: oklch(16% 0.06 264);
+    --color-bg-elevated: oklch(10% 0.04 264);
+    --color-bg-dark: oklch(5% 0.03 264);
+    --color-bg-darker: oklch(2% 0.02 264);
 
-    --color-border: oklch(90% 0.01 260);
-    --color-border-light: oklch(95% 0.005 260);
-    --color-border-dark: oklch(85% 0.01 260);
+    --color-border: oklch(25% 0.05 264);
+    --color-border-light: oklch(20% 0.04 264);
+    --color-border-dark: oklch(30% 0.06 264);
 
     /* ==========================================
-       GRADIENTY - Moderní mesh gradienty
+       GRADIENTY - Dark Indigo mesh gradienty
        ========================================== */
     --gradient-primary: linear-gradient(
       135deg,
-      oklch(55% 0.22 264) 0%,
-      oklch(65% 0.15 195) 100%
+      oklch(35% 0.18 264) 0%,
+      oklch(45% 0.15 280) 100%
     );
 
     --gradient-mesh: radial-gradient(
       ellipse at 20% 0%,
-      oklch(90% 0.1 264) 0%,
+      oklch(18% 0.12 264) 0%,
       transparent 50%
     ),
     radial-gradient(
       ellipse at 80% 100%,
-      oklch(90% 0.08 195) 0%,
+      oklch(15% 0.10 280) 0%,
       transparent 50%
     ),
-    oklch(98% 0.005 260);
+    oklch(8% 0.04 264);
 
     --gradient-glass: linear-gradient(
       135deg,
-      oklch(100% 0 0 / 0.8) 0%,
-      oklch(100% 0 0 / 0.4) 100%
+      oklch(12% 0.05 264 / 0.9) 0%,
+      oklch(8% 0.04 264 / 0.6) 100%
     );
 
     /* ==========================================
@@ -198,30 +198,30 @@
     --radius-full: 9999px;
 
     /* ==========================================
-       SHADOWS - Moderní s color
+       SHADOWS - Dark theme shadows
        ========================================== */
-    --shadow-color: 260deg 10% 50%;
+    --shadow-color: 264deg 50% 2%;
 
-    --shadow-xs: 0 1px 2px hsl(var(--shadow-color) / 0.05);
-    --shadow-sm: 0 1px 3px hsl(var(--shadow-color) / 0.08),
-                 0 1px 2px hsl(var(--shadow-color) / 0.06);
-    --shadow-md: 0 4px 6px -1px hsl(var(--shadow-color) / 0.08),
-                 0 2px 4px -2px hsl(var(--shadow-color) / 0.06);
-    --shadow-lg: 0 10px 15px -3px hsl(var(--shadow-color) / 0.08),
-                 0 4px 6px -4px hsl(var(--shadow-color) / 0.06);
-    --shadow-xl: 0 20px 25px -5px hsl(var(--shadow-color) / 0.08),
-                 0 8px 10px -6px hsl(var(--shadow-color) / 0.06);
-    --shadow-2xl: 0 25px 50px -12px hsl(var(--shadow-color) / 0.2);
-    --shadow-inner: inset 0 2px 4px hsl(var(--shadow-color) / 0.06);
+    --shadow-xs: 0 1px 2px hsl(var(--shadow-color) / 0.4);
+    --shadow-sm: 0 1px 3px hsl(var(--shadow-color) / 0.5),
+                 0 1px 2px hsl(var(--shadow-color) / 0.4);
+    --shadow-md: 0 4px 6px -1px hsl(var(--shadow-color) / 0.6),
+                 0 2px 4px -2px hsl(var(--shadow-color) / 0.5);
+    --shadow-lg: 0 10px 15px -3px hsl(var(--shadow-color) / 0.7),
+                 0 4px 6px -4px hsl(var(--shadow-color) / 0.6);
+    --shadow-xl: 0 20px 25px -5px hsl(var(--shadow-color) / 0.8),
+                 0 8px 10px -6px hsl(var(--shadow-color) / 0.7);
+    --shadow-2xl: 0 25px 50px -12px hsl(var(--shadow-color) / 0.9);
+    --shadow-inner: inset 0 2px 4px hsl(var(--shadow-color) / 0.5);
 
-    /* Colored shadows pro karty */
-    --shadow-primary: 0 10px 40px -10px oklch(55% 0.22 264 / 0.3);
-    --shadow-success: 0 10px 40px -10px oklch(55% 0.18 145 / 0.3);
-    --shadow-danger: 0 10px 40px -10px oklch(55% 0.22 25 / 0.3);
+    /* Colored shadows & glows pro dark theme */
+    --shadow-primary: 0 10px 40px -10px oklch(40% 0.22 264 / 0.5);
+    --shadow-success: 0 10px 40px -10px oklch(40% 0.18 145 / 0.5);
+    --shadow-danger: 0 10px 40px -10px oklch(40% 0.22 25 / 0.5);
 
-    /* Glow efekty */
-    --glow-primary: 0 0 20px oklch(55% 0.22 264 / 0.4);
-    --glow-success: 0 0 20px oklch(55% 0.18 145 / 0.4);
+    /* Glow efekty - silnější pro dark theme */
+    --glow-primary: 0 0 30px oklch(50% 0.22 264 / 0.6);
+    --glow-success: 0 0 30px oklch(50% 0.18 145 / 0.6);
 
     /* ==========================================
        TRANSITIONS & ANIMATIONS
@@ -302,10 +302,10 @@
     --blur-3xl: 64px;
 
     /* ==========================================
-       GLASSMORPHISM
+       GLASSMORPHISM - Dark theme
        ========================================== */
-    --glass-bg: oklch(100% 0 0 / 0.7);
-    --glass-border: oklch(100% 0 0 / 0.2);
+    --glass-bg: oklch(12% 0.05 264 / 0.8);
+    --glass-border: oklch(30% 0.08 264 / 0.3);
     --glass-blur: var(--blur-xl);
   }
 

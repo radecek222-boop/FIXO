@@ -4,9 +4,9 @@
  * Aplikační styly specifické pro FIXO
  */
 
-/* App-specific overrides */
+/* App-specific overrides - Dark Indigo Theme */
 .app-bg {
-    background: linear-gradient(135deg, var(--color-primary-light) 0%, var(--color-secondary-light) 100%);
+    background: var(--gradient-mesh);
     min-height: 100vh;
 }
 
@@ -51,7 +51,8 @@
 }
 
 .step-box {
-    background: linear-gradient(135deg, var(--color-primary-light) 0%, var(--color-secondary-light) 100%);
+    background: var(--color-bg-tertiary);
+    border: 1px solid var(--color-border);
     border-radius: var(--radius-xl);
     padding: var(--space-8);
     text-align: center;
@@ -227,7 +228,8 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0,0,0,0.5);
+    background: rgba(0,0,0,0.85);
+    backdrop-filter: blur(8px);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -287,7 +289,8 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(4px);
     z-index: 999;
     opacity: 0;
     transition: opacity var(--transition-normal);
