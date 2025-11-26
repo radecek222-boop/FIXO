@@ -10,6 +10,51 @@
     min-height: 100vh;
 }
 
+/* Hero Section - Kompaktní */
+.hero-section {
+    background: var(--gradient-primary);
+    color: var(--color-text-inverse);
+    padding: var(--space-8) var(--space-4);
+    text-align: center;
+    border-radius: 0 0 var(--radius-2xl) var(--radius-2xl);
+    margin-bottom: var(--space-6);
+    box-shadow: var(--shadow-lg);
+}
+
+/* Utility Classes - Kompaktní */
+.container {
+    max-width: 1200px;
+    margin-inline: auto;
+    padding-inline: var(--space-4);
+}
+
+.py-8 { padding-block: var(--space-6); }
+.py-6 { padding-block: var(--space-5); }
+.py-4 { padding-block: var(--space-4); }
+
+.mb-6 { margin-bottom: var(--space-4); }
+.mb-4 { margin-bottom: var(--space-3); }
+.mb-3 { margin-bottom: var(--space-2); }
+
+.text-center { text-align: center; }
+.text-secondary { color: var(--color-text-secondary); }
+.text-muted { color: var(--color-text-muted); }
+
+.max-w-md { max-width: 28rem; }
+.w-full { width: 100%; }
+.mx-auto { margin-inline: auto; }
+
+.hidden { display: none; }
+
+.grid { display: grid; }
+.grid-2 { grid-template-columns: repeat(2, 1fr); }
+.grid-3 { grid-template-columns: repeat(3, 1fr); }
+.grid-4 { grid-template-columns: repeat(4, 1fr); }
+
+.gap-2 { gap: var(--space-2); }
+.gap-3 { gap: var(--space-3); }
+.gap-4 { gap: var(--space-4); }
+
 .upload-card {
     background: var(--color-bg-primary);
     border: 1px solid var(--color-border);
