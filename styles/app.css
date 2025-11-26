@@ -75,7 +75,7 @@
   height: 100%;
   overflow-y: auto;
   padding-right: var(--space-2);
-  justify-content: center;
+  justify-content: flex-start;
 }
 
 /* Pravý blok - INFO (informativní, návody) */
@@ -86,7 +86,7 @@
   height: 100%;
   overflow-y: auto;
   padding-right: var(--space-2);
-  justify-content: center;
+  justify-content: flex-start;
 }
 
 /* Na mobilu - jeden sloupec, scrolluje celý obsah */
