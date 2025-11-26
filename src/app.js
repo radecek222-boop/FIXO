@@ -3690,33 +3690,33 @@
                                 <div className="content-right">
                                     {/* Horní box - Diagnostika */}
                                     <div className="glass-card p-0 overflow-hidden">
-                                        {/* Detection Header */}
-                                        <div className="result-header">
-                                                <div className="flex-between">
-                                                    <div>
-                                                        <h2 className="text-xl font-bold mb-2">
+                                        {/* Detection Header - kompaktní */}
+                                        <div className="p-4 bg-gradient-to-r from-primary to-primary-dark">
+                                                <div className="flex items-start justify-between gap-3">
+                                                    <div className="flex-1 min-w-0">
+                                                        <h2 className="text-base font-bold mb-1 truncate">
                                                             {analysisResult.object.name}
                                                         </h2>
-                                                        <p className="opacity-90 text-sm">
+                                                        <p className="opacity-90 text-xs mb-1">
                                                             {t('detectedWith')} {analysisResult.confidence}% {t('confidence')}
                                                         </p>
                                                 {analysisResult._meta && (
                                                     <span style={{
                                                         display: 'inline-flex',
                                                         alignItems: 'center',
-                                                        gap: 'var(--space-1)',
-                                                        marginTop: 'var(--space-2)',
-                                                        padding: 'var(--space-1) var(--space-2)',
+                                                        gap: '4px',
+                                                        marginTop: '4px',
+                                                        padding: '2px 6px',
                                                         borderRadius: 'var(--radius-full)',
-                                                        fontSize: 'var(--text-xs)',
+                                                        fontSize: '10px',
                                                         fontWeight: 'var(--font-medium)',
                                                         background: analysisResult._meta.source === 'cache' || analysisResult._meta.source === 'embedding'
-                                                            ? 'rgba(34, 197, 94, 0.2)'
+                                                            ? 'rgba(34, 197, 94, 0.3)'
                                                             : analysisResult._meta.source === 'classifier'
-                                                                ? 'rgba(59, 130, 246, 0.2)'
+                                                                ? 'rgba(59, 130, 246, 0.3)'
                                                                 : analysisResult._meta.source === 'api'
-                                                                    ? 'rgba(168, 85, 247, 0.2)'
-                                                                    : 'rgba(251, 191, 36, 0.2)',
+                                                                    ? 'rgba(168, 85, 247, 0.3)'
+                                                                    : 'rgba(251, 191, 36, 0.3)',
                                                         color: 'white'
                                                     }}>
                                                         <i className={`fas ${
@@ -3725,44 +3725,43 @@
                                                             analysisResult._meta.source === 'classifier' ? 'fa-robot' :
                                                             analysisResult._meta.source === 'api' ? 'fa-cloud' : 'fa-question'
                                                         }`}></i>
-                                                        {analysisResult._meta.source === 'cache' && 'Z paměti'}
-                                                        {analysisResult._meta.source === 'embedding' && 'Podobný obrázek'}
-                                                        {analysisResult._meta.source === 'classifier' && 'Lokální AI'}
-                                                        {analysisResult._meta.source === 'api' && 'Cloud AI'}
-                                                        {analysisResult._meta.source === 'simulation' && 'Demo režim'}
-                                                        {analysisResult._meta.cached && ` (${analysisResult._meta.duration}ms)`}
+                                                        {analysisResult._meta.source === 'cache' && 'Paměť'}
+                                                        {analysisResult._meta.source === 'embedding' && 'Podobný'}
+                                                        {analysisResult._meta.source === 'classifier' && 'AI'}
+                                                        {analysisResult._meta.source === 'api' && 'Cloud'}
+                                                        {analysisResult._meta.source === 'simulation' && 'Demo'}
                                                     </span>
                                                 )}
                                                     </div>
-                                            <div className="text-5xl">
+                                            <div className="text-2xl flex-shrink-0">
                                                 <i className={`fas ${getCategoryIcon(analysisResult.issue.category)} opacity-90`}></i>
                                             </div>
                                                 </div>
                                             </div>
 
-                                    {/* Tlačítko pro opravu špatné analýzy */}
-                                    <div className="bg-secondary">
-                                        <span className="text-sm text-secondary">
-                                            <i className="fas fa-question-circle mr-2"></i>
-                                            Nesouhlasíte s výsledkem?
+                                    {/* Tlačítko pro opravu špatné analýzy - kompaktní */}
+                                    <div className="p-2 bg-secondary border-b border-border flex items-center justify-between">
+                                        <span className="text-xs text-secondary">
+                                            <i className="fas fa-question-circle mr-1"></i>
+                                            Nesouhlasíte?
                                         </span>
                                         <button
                                             onClick={() => setShowFeedbackModal(true)}
-                                            className="bg-transparent text-sm cursor-pointer"
+                                            className="bg-transparent text-xs text-primary cursor-pointer hover:underline"
                                         >
-                                            <i className="fas fa-edit"></i>
+                                            <i className="fas fa-edit mr-1"></i>
                                             Opravit
                                         </button>
                                     </div>
 
-                                    {/* Possible Issues Selection */}
+                                    {/* Possible Issues Selection - kompaktní */}
                                     {analysisResult.possibleIssues && analysisResult.possibleIssues.length > 0 && (
-                                        <div className="p-4 bg-secondary border-b border-border">
-                                            <h3 className="font-semibold mb-3 text-sm text-secondary">
-                                                <i className="fas fa-question-circle mr-2"></i>
+                                        <div className="p-3 bg-secondary border-b border-border">
+                                            <h3 className="font-semibold mb-2 text-xs text-secondary">
+                                                <i className="fas fa-question-circle mr-1"></i>
                                                 Vyberte váš problém:
                                             </h3>
-                                            <div className="flex flex-col gap-2">
+                                            <div className="flex flex-col gap-1">
                                                 {analysisResult.possibleIssues.map((issue, idx) => (
                                                     <button
                                                         key={issue.id || idx}
@@ -3776,24 +3775,25 @@
                                                                 }
                                                             }));
                                                         }}
-                                                        className="p-3 rounded-lg cursor-pointer text-left"
+                                                        className="p-2 rounded-lg cursor-pointer text-left hover:bg-tertiary"
                                                     >
-                                                        <div className="flex justify-between items-center">
-                                                            <div>
-                                                                <p className="font-semibold mb-1">
+                                                        <div className="flex justify-between items-center gap-2">
+                                                            <div className="flex-1 min-w-0">
+                                                                <p className="font-semibold text-xs mb-0 truncate">
                                                                     {issue.name}
                                                                 </p>
-                                                                <p className="text-xs text-secondary">
+                                                                <p className="text-xs text-secondary m-0 truncate">
                                                                     {issue.description}
                                                                 </p>
                                                             </div>
                                                             <div style={{
                                                                 background: idx === 0 ? 'var(--color-success)' : 'var(--color-bg-tertiary)',
                                                                 color: idx === 0 ? 'white' : 'var(--color-text-secondary)',
-                                                                padding: 'var(--space-1) var(--space-2)',
+                                                                padding: '2px 6px',
                                                                 borderRadius: 'var(--radius-full)',
-                                                                fontSize: 'var(--text-xs)',
-                                                                whiteSpace: 'nowrap'
+                                                                fontSize: '10px',
+                                                                whiteSpace: 'nowrap',
+                                                                flexShrink: 0
                                                             }}>
                                                                 {Math.round(issue.probability * 100)}%
                                                             </div>
@@ -3804,67 +3804,67 @@
                                         </div>
                                     )}
 
-                                    {/* Issue Details */}
-                                    <div className="card-body">
-                                        <div className="mb-6">
-                                            <h3 className="text-lg font-semibold mb-2">
+                                    {/* Issue Details - kompaktní */}
+                                    <div className="p-3">
+                                        <div className="mb-3">
+                                            <h3 className="text-sm font-semibold mb-2">
                                                 {t('identifiedProblem')}
                                             </h3>
-                                            <div className="alert alert-danger">
-                                                <p className="alert-title">{analysisResult.issue.name}</p>
-                                                <p className="text-sm mt-1">
+                                            <div className="alert alert-danger p-3">
+                                                <p className="font-semibold text-sm mb-1">{analysisResult.issue.name}</p>
+                                                <p className="text-xs m-0">
                                                     {analysisResult.issue.description}
                                                 </p>
                                             </div>
                                         </div>
 
-                                        {/* Quick Info */}
-                                        <div className="grid grid-3 gap-4 mb-6">
-                                            <div className="info-box">
-                                                <i className="fas fa-clock text-primary text-2xl mb-2 block"></i>
-                                                <div className="text-sm text-secondary">{t('repairTime')}</div>
-                                                <div className="font-semibold">{analysisResult.issue.timeEstimate}</div>
+                                        {/* Quick Info - kompaktní */}
+                                        <div className="grid grid-3 gap-2 mb-3">
+                                            <div className="info-box p-3">
+                                                <i className="fas fa-clock text-primary text-lg mb-1 block"></i>
+                                                <div className="text-xs text-secondary">{t('repairTime')}</div>
+                                                <div className="font-semibold text-sm">{analysisResult.issue.timeEstimate}</div>
                                             </div>
-                                            <div className="info-box">
-                                                <i className="fas fa-signal text-warning text-2xl mb-2 block"></i>
-                                                <div className="text-sm text-secondary">{t('difficulty')}</div>
-                                                <div className="font-semibold">{analysisResult.issue.difficulty}</div>
+                                            <div className="info-box p-3">
+                                                <i className="fas fa-signal text-warning text-lg mb-1 block"></i>
+                                                <div className="text-xs text-secondary">{t('difficulty')}</div>
+                                                <div className="font-semibold text-sm">{analysisResult.issue.difficulty}</div>
                                             </div>
-                                            <div className="info-box">
-                                                <i className="fas fa-exclamation-triangle text-danger text-2xl mb-2 block"></i>
-                                                <div className="text-sm text-secondary">{t('risk')}</div>
-                                                <div className="font-semibold">{analysisResult.issue.riskScore}/10</div>
+                                            <div className="info-box p-3">
+                                                <i className="fas fa-exclamation-triangle text-danger text-lg mb-1 block"></i>
+                                                <div className="text-xs text-secondary">{t('risk')}</div>
+                                                <div className="font-semibold text-sm">{analysisResult.issue.riskScore}/10</div>
                                             </div>
                                         </div>
 
-                                        {/* 💰 Savings Calculator - DIY vs Professional */}
+                                        {/* Savings Calculator - kompaktní */}
                                         {analysisResult.issue.materialCost && analysisResult.issue.professionalCost && (
-                                            <div className="p-6">
-                                                <h3 className="mb-4">
-                                                    <i className="fas fa-piggy-bank text-xl"></i>
+                                            <div className="mb-3">
+                                                <h3 className="text-sm font-semibold mb-2">
+                                                    <i className="fas fa-piggy-bank text-sm mr-1"></i>
                                                     Kolik ušetříš?
                                                 </h3>
 
-                                                <div className="grid grid-cols-2 gap-4 mb-4">
+                                                <div className="grid grid-cols-2 gap-2">
                                                     {/* DIY Cost */}
-                                                    <div className="p-4 rounded-lg text-center">
-                                                        <div className="text-xs uppercase text-success font-semibold mb-1">
-                                                            <i className="fas fa-hand-paper mr-1"></i> DIY oprava
+                                                    <div className="p-2 rounded-lg bg-success-light text-center">
+                                                        <div className="text-xs text-success font-semibold mb-1">
+                                                            <i className="fas fa-hand-paper mr-1"></i> DIY
                                                         </div>
-                                                        <div className="text-2xl font-bold text-success-text">
+                                                        <div className="text-base font-bold text-success">
                                                             {analysisResult.issue.materialCost.min}-{analysisResult.issue.materialCost.max} Kč
                                                         </div>
-                                                        <div className="text-xs text-muted">
-                                                            pouze materiál
+                                                        <div className="text-xs text-secondary">
+                                                            materiál
                                                         </div>
                                                     </div>
 
                                                     {/* Professional Cost */}
-                                                    <div className="p-4 rounded-lg border border-border text-center">
-                                                        <div className="text-xs uppercase text-secondary font-semibold mb-1">
-                                                            <i className="fas fa-user-tie mr-1"></i> Profesionál
+                                                    <div className="p-2 rounded-lg border border-border text-center">
+                                                        <div className="text-xs text-secondary font-semibold mb-1">
+                                                            <i className="fas fa-user-tie mr-1"></i> Expert
                                                         </div>
-                                                        <div className="text-2xl font-bold text-secondary">
+                                                        <div className="text-base font-bold text-secondary">
                                                             {analysisResult.issue.professionalCost.min}-{analysisResult.issue.professionalCost.max} Kč
                                                         </div>
                                                         <div className="text-xs text-muted">
@@ -3873,31 +3873,28 @@
                                                     </div>
                                                 </div>
 
-                                                {/* Savings highlight */}
-                                                <div className="p-4 rounded-lg text-center">
-                                                    <div className="text-sm mb-1">
-                                                        <i className="fas fa-star mr-1"></i> Tvoje úspora s FIXO
+                                                {/* Savings highlight - kompaktní */}
+                                                <div className="p-2 rounded-lg bg-primary-light text-center mt-2">
+                                                    <div className="text-xs mb-1">
+                                                        <i className="fas fa-star mr-1"></i> Tvoje úspora
                                                     </div>
-                                                    <div className="text-3xl font-bold">
+                                                    <div className="text-lg font-bold text-primary">
                                                         {analysisResult.issue.professionalCost.min - analysisResult.issue.materialCost.max}-{analysisResult.issue.professionalCost.max - analysisResult.issue.materialCost.min} Kč
-                                                    </div>
-                                                    <div className="text-xs opacity-90">
-                                                        To je {Math.round((analysisResult.issue.professionalCost.min + analysisResult.issue.professionalCost.max) / 2 / 79)} měsíců FIXO Premium zdarma! <i className="fas fa-dumbbell"></i>
                                                     </div>
                                                 </div>
                                             </div>
                                         )}
 
-                                        {/* Safety Warnings */}
+                                        {/* Safety Warnings - kompaktní */}
                                         {analysisResult.issue.riskScore > 5 && (
-                                            <div className="alert alert-warning mb-6">
-                                                <p className="alert-title">
-                                                    <i className="fas fa-exclamation-triangle mr-2"></i>
+                                            <div className="alert alert-warning p-3 mb-3">
+                                                <p className="font-semibold text-sm mb-1">
+                                                    <i className="fas fa-exclamation-triangle mr-1"></i>
                                                     {t('safetyWarning')}
                                                 </p>
-                                                <ul className="text-sm mt-2">
+                                                <ul className="text-xs m-0 pl-4">
                                                     {analysisResult.issue.safetyWarnings.map((warning, idx) => (
-                                                        <li key={idx}>• {warning}</li>
+                                                        <li key={idx}>{warning}</li>
                                                     ))}
                                                 </ul>
                                             </div>
