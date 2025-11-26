@@ -756,6 +756,7 @@
             const [isDragging, setIsDragging] = useState(false);
             const [selectedCategory, setSelectedCategory] = useState('all');
             const [searchTerm, setSearchTerm] = useState(''); // Search in database
+            const [expandedSections, setExpandedSections] = useState({}); // Databázové sekce (action_block friendly)
             const [checkedItems, setCheckedItems] = useState({}); // Pre-repair checklist items
             const [checklistPhase, setChecklistPhase] = useState(false); // Show checklist before repair
             const [historyFilter, setHistoryFilter] = useState('all'); // 'all', 'completed', 'in_progress'
@@ -894,6 +895,36 @@
                 });
 
                 return results.sort((a, b) => b.matchScore - a.matchScore).slice(0, 8);
+            };
+
+            // Toggle detailní karty v databázi (information_block obsahuje otevřené sekce)
+            const toggleDatabaseSection = (sectionKey) => {
+                setExpandedSections(prev => ({
+                    ...prev,
+                    [sectionKey]: !prev[sectionKey]
+                }));
+            };
+
+            // Navigační tlačítka pro databázi (otevřou kartu a posunou pohled)
+            const focusDatabaseSection = (sectionKey) => {
+                setExpandedSections(prev => ({
+                    ...prev,
+                    [sectionKey]: true
+                }));
+
+                requestAnimationFrame(() => {
+                    const sectionEl = document.getElementById(`database-card-${sectionKey}`);
+                    if (sectionEl) {
+                        sectionEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        sectionEl.classList.add('nav-highlight');
+                        setTimeout(() => sectionEl.classList.remove('nav-highlight'), 1200);
+                    }
+                });
+            };
+
+            const getCategoryLabel = (categoryId) => {
+                const found = getCategories().find(cat => cat.id === categoryId);
+                return found ? found.name : categoryId;
             };
 
             // Resetovat upřesňující kroky
@@ -3013,7 +3044,7 @@
                     )}
 
                     {/* NEW: Top Header - Kompaktní, centralizovaný */}
-                    <header className="top-header">
+                    <header className="top-header header-block" data-block="header">
                         <div className="top-header-content">
                             {/* Logo */}
                             <div className="logo" onClick={() => navigateTo('home')}>
@@ -3064,7 +3095,7 @@
                     </header>
 
                     {/* Sub-header info bar se stats */}
-                    <div className="sub-header-bar">
+                    <div className="sub-header-bar header-block" data-block="header">
                         <div className="sub-header-content">
                             <div className="sub-header-info">
                                 <span className="sub-header-brand">FIXO</span>
@@ -3088,7 +3119,7 @@
                     </div>
 
                     {/* NEW: Bottom Navigation Bar */}
-                    <nav className="bottom-nav">
+                    <nav className="bottom-nav navigation-block" data-block="navigation_block">
                         <button
                             className={`bottom-nav-item ${currentView === 'home' || currentView === 'preview' || currentView === 'analyze' || currentView === 'repair' ? 'active' : ''}`}
                             onClick={() => navigateTo('home')}
@@ -3149,89 +3180,89 @@
                         {/* Home View - Single Page s Hero */}
                         {currentView === 'home' && (
                             <div className="app-container">
-                                {/* Desktop: Upload + Jak to funguje vedle sebe */}
-                                <div className="home-two-columns">
-                                    {/* Main Upload Section */}
-                                    <div className="upload-card glass-card upload-card-compact">
-                                        <div className="text-center mb-4">
-                                            <h2 className="text-xl font-bold text-primary mb-2">
-                                                {t('homeTitle')}
-                                            </h2>
-                                            <p className="text-secondary" className="text-sm">
-                                                {t('homeSubtitle')}
-                                            </p>
-                                        </div>
-
-                                        <input
-                                            ref={fileInputRef}
-                                            type="file"
-                                            accept="image/*"
-                                            onChange={handleImageUpload}
-                                            className="hidden"
-                                        />
-
-                                        {/* Drag & Drop Zone */}
-                                        <div
-                                            ref={dropZoneRef}
-                                            className={`drop-zone ${isDragging ? 'drag-over' : ''}`}
-                                            onDragOver={handleDragOver}
-                                            onDragLeave={handleDragLeave}
-                                            onDrop={handleDrop}
-                                            onClick={() => fileInputRef.current.click()}
-                                            className="p-6"
-                                        >
-                                            <div className="drop-zone-icon">
-                                                {isDragging ? (
-                                                    <i className="fas fa-cloud-upload-alt"></i>
-                                                ) : (
-                                                    <i className="fas fa-camera"></i>
-                                                )}
+                                <div className="page-frame" data-block="layout_shell">
+                                    {/* action_block */}
+                                    <section className="action-block" data-block="action_block">
+                                        <div className="upload-card glass-card upload-card-compact">
+                                            <div className="text-center mb-4">
+                                                <h2 className="text-xl font-bold text-primary mb-2">
+                                                    {t('homeTitle')}
+                                                </h2>
+                                                <p className="text-secondary" className="text-sm">
+                                                    {t('homeSubtitle')}
+                                                </p>
                                             </div>
-                                            <p className="text-base font-semibold mb-1 text-primary">
-                                                {isDragging ? t('dropzoneDrop') : t('dropzoneText')}
-                                            </p>
-                                            <p className="text-secondary" className="text-sm">
-                                                {t('dropzoneHint')}
-                                            </p>
-                                        </div>
 
-                                        {/* Quick Examples - kompaktní */}
-                                        <div className="grid grid-6 mt-4 gap-2" className="grid-cols-6">
-                                            {[
-                                                { icon: 'fa-tint', name: 'Kohoutek' },
-                                                { icon: 'fa-toilet', name: 'WC' },
-                                                { icon: 'fa-plug', name: 'Zásuvka' },
-                                                { icon: 'fa-door-open', name: 'Dveře' },
-                                                { icon: 'fa-lightbulb', name: 'Světlo' },
-                                                { icon: 'fa-thermometer-half', name: 'Topení' }
-                                            ].map((item, idx) => (
-                                                <div key={idx} className="example-card" className="p-2">
-                                                    <i className={`fas ${item.icon}`} className="text-lg text-primary"></i>
-                                                    <div className="text-xs text-secondary">{item.name}</div>
+                                            <input
+                                                ref={fileInputRef}
+                                                type="file"
+                                                accept="image/*"
+                                                onChange={handleImageUpload}
+                                                className="hidden"
+                                            />
+
+                                            {/* Drag & Drop Zone */}
+                                            <div
+                                                ref={dropZoneRef}
+                                                className={`drop-zone ${isDragging ? 'drag-over' : ''}`}
+                                                onDragOver={handleDragOver}
+                                                onDragLeave={handleDragLeave}
+                                                onDrop={handleDrop}
+                                                onClick={() => fileInputRef.current.click()}
+                                                className="p-6"
+                                            >
+                                                <div className="drop-zone-icon">
+                                                    {isDragging ? (
+                                                        <i className="fas fa-cloud-upload-alt"></i>
+                                                    ) : (
+                                                        <i className="fas fa-camera"></i>
+                                                    )}
                                                 </div>
-                                            ))}
-                                        </div>
+                                                <p className="text-base font-semibold mb-1 text-primary">
+                                                    {isDragging ? t('dropzoneDrop') : t('dropzoneText')}
+                                                </p>
+                                                <p className="text-secondary" className="text-sm">
+                                                    {t('dropzoneHint')}
+                                                </p>
+                                            </div>
 
-                                        {/* Nelze vyfotit? - integrováno */}
-                                        <div
-                                            onClick={() => {
-                                                resetClarification();
-                                                setShowDescribeModal(true);
-                                            }}
-                                            className="p-3 rounded-lg bg-primary-light cursor-pointer text-center"
-                                        >
-                                            <div className="flex items-center justify-center gap-2">
-                                                <i className="fas fa-keyboard" className="text-lg text-primary"></i>
-                                                <span className="font-semibold text-primary-dark text-sm">
-                                                    Nelze vyfotit? Popište problém
-                                                </span>
+                                            {/* Quick Examples - kompaktní */}
+                                            <div className="grid grid-6 mt-4 gap-2" className="grid-cols-6">
+                                                {[
+                                                    { icon: 'fa-tint', name: 'Kohoutek' },
+                                                    { icon: 'fa-toilet', name: 'WC' },
+                                                    { icon: 'fa-plug', name: 'Zásuvka' },
+                                                    { icon: 'fa-door-open', name: 'Dveře' },
+                                                    { icon: 'fa-lightbulb', name: 'Světlo' },
+                                                    { icon: 'fa-thermometer-half', name: 'Topení' }
+                                                ].map((item, idx) => (
+                                                    <div key={idx} className="example-card" className="p-2">
+                                                        <i className={`fas ${item.icon}`} className="text-lg text-primary"></i>
+                                                        <div className="text-xs text-secondary">{item.name}</div>
+                                                    </div>
+                                                ))}
+                                            </div>
+
+                                            {/* Nelze vyfotit? - integrováno */}
+                                            <div
+                                                onClick={() => {
+                                                    resetClarification();
+                                                    setShowDescribeModal(true);
+                                                }}
+                                                className="p-3 rounded-lg bg-primary-light cursor-pointer text-center"
+                                            >
+                                                <div className="flex items-center justify-center gap-2">
+                                                    <i className="fas fa-keyboard" className="text-lg text-primary"></i>
+                                                    <span className="font-semibold text-primary-dark text-sm">
+                                                        Nelze vyfotit? Popište problém
+                                                    </span>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    </section>
 
-                                    {/* Pravý sloupec: Jak to funguje + Footer */}
-                                    <div className="flex flex-col gap-4">
-                                        {/* Jak to funguje */}
+                                    {/* information_block */}
+                                    <section className="information-block" data-block="information_block">
                                         <div className="glass-card flex flex-col">
                                             <h3 className="section-title mb-4">
                                                 <i className="fas fa-magic"></i>
@@ -3268,7 +3299,6 @@
                                             </div>
                                         </div>
 
-                                        {/* Footer uvnitř pravého sloupce - horizontální layout */}
                                         <div className="glass-card">
                                             <div className="flex flex-col md:flex-row gap-6 items-start md:items-center justify-between">
                                                 {/* FIXO sekce */}
@@ -3305,7 +3335,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    </section>
                                 </div>
                             </div>
                         )}
@@ -4076,100 +4106,159 @@
 
                         {/* Knowledge Base View */}
                         {currentView === 'knowledge' && (
-                            <div className="app-container" className="pt-4">
-                                <h2 className="section-title" className="mb-4">
-                                    <i className="fas fa-book section-title-icon"></i>
-                                    {t('databaseTitle')}
-                                </h2>
+                            <div className="app-container">
+                                <div className="page-frame" data-block="layout_shell">
+                                    <section className="action-block" data-block="action_block">
+                                        <h2 className="section-title mb-4">
+                                            <i className="fas fa-book section-title-icon"></i>
+                                            {t('databaseTitle')}
+                                        </h2>
 
-                                {/* Search Input */}
-                                <div className="mb-6">
-                                    <div className="max-w-lg">
-                                        <i className="fas fa-search" className="text-muted"></i>
-                                        <input
-                                            type="text"
-                                            placeholder="Hledat opravy, nástroje, problémy..."
-                                            value={searchTerm}
-                                            onChange={(e) => setSearchTerm(e.target.value)}
-                                            className="w-full text-base"
-                                            onFocus={(e) => e.target.style.borderColor = 'var(--color-primary)'}
-                                            onBlur={(e) => e.target.style.borderColor = 'var(--color-border)'}
-                                        />
-                                        {searchTerm && (
-                                            <button
-                                                onClick={() => setSearchTerm('')}
-                                                className="p-1 border-none text-muted cursor-pointer"
-                                            >
-                                                <i className="fas fa-times"></i>
-                                            </button>
-                                        )}
-                                    </div>
-                                </div>
-
-                                {/* Category Filter - kompaktní na desktopu */}
-                                <div className="category-filter category-filter-desktop">
-                                    {categories.map(cat => (
-                                        <button
-                                            key={cat.id}
-                                            onClick={() => setSelectedCategory(cat.id)}
-                                            className={`category-btn ${selectedCategory === cat.id ? 'active' : ''}`}
-                                        >
-                                            <i className={`fas ${cat.icon}`} className="mr-1"></i>
-                                            {cat.name}
-                                        </button>
-                                    ))}
-                                </div>
-
-                                {/* Results count */}
-                                <p className="text-center text-secondary mb-4" className="text-sm">
-                                    {t('showing')} {getFilteredDatabase().length} {t('outOf')} {Object.keys(repairDatabase).length} {t('items')}
-                                </p>
-
-                                {/* Knowledge Grid - 4-6 sloupců na desktopu */}
-                                <div className="grid grid-3 knowledge-grid-desktop gap-4">
-                                    {getFilteredDatabase().map(([key, item]) => (
-                                        <div key={key} className="knowledge-card knowledge-card-compact">
-                                            <div className="knowledge-card-header">
-                                                <div className="flex-between items-center">
-                                                    <h3 className="font-bold text-base">{item.name}</h3>
-                                                    <i className={`fas ${getCategoryIcon(item.category)}`} className="text-xl opacity-90"></i>
-                                                </div>
-                                            </div>
-                                            <div className="p-3 scrollable-content" className="max-h-[180px]">
-                                                <div className="flex flex-col gap-2">
-                                                    {item.issues.map(issue => (
-                                                        <div key={issue.id} className="issue-item" className="p-2 pl-3">
-                                                            <p className="font-semibold text-sm">{issue.name}</p>
-                                                            <div className="mt-1 flex gap-3 text-xs text-muted flex-wrap">
-                                                                <span><i className="fas fa-clock mr-1"></i>{issue.timeEstimate}</span>
-                                                                <span className={`badge badge-${issue.riskScore > 5 ? 'danger' : issue.riskScore > 2 ? 'warning' : 'success'}`} className="text-[10px] px-1.5 py-[1px]">
-                                                                    {issue.riskScore}/10
-                                                                </span>
-                                                            </div>
-                                                        </div>
-                                                    ))}
-                                                </div>
+                                        <div className="card mb-4">
+                                            <div className="max-w-lg">
+                                                <i className="fas fa-search" className="text-muted"></i>
+                                                <input
+                                                    type="text"
+                                                    placeholder="Hledat opravy, nástroje, problémy..."
+                                                    value={searchTerm}
+                                                    onChange={(e) => setSearchTerm(e.target.value)}
+                                                    className="w-full text-base"
+                                                    onFocus={(e) => e.target.style.borderColor = 'var(--color-primary)'}
+                                                    onBlur={(e) => e.target.style.borderColor = 'var(--color-border)'}
+                                                />
+                                                {searchTerm && (
+                                                    <button
+                                                        onClick={() => setSearchTerm('')}
+                                                        className="p-1 border-none text-muted cursor-pointer"
+                                                    >
+                                                        <i className="fas fa-times"></i>
+                                                    </button>
+                                                )}
                                             </div>
                                         </div>
-                                    ))}
-                                </div>
 
-                                {getFilteredDatabase().length === 0 && (
-                                    <div className="empty-state card">
-                                        <div className="empty-state-icon"><i className="fas fa-search"></i></div>
-                                        <p className="empty-state-title">{t('noCategoryItems')}</p>
-                                        <p className="empty-state-desc">{t('tryCategoryHint')}</p>
-                                    </div>
-                                )}
+                                        <div className="category-filter category-filter-desktop">
+                                            {categories.map(cat => (
+                                                <button
+                                                    key={cat.id}
+                                                    onClick={() => setSelectedCategory(cat.id)}
+                                                    className={`category-btn ${selectedCategory === cat.id ? 'active' : ''}`}
+                                                >
+                                                    <i className={`fas ${cat.icon}`} className="mr-1"></i>
+                                                    {cat.name}
+                                                </button>
+                                            ))}
+                                        </div>
 
-                                <div className="alert alert-info mt-8">
-                                    <p className="alert-title">
-                                        <i className="fas fa-info-circle mr-2"></i>
-                                        {t('aboutDatabase')}
-                                    </p>
-                                    <p>
-                                        {t('databaseInfo')}
-                                    </p>
+                                        <p className="text-center text-secondary mb-0" className="text-sm">
+                                            {t('showing')} {getFilteredDatabase().length} {t('outOf')} {Object.keys(repairDatabase).length} {t('items')}
+                                        </p>
+
+                                        <div className="card navigation-card mt-4">
+                                            <div className="navigation-card-header">
+                                                <div className="navigation-card-title">
+                                                    <i className="fas fa-compass mr-2"></i>
+                                                    Navigace sekcí
+                                                </div>
+                                                <span className="navigation-card-hint">Klikněte pro otevření detailu</span>
+                                            </div>
+                                            <div className="database-nav-grid">
+                                                {getFilteredDatabase().map(([key, item]) => (
+                                                    <button
+                                                        key={key}
+                                                        className="nav-chip"
+                                                        onClick={() => focusDatabaseSection(key)}
+                                                    >
+                                                        <span className="nav-chip-icon">
+                                                            <i className={`fas ${getCategoryIcon(item.category)}`}></i>
+                                                        </span>
+                                                        <span className="nav-chip-text">
+                                                            <strong>{item.name}</strong>
+                                                            <small>{item.issues.length} oprav</small>
+                                                        </span>
+                                                        <i className="fas fa-arrow-right nav-chip-caret"></i>
+                                                    </button>
+                                                ))}
+
+                                                {getFilteredDatabase().length === 0 && (
+                                                    <p className="text-secondary text-sm m-0">Vyberte kategorii nebo zkuste vyhledávání.</p>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </section>
+
+                                    <section className="information-block" data-block="information_block">
+                                        <div className="database-card-grid">
+                                            {getFilteredDatabase().map(([key, item]) => {
+                                                const isOpen = expandedSections[key];
+                                                return (
+                                                    <div
+                                                        key={key}
+                                                        id={`database-card-${key}`}
+                                                        className={`database-card ${isOpen ? 'open' : ''}`}
+                                                    >
+                                                        <button className="database-card-toggle" onClick={() => toggleDatabaseSection(key)}>
+                                                            <div className="database-card-headline">
+                                                                <div className="database-card-icon">
+                                                                    <i className={`fas ${getCategoryIcon(item.category)}`}></i>
+                                                                </div>
+                                                                <div>
+                                                                    <div className="database-card-title">{item.name}</div>
+                                                                    <p className="database-card-subtitle">
+                                                                        {getCategoryLabel(item.category)} · {item.issues.length} řešení
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                            <i className={`fas ${isOpen ? 'fa-chevron-up' : 'fa-chevron-down'}`}></i>
+                                                        </button>
+
+                                                        {isOpen && (
+                                                            <div className="database-card-body">
+                                                                {item.issues.map(issue => (
+                                                                    <div key={issue.id} className="database-issue">
+                                                                        <div className="database-issue-header">
+                                                                            <div className="database-issue-title">
+                                                                                <i className="fas fa-screwdriver-wrench"></i>
+                                                                                <span>{issue.name}</span>
+                                                                            </div>
+                                                                            <span className={`badge badge-${issue.riskScore > 5 ? 'danger' : issue.riskScore > 2 ? 'warning' : 'success'}`}>
+                                                                                {issue.riskScore}/10
+                                                                            </span>
+                                                                        </div>
+                                                                        <p className="database-issue-description">
+                                                                            {issue.description || 'Rychlý náhled postupu a nástrojů.'}
+                                                                        </p>
+                                                                        <div className="database-issue-meta">
+                                                                            <span><i className="fas fa-clock"></i> {issue.timeEstimate}</span>
+                                                                            <span><i className="fas fa-layer-group"></i> {getCategoryLabel(item.category)}</span>
+                                                                        </div>
+                                                                    </div>
+                                                                ))}
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
+
+                                        {getFilteredDatabase().length === 0 && (
+                                            <div className="empty-state card">
+                                                <div className="empty-state-icon"><i className="fas fa-search"></i></div>
+                                                <p className="empty-state-title">{t('noCategoryItems')}</p>
+                                                <p className="empty-state-desc">{t('tryCategoryHint')}</p>
+                                            </div>
+                                        )}
+
+                                        <div className="alert alert-info mt-4">
+                                            <p className="alert-title">
+                                                <i className="fas fa-info-circle mr-2"></i>
+                                                {t('aboutDatabase')}
+                                            </p>
+                                            <p>
+                                                {t('databaseInfo')}
+                                            </p>
+                                        </div>
+                                    </section>
                                 </div>
                             </div>
                         )}
@@ -4762,19 +4851,48 @@
 
                         {/* Offline Guides View */}
                         {currentView === 'offline' && (
-                            <div className="app-container" className="pt-4">
-                                {/* Desktop: AI Learning + Guides vedle sebe */}
-                                <div className="offline-desktop-layout">
-                                    {/* AI Learning Stats - levý sloupec na desktopu */}
-                                    <div>
+                            <div className="app-container">
+                                <div className="page-frame" data-block="layout_shell">
+                                    {/* action_block */}
+                                    <section className="action-block" data-block="action_block">
+                                        <h2 className="section-title mb-4">
+                                            <i className="fas fa-cloud-download-alt section-title-icon"></i>
+                                            Uložené návody offline
+                                        </h2>
+
+                                        <div className="card mb-4">
+                                            <div className="card-body p-5">
+                                                <div className="flex items-start gap-3">
+                                                    <div className="flex-none text-3xl text-primary">
+                                                        <i className="fas fa-plug-circle-bolt"></i>
+                                                    </div>
+                                                    <div className="flex-1">
+                                                        <h3 className="font-semibold mb-1">Používejte FIXO bez signálu</h3>
+                                                        <p className="text-sm text-secondary mb-3">
+                                                            Každý návod můžeš uložit pro offline použití. Kliknutím níže otevřeš databázi a přidáš další řešení do své knihovny.
+                                                        </p>
+                                                        <div className="flex gap-2 flex-wrap">
+                                                            <button onClick={() => navigateTo('knowledge')} className="btn btn-primary btn-sm">
+                                                                <i className="fas fa-book mr-2"></i>
+                                                                Procházet databázi
+                                                            </button>
+                                                            <button onClick={() => navigateTo('home')} className="btn btn-secondary btn-sm">
+                                                                <i className="fas fa-camera mr-2"></i>
+                                                                Nová analýza
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
                                         {analyzerStats && (
-                                            <div className="card mb-4">
-                                                <div className="card-body" className="p-4">
+                                            <div className="card">
+                                                <div className="card-body p-4">
                                                     <h3 className="font-semibold mb-3 flex items-center gap-2 text-base">
-                                                        <i className="fas fa-brain" className="text-primary"></i>
+                                                        <i className="fas fa-brain text-primary"></i>
                                                         AI Učení
                                                     </h3>
-                                                    {/* Desktop: 6 sloupců, mobil: 3 */}
                                                     <div className="analyze-stats-grid">
                                                         <div className="text-center p-2 bg-success-light rounded-md">
                                                             <div className="text-lg font-bold text-success">
@@ -4831,18 +4949,26 @@
                                                 </div>
                                             </div>
                                         )}
-                                    </div>
+                                    </section>
 
-                                    {/* Offline guides - pravý sloupec na desktopu */}
-                                    <div>
-                                        <h2 className="section-title section-title-compact" className="mb-3">
-                                            <i className="fas fa-cloud-download-alt section-title-icon"></i>
-                                            Offline návody
-                                        </h2>
+                                    {/* information_block */}
+                                    <section className="information-block" data-block="information_block">
+                                        <div className="flex items-center justify-between gap-3">
+                                            <h3 className="section-title">
+                                                <i className="fas fa-folder-open section-title-icon"></i>
+                                                Moje uložené návody
+                                            </h3>
+                                            {savedGuides.length > 0 && (
+                                                <button onClick={() => navigateTo('knowledge')} className="btn btn-outline btn-sm">
+                                                    <i className="fas fa-plus mr-2"></i>
+                                                    Přidat další
+                                                </button>
+                                            )}
+                                        </div>
 
                                         {savedGuides.length === 0 ? (
                                             <div className="card">
-                                                <div className="card-body text-center" className="p-6">
+                                                <div className="card-body text-center p-6">
                                                     <div className="text-6xl mb-3 opacity-30">
                                                         <i className="fas fa-cloud-download-alt"></i>
                                                     </div>
@@ -4852,7 +4978,7 @@
                                                     <p className="text-secondary mb-4 text-sm">
                                                         Při prohlížení návodu klikni na "Uložit offline".
                                                     </p>
-                                                    <button onClick={() => navigateTo('knowledge')} className="btn btn-primary" className="py-2 px-4 text-sm">
+                                                    <button onClick={() => navigateTo('knowledge')} className="btn btn-primary py-2 px-4 text-sm">
                                                         <i className="fas fa-book mr-2"></i>
                                                         Procházet databázi
                                                     </button>
@@ -4860,7 +4986,7 @@
                                             </div>
                                         ) : (
                                             <>
-                                                <div className="alert alert-success alert-compact mb-4">
+                                                <div className="alert alert-success alert-compact">
                                                     <p className="m-0 text-sm">
                                                         <i className="fas fa-wifi-slash mr-2"></i>
                                                         <strong>Offline!</strong> Návody uložené v zařízení.
@@ -4868,74 +4994,73 @@
                                                 </div>
 
                                                 <div className="flex flex-col gap-3">
-                                            {savedGuides.map(guide => (
-                                                <div key={guide.id} className="card">
-                                                    <div className="card-body">
-                                                        <div className="flex justify-between items-start gap-3">
-                                                            <div className="flex-1">
-                                                                <h3 className="font-semibold mb-2">
-                                                                    {guide.name}
-                                                                </h3>
-                                                                <p className="text-sm text-secondary mb-3">
-                                                                    {guide.description}
-                                                                </p>
+                                                    {savedGuides.map(guide => (
+                                                        <div key={guide.id} className="card">
+                                                            <div className="card-body">
+                                                                <div className="flex justify-between items-start gap-3">
+                                                                    <div className="flex-1">
+                                                                        <h3 className="font-semibold mb-2">
+                                                                            {guide.name}
+                                                                        </h3>
+                                                                        <p className="text-sm text-secondary mb-3">
+                                                                            {guide.description}
+                                                                        </p>
 
-                                                                <div className="flex flex-wrap gap-2 mb-3">
-                                                                    <span className="badge">
-                                                                        <i className="fas fa-clock mr-1"></i>
-                                                                        {guide.timeEstimate}
-                                                                    </span>
-                                                                    <span className="badge">
-                                                                        <i className="fas fa-signal mr-1"></i>
-                                                                        {guide.difficulty}
-                                                                    </span>
-                                                                    <span className="badge">
-                                                                        <i className="fas fa-list mr-1"></i>
-                                                                        {guide.steps?.length || 0} kroků
-                                                                    </span>
+                                                                        <div className="flex flex-wrap gap-2 mb-3">
+                                                                            <span className="badge">
+                                                                                <i className="fas fa-clock mr-1"></i>
+                                                                                {guide.timeEstimate}
+                                                                            </span>
+                                                                            <span className="badge">
+                                                                                <i className="fas fa-signal mr-1"></i>
+                                                                                {guide.difficulty}
+                                                                            </span>
+                                                                            <span className="badge">
+                                                                                <i className="fas fa-list mr-1"></i>
+                                                                                {guide.steps?.length || 0} kroků
+                                                                            </span>
+                                                                        </div>
+
+                                                                        <p className="text-xs text-muted">
+                                                                            <i className="fas fa-save mr-1"></i>
+                                                                            Uloženo: {new Date(guide.savedAt).toLocaleDateString('cs-CZ')}
+                                                                        </p>
+                                                                    </div>
+
+                                                                    <div className="flex flex-col gap-2">
+                                                                        <button
+                                                                            onClick={() => loadOfflineGuide(guide)}
+                                                                            className="btn btn-success btn-sm"
+                                                                        >
+                                                                            <i className="fas fa-play mr-1"></i>
+                                                                            Spustit
+                                                                        </button>
+                                                                        <button
+                                                                            onClick={() => {
+                                                                                if (confirm('Opravdu smazat tento uložený návod?')) {
+                                                                                    deleteOfflineGuide(guide.id);
+                                                                                }
+                                                                            }}
+                                                                            className="btn btn-secondary btn-sm opacity-70"
+                                                                        >
+                                                                            <i className="fas fa-trash"></i>
+                                                                        </button>
+                                                                    </div>
                                                                 </div>
-
-                                                                <p className="text-xs text-muted">
-                                                                    <i className="fas fa-save mr-1"></i>
-                                                                    Uloženo: {new Date(guide.savedAt).toLocaleDateString('cs-CZ')}
-                                                                </p>
-                                                            </div>
-
-                                                            <div className="flex flex-col gap-2">
-                                                                <button
-                                                                    onClick={() => loadOfflineGuide(guide)}
-                                                                    className="btn btn-success btn-sm"
-                                                                >
-                                                                    <i className="fas fa-play mr-1"></i>
-                                                                    Spustit
-                                                                </button>
-                                                                <button
-                                                                    onClick={() => {
-                                                                        if (confirm('Opravdu smazat tento uložený návod?')) {
-                                                                            deleteOfflineGuide(guide.id);
-                                                                        }
-                                                                    }}
-                                                                    className="btn btn-secondary btn-sm"
-                                                                    className="opacity-70"
-                                                                >
-                                                                    <i className="fas fa-trash"></i>
-                                                                </button>
                                                             </div>
                                                         </div>
-                                                    </div>
+                                                    ))}
                                                 </div>
-                                            ))}
-                                        </div>
 
-                                        <div className="mt-4 text-center">
-                                            <button onClick={() => navigateTo('knowledge')} className="btn btn-secondary" className="py-2 px-4 text-sm">
-                                                <i className="fas fa-plus mr-2"></i>
-                                                Přidat další návody
-                                            </button>
-                                        </div>
-                                    </>
+                                                <div className="mt-4 text-center">
+                                                    <button onClick={() => navigateTo('knowledge')} className="btn btn-secondary py-2 px-4 text-sm">
+                                                        <i className="fas fa-plus mr-2"></i>
+                                                        Přidat další návody
+                                                    </button>
+                                                </div>
+                                            </>
                                         )}
-                                    </div>
+                                    </section>
                                 </div>
                             </div>
                         )}
