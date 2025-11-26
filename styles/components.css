@@ -546,7 +546,6 @@
   .alert-title {
     font-weight: var(--font-semibold);
     margin-block-end: var(--space-1);
-    color: white;
   }
 
   .alert-description {
@@ -572,11 +571,17 @@
     border-color: var(--color-info);
     color: oklch(30% 0.1 220);
   }
+  .alert-info .alert-title {
+    color: oklch(25% 0.15 220);
+  }
 
   .alert-success {
     background-color: var(--color-success-light);
     border-color: var(--color-success);
     color: oklch(30% 0.1 145);
+  }
+  .alert-success .alert-title {
+    color: oklch(25% 0.15 145);
   }
 
   .alert-warning {
@@ -584,11 +589,17 @@
     border-color: var(--color-warning);
     color: oklch(35% 0.12 85);
   }
+  .alert-warning .alert-title {
+    color: oklch(30% 0.15 85);
+  }
 
   .alert-danger {
     background-color: var(--color-danger-light);
     border-color: var(--color-danger);
     color: oklch(35% 0.12 25);
+  }
+  .alert-danger .alert-title {
+    color: oklch(30% 0.18 25);
   }
 
   /* ==========================================
