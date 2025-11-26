@@ -3458,37 +3458,23 @@
                         {currentView === 'home' && (
                             <div className="app-container">
                                 {/* Stats Bar - pod headerem, užší */}
-                                <div className="stats-bar" style={{
-                                    display: 'flex',
-                                    justifyContent: 'center',
-                                    gap: 'var(--space-8)',
-                                    padding: 'var(--space-3) var(--space-4)',
-                                    background: 'var(--gradient-primary)',
-                                    borderRadius: 'var(--radius-xl)',
-                                    maxWidth: '400px',
-                                    margin: '0 auto var(--space-4)',
-                                    color: 'white'
-                                }}>
-                                    <div style={{textAlign: 'center'}}>
-                                        <div style={{fontSize: 'var(--text-xl)', fontWeight: 'var(--font-bold)'}}>500+</div>
-                                        <div style={{fontSize: 'var(--text-xs)', opacity: 0.9}}>Závad</div>
+                                <div className="stats-bar">
+                                    <div className="stats-bar-item">
+                                        <div className="stats-bar-value">500+</div>
+                                        <div className="stats-bar-label">Závad</div>
                                     </div>
-                                    <div style={{textAlign: 'center'}}>
-                                        <div style={{fontSize: 'var(--text-xl)', fontWeight: 'var(--font-bold)'}}>30s</div>
-                                        <div style={{fontSize: 'var(--text-xs)', opacity: 0.9}}>Analýza</div>
+                                    <div className="stats-bar-item">
+                                        <div className="stats-bar-value">30s</div>
+                                        <div className="stats-bar-label">Analýza</div>
                                     </div>
-                                    <div style={{textAlign: 'center'}}>
-                                        <div style={{fontSize: 'var(--text-xl)', fontWeight: 'var(--font-bold)'}}>AI</div>
-                                        <div style={{fontSize: 'var(--text-xs)', opacity: 0.9}}>Powered</div>
+                                    <div className="stats-bar-item">
+                                        <div className="stats-bar-value">AI</div>
+                                        <div className="stats-bar-label">Powered</div>
                                     </div>
                                 </div>
 
                                 {/* Desktop: Upload + Jak to funguje vedle sebe */}
-                                <div className="home-two-columns" style={{
-                                    display: 'grid',
-                                    gridTemplateColumns: '1fr',
-                                    gap: 'var(--space-4)'
-                                }}>
+                                <div className="home-two-columns">
                                     {/* Main Upload Section */}
                                     <div className="upload-card glass-card upload-card-compact">
                                         <div className="text-center mb-4">
