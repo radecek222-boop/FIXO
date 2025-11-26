@@ -3195,7 +3195,7 @@
                         {/* Home View - Single Page s Hero */}
                         {currentView === 'home' && (
                             <div className="content-two-columns">
-                                {/* Levý blok - AKČNÍ */}
+                                {/* Levy blok - AKCNI */}
                                 <div className="content-left">
                                     <div className="upload-card glass-card">
                                         <div className="text-center mb-4">
@@ -3275,7 +3275,7 @@
                                     </div>
                                 </div>
 
-                                {/* Pravý blok - INFORMATIVNÍ */}
+                                {/* Pravy blok - INFORMATIVNI */}
                                 <div className="content-right">
                                         {/* Jak to funguje */}
                                         <div className="glass-card flex flex-col">
@@ -3544,9 +3544,9 @@
                         {/* Results View */}
                         {currentView === 'results' && analysisResult && (
                             <div className="app-container pt-4">
-                                {/* Desktop: Obrázek vlevo, výsledky vpravo */}
+                                {/* Desktop: Obrazek vlevo, vysledky vpravo */}
                                 <div className="results-desktop-layout">
-                                    {/* Levý sloupec - analyzovaný obrázek (pouze desktop) */}
+                                    {/* Levy sloupec - analyzovany obrazek (pouze desktop) */}
                                     {selectedImage && (
                                         <div className="results-image-section hidden">
                                             <div className="glass-card p-4 mb-4">
@@ -3573,7 +3573,7 @@
                                         </div>
                                     )}
 
-                                    {/* Pravý sloupec - výsledky analýzy */}
+                                    {/* Pravy sloupec - vysledky analyzy */}
                                     <div>
                                         <div className="glass-card p-0 overflow-hidden">
                                             {/* Detection Header */}
