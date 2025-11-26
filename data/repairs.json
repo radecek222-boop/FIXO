@@ -442,6 +442,64 @@
             "youtubeId": "utazeni-papacky",
             "premium": false
           }
+        },
+        {
+          "id": "stiff-cartridge-codex",
+          "name": "Ztužená kartuše (codex)",
+          "description": "Páka jde ztuha kvůli opotřebené kartuši",
+          "riskScore": 2,
+          "difficulty": "Střední",
+          "timeEstimate": "25 min",
+          "tools": [
+            "Imbusový klíč",
+            "Šroubovák",
+            "Nová kartuše",
+            "Hadřík"
+          ],
+          "steps": [
+            { "step": 1, "action": "Uzavřete přívod vody a vypusťte zbytek", "time": "2 min", "icon": "🚰" },
+            { "step": 2, "action": "Sejměte krytku a povolte zajišťovací šroub páky", "time": "3 min", "icon": "🔧", "hint": "Použijte správný imbus, ať se šroub nestrhne." },
+            { "step": 3, "action": "Sundejte páku a dekorativní kryt", "time": "3 min", "icon": "🧰" },
+            { "step": 4, "action": "Vyjměte starou kartuši", "time": "4 min", "icon": "⚙️", "hint": "Poznamenejte si orientaci výstupků." },
+            { "step": 5, "action": "Vyčistěte sedlo hadříkem a odstraňte vodní kámen", "time": "3 min", "icon": "🧼" },
+            { "step": 6, "action": "Vložte novou kartuši a zarovnejte zarážky", "time": "4 min", "icon": "🔩" },
+            { "step": 7, "action": "Sestavte kohoutek zpět a dotáhněte šroub", "time": "4 min", "icon": "✅" },
+            { "step": 8, "action": "Otevřete vodu a otestujte plynulost", "time": "2 min", "icon": "💧" }
+          ],
+          "safetyWarnings": [
+            "Uzavřete vodu před demontáží",
+            "Neutahujte kartuši příliš, ať nepraskne těleso",
+            "Používejte měkkou podložku, aby nedošlo k poškrábání chromu"
+          ]
+        },
+        {
+          "id": "no-hot-water-codex",
+          "name": "Kohoutek netopí (codex)",
+          "description": "Porucha směšovacího ventilu nebo ucpaný přívod teplé vody",
+          "riskScore": 3,
+          "difficulty": "Střední",
+          "timeEstimate": "30 min",
+          "tools": [
+            "Klíč",
+            "Imbusový klíč",
+            "Kleště",
+            "Odvápňovač"
+          ],
+          "steps": [
+            { "step": 1, "action": "Ověřte, že je zapnutý ohřev vody a tlak v systému", "time": "2 min", "icon": "📊" },
+            { "step": 2, "action": "Zavřete rohový ventil teplé vody", "time": "1 min", "icon": "🚰" },
+            { "step": 3, "action": "Demontujte páku a kryt kartuše", "time": "4 min", "icon": "🔧" },
+            { "step": 4, "action": "Vyjměte kartuši a zkontrolujte usazeniny", "time": "4 min", "icon": "🔍" },
+            { "step": 5, "action": "Očistěte vstupní sítka a kanálky odvápňovačem", "time": "10 min", "icon": "🧴", "hint": "Nechte působit a následně propláchněte čistou vodou." },
+            { "step": 6, "action": "V případě poškození vložte novou kartuši", "time": "5 min", "icon": "⚙️" },
+            { "step": 7, "action": "Sestavte kohoutek a otevřete ventil", "time": "3 min", "icon": "✅" },
+            { "step": 8, "action": "Pusťte teplou vodu a otestujte mísení", "time": "2 min", "icon": "💧" }
+          ],
+          "safetyWarnings": [
+            "Pozor na horkou vodu při testování",
+            "Používejte rukavice při práci s chemickým odvápňovačem",
+            "Před montáží se ujistěte, že těsnění sedí správně"
+          ]
         }
       ]
     },
@@ -880,6 +938,40 @@
             "youtubeId": "slaby-splach",
             "premium": false
           }
+        },
+        {
+          "id": "stuck-button-codex",
+          "name": "Zaseknuté splachovací tlačítko (codex)",
+          "description": "Mechanismus tlačítka drhne nebo zůstává dole",
+          "riskScore": 2,
+          "difficulty": "Nízká",
+          "timeEstimate": "15 min",
+          "tools": ["Šroubovák", "Sprej na silikon", "Hadřík"],
+          "steps": [
+            { "step": 1, "action": "Sundejte víko nádržky", "time": "1 min", "icon": "📦" },
+            { "step": 2, "action": "Odpojte tlačítko od táhla nebo tyčky", "time": "2 min", "icon": "⚙️" },
+            { "step": 3, "action": "Vyčistěte vedení tlačítka od vodního kamene", "time": "5 min", "icon": "🧹", "hint": "Použijte hadřík a teplou vodu." },
+            { "step": 4, "action": "Lehce promažte pohyblivé části silikonovým sprejem", "time": "2 min", "icon": "🧴" },
+            { "step": 5, "action": "Znovu sestavte a otestujte pružnost", "time": "3 min", "icon": "✅" }
+          ],
+          "safetyWarnings": ["Manipulujte opatrně s porcelánovým víkem", "Nepoužívejte oleje, které lepí nečistoty"]
+        },
+        {
+          "id": "toilet-odor-codex",
+          "name": "Zápach z WC (codex)",
+          "description": "Netěsný odpad nebo vyschlý sifon způsobuje zápach",
+          "riskScore": 2,
+          "difficulty": "Nízká",
+          "timeEstimate": "20 min",
+          "tools": ["Klíč", "Tmel na sanitu", "Čistící kartáč", "Ochranné rukavice"],
+          "steps": [
+            { "step": 1, "action": "Zkontrolujte vodu ve WC sifonu a případně dolijte", "time": "1 min", "icon": "💧" },
+            { "step": 2, "action": "Přitáhněte šrouby spojující mísu s odpadem", "time": "3 min", "icon": "🔧" },
+            { "step": 3, "action": "Vyčistěte a odmaštěte okolí napojení na odpad", "time": "5 min", "icon": "🧹" },
+            { "step": 4, "action": "Naneste tenký pruh sanitárního tmelu kolem spoje", "time": "5 min", "icon": "🧴", "hint": "Nechte tmel alespoň 10 minut zaschnout." },
+            { "step": 5, "action": "Propláchněte WC a ověřte, zda zápach mizí", "time": "3 min", "icon": "✅" }
+          ],
+          "safetyWarnings": ["Používejte rukavice a větrejte", "Nepoužívejte agresivní chemii na silikon"]
         }
       ]
     },
@@ -1361,6 +1453,42 @@
             "youtubeId": "zasuvka-jiskri",
             "premium": false
           }
+        },
+        {
+          "id": "outlet-hot-codex",
+          "name": "Zásuvka se hřeje (codex)",
+          "description": "Přehřáté kontakty nebo přetížený okruh způsobují zahřívání zásuvky",
+          "riskScore": 9,
+          "difficulty": "Vysoká",
+          "timeEstimate": "25 min",
+          "tools": ["Tester napětí", "Šroubovák", "Momentový šroubovák", "Nová zásuvka"],
+          "steps": [
+            { "step": 1, "action": "Vypněte jistič a ověřte beznapěťový stav", "time": "3 min", "icon": "⚡" },
+            { "step": 2, "action": "Demontujte kryt a zkontrolujte přitažení svorek", "time": "5 min", "icon": "🔍" },
+            { "step": 3, "action": "Dotáhněte uvolněné spoje momentovým šroubovákem", "time": "5 min", "icon": "🔩", "hint": "Použijte doporučený moment výrobce." },
+            { "step": 4, "action": "Pokud jsou vodiče spálené, zkraťte a znovu odizolujte", "time": "6 min", "icon": "✂️" },
+            { "step": 5, "action": "V případě poškození vyměňte celou zásuvku", "time": "5 min", "icon": "⚙️" },
+            { "step": 6, "action": "Zapněte jistič a sledujte ohřev při zátěži", "time": "3 min", "icon": "✅" }
+          ],
+          "safetyWarnings": ["⚠️ Přehřátá zásuvka může způsobit požár", "Vždy pracujte s vypnutým okruhem", "Pokud si nejste jisti, volejte elektrikáře"]
+        },
+        {
+          "id": "loose-box-codex",
+          "name": "Uvolněná krabice zásuvky (codex)",
+          "description": "Montážní krabice nebo rámeček se viklá a hrozí uvolnění vodičů",
+          "riskScore": 6,
+          "difficulty": "Střední",
+          "timeEstimate": "20 min",
+          "tools": ["Šroubovák", "Rozpěrné šrouby", "Montážní pěna", "Vodováha"],
+          "steps": [
+            { "step": 1, "action": "Vypněte jistič a ověřte beznapěťový stav", "time": "3 min", "icon": "⚡" },
+            { "step": 2, "action": "Vyšroubujte rámeček a vyjměte zásuvku z krabice", "time": "4 min", "icon": "🔧" },
+            { "step": 3, "action": "Zkontrolujte, zda drží rozpěrné packy nebo šrouby", "time": "3 min", "icon": "🔍" },
+            { "step": 4, "action": "Dotáhněte nebo nahraďte rozpěrné šrouby, případně doplňte montážní pěnu", "time": "5 min", "icon": "🔩" },
+            { "step": 5, "action": "Vyrovnejte zásuvku vodováhou a připevněte rámeček", "time": "3 min", "icon": "📏" },
+            { "step": 6, "action": "Zapněte jistič a otestujte pevnost i funkčnost", "time": "2 min", "icon": "✅" }
+          ],
+          "safetyWarnings": ["Pracujte opatrně v blízkosti omítky", "Nepřetahujte šrouby v plastové krabici", "Zkontrolujte, že vodiče nejsou namáhané"]
         }
       ]
     },
@@ -3093,6 +3221,42 @@
             "premium": true,
             "comingSoon": true
           }
+        },
+        {
+          "id": "uneven-heat-codex",
+          "name": "Radiátor topí nerovnoměrně (codex)",
+          "description": "Horní část je horká, spodní studená kvůli zanesení nebo špatnému průtoku",
+          "riskScore": 3,
+          "difficulty": "Střední",
+          "timeEstimate": "30 min",
+          "tools": ["Odvzdušňovací klíč", "Hadice na proplach", "Kbelík", "Klíč na šroubení"],
+          "steps": [
+            { "step": 1, "action": "Vypněte kotel a nechte systém vychladnout", "time": "15 min", "icon": "🌡️" },
+            { "step": 2, "action": "Odvzdušněte radiátor standardním způsobem", "time": "5 min", "icon": "🔧" },
+            { "step": 3, "action": "Uzavřete přívod i zpátečku radiátoru", "time": "2 min", "icon": "🚰" },
+            { "step": 4, "action": "Odpojte radiátor na šroubeních a přeneste k odpadu", "time": "6 min", "icon": "🧰" },
+            { "step": 5, "action": "Propláchněte radiátor hadicí, dokud neteče čistá voda", "time": "8 min", "icon": "💦" },
+            { "step": 6, "action": "Namontujte zpět, otevřete ventily a doplňte tlak", "time": "6 min", "icon": "✅" }
+          ],
+          "safetyWarnings": ["Radiátor může být těžký - zvedejte ve dvou", "Zabraňte úniku špinavé vody na podlahu", "Zkontrolujte těsnost po znovuzapojení"]
+        },
+        {
+          "id": "vent-leak-codex",
+          "name": "Netěsní odvzdušňovací ventil (codex)",
+          "description": "Ventil po odvzdušnění stále kape nebo prosakuje",
+          "riskScore": 3,
+          "difficulty": "Nízká",
+          "timeEstimate": "15 min",
+          "tools": ["Odvzdušňovací klíč", "Teflonová páska", "Malý štětec", "Nádoba"],
+          "steps": [
+            { "step": 1, "action": "Uzavřete ventily radiátoru a snižte tlak otevřením odvzdušňováku", "time": "3 min", "icon": "🚰" },
+            { "step": 2, "action": "Vyšroubujte odvzdušňovací ventil z těla radiátoru", "time": "3 min", "icon": "🔧" },
+            { "step": 3, "action": "Očistěte závit i sedlo ventilku štětcem", "time": "3 min", "icon": "🧹" },
+            { "step": 4, "action": "Omotejte závit dvěma vrstvami teflonové pásky", "time": "2 min", "icon": "🩹" },
+            { "step": 5, "action": "Vraťte ventil, dotáhněte a znovu napusťte radiátor", "time": "3 min", "icon": "✅" },
+            { "step": 6, "action": "Zkontrolujte, zda po zahřátí neprosakuje", "time": "4 min", "icon": "👀" }
+          ],
+          "safetyWarnings": ["Pracujte s vychladlým radiátorem", "Nepřetahujte mosazné díly", "Při větším úniku vypněte kotel"]
         }
       ]
     },
