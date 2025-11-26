@@ -1371,11 +1371,11 @@ class SmartAnalyzer {
                     name: data.detection.issue.name,
                     description: data.detection.issue.description,
                     riskScore: data.detection.issue.riskScore,
-                    difficulty: data.detection.issue.difficulty,
+                    difficulty: data.recommendations.difficulty,
                     timeEstimate: data.recommendations.timeEstimate,
-                    tools: data.recommendations.tools,
-                    steps: data.recommendations.steps,
-                    safetyWarnings: data.recommendations.safetyWarnings
+                    tools: data.recommendations.requiredTools || data.recommendations.tools || [],
+                    steps: data.recommendations.steps || [],
+                    safetyWarnings: data.recommendations.safetyWarnings || []
                 },
                 confidence: Math.round(data.detection.object.confidence * 100)
             };
