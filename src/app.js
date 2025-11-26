@@ -2702,6 +2702,10 @@
                             <i className="fas fa-truck"></i>
                             <span>Dodavatelé</span>
                         </div>
+                        <div className="mobile-menu-item" onClick={() => navigateTo('legal')} style={currentView === 'legal' ? {background: 'var(--color-primary-light)', color: 'var(--color-primary)'} : {}}>
+                            <i className="fas fa-balance-scale"></i>
+                            <span>Právní informace</span>
+                        </div>
 
                         {/* Tmavý režim toggle */}
                         <div
@@ -4869,6 +4873,214 @@
 
                                 <div className="alert alert-info">
                                     <p><i className="fas fa-info-circle mr-2"></i>Všichni partneři jsou prověřeni a nabízejí kvalitní produkty s garancí.</p>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Legal/Terms Page View */}
+                        {currentView === 'legal' && (
+                            <div className="max-w-2xl mx-auto">
+                                <h2 className="page-title">
+                                    <i className="fas fa-balance-scale mr-2" style={{color: 'var(--color-primary)'}}></i>
+                                    Právní informace
+                                </h2>
+
+                                <p className="text-center text-secondary mb-6">
+                                    Podmínky používání, ochrana osobních údajů a omezení odpovědnosti
+                                </p>
+
+                                {/* Všeobecné obchodní podmínky */}
+                                <div className="card mb-6">
+                                    <div className="card-header">
+                                        <h3 className="card-title">
+                                            <i className="fas fa-file-contract mr-2"></i>
+                                            Všeobecné obchodní podmínky
+                                        </h3>
+                                    </div>
+                                    <div className="card-body" style={{lineHeight: 1.7}}>
+                                        <h4 style={{fontWeight: 'var(--font-semibold)', marginBottom: 'var(--space-2)', marginTop: 'var(--space-4)'}}>1. Základní ustanovení</h4>
+                                        <p style={{fontSize: 'var(--text-sm)', color: 'var(--color-text-secondary)', marginBottom: 'var(--space-3)'}}>
+                                            FIXO je webová aplikace poskytující AI-asistované návody na domácí opravy. Používáním služby souhlasíte s těmito podmínkami.
+                                        </p>
+
+                                        <h4 style={{fontWeight: 'var(--font-semibold)', marginBottom: 'var(--space-2)', marginTop: 'var(--space-4)'}}>2. Rozsah služeb</h4>
+                                        <p style={{fontSize: 'var(--text-sm)', color: 'var(--color-text-secondary)', marginBottom: 'var(--space-3)'}}>
+                                            <strong>FREE verze:</strong> 3 AI analýzy denně, základní návody, databáze 67 oprav<br/>
+                                            <strong>PLUS verze:</strong> Neomezené analýzy, video návody, affiliate odkazy<br/>
+                                            <strong>PRO verze:</strong> Vše z PLUS + kontakty řemeslníků, schémata, prioritní podpora
+                                        </p>
+
+                                        <h4 style={{fontWeight: 'var(--font-semibold)', marginBottom: 'var(--space-2)', marginTop: 'var(--space-4)'}}>3. Platební podmínky</h4>
+                                        <p style={{fontSize: 'var(--text-sm)', color: 'var(--color-text-secondary)', marginBottom: 'var(--space-3)'}}>
+                                            Platby jsou zpracovávány přes zabezpečenou bránu Stripe. Předplatné je možné kdykoli zrušit bez dalších poplatků.
+                                            Po zrušení zůstává přístup aktivní do konce zaplaceného období.
+                                        </p>
+
+                                        <h4 style={{fontWeight: 'var(--font-semibold)', marginBottom: 'var(--space-2)', marginTop: 'var(--space-4)'}}>4. Práva a povinnosti</h4>
+                                        <p style={{fontSize: 'var(--text-sm)', color: 'var(--color-text-secondary)', marginBottom: 'var(--space-3)'}}>
+                                            Uživatel má právo na přístup ke službě dle zvoleného tarifu.
+                                            Uživatel se zavazuje nepoužívat službu k nelegálním účelům a nesdílet přístupové údaje s třetími stranami.
+                                        </p>
+
+                                        <h4 style={{fontWeight: 'var(--font-semibold)', marginBottom: 'var(--space-2)', marginTop: 'var(--space-4)'}}>5. Zrušení a vrácení peněz</h4>
+                                        <p style={{fontSize: 'var(--text-sm)', color: 'var(--color-text-secondary)'}}>
+                                            Nabízíme 7denní zkušební dobu na placené tarify. Při zrušení během zkušební doby vrátíme plnou částku.
+                                            Po uplynutí zkušební doby je předplatné nevratné, ale můžete kdykoli zrušit automatické obnovení.
+                                        </p>
+                                    </div>
+                                </div>
+
+                                {/* GDPR a ochrana osobních údajů */}
+                                <div className="card mb-6">
+                                    <div className="card-header">
+                                        <h3 className="card-title">
+                                            <i className="fas fa-shield-alt mr-2"></i>
+                                            Ochrana osobních údajů (GDPR)
+                                        </h3>
+                                    </div>
+                                    <div className="card-body" style={{lineHeight: 1.7}}>
+                                        <h4 style={{fontWeight: 'var(--font-semibold)', marginBottom: 'var(--space-2)', marginTop: 'var(--space-4)'}}>Jaké údaje sbíráme</h4>
+                                        <ul style={{fontSize: 'var(--text-sm)', color: 'var(--color-text-secondary)', marginBottom: 'var(--space-3)', paddingLeft: 'var(--space-6)'}}>
+                                            <li>E-mailová adresa (pro registraci a komunikaci)</li>
+                                            <li>Nahrané fotografie problémů (zpracovávané AI)</li>
+                                            <li>Historie vašich analýz a návodů</li>
+                                            <li>Platební informace (zpracovává Stripe, neuloženo u nás)</li>
+                                            <li>Technické údaje (IP adresa, typ zařízení, prohlížeč)</li>
+                                        </ul>
+
+                                        <h4 style={{fontWeight: 'var(--font-semibold)', marginBottom: 'var(--space-2)', marginTop: 'var(--space-4)'}}>Jak údaje používáme</h4>
+                                        <p style={{fontSize: 'var(--text-sm)', color: 'var(--color-text-secondary)', marginBottom: 'var(--space-3)'}}>
+                                            Vaše data používáme výhradně pro poskytování služby, zlepšování AI modelů a komunikaci s vámi.
+                                            Fotografie jsou analyzovány AI a poté bezpečně uloženy ve vašem účtu. Nikdy je neprodáváme třetím stranám.
+                                        </p>
+
+                                        <h4 style={{fontWeight: 'var(--font-semibold)', marginBottom: 'var(--space-2)', marginTop: 'var(--space-4)'}}>Vaše práva</h4>
+                                        <p style={{fontSize: 'var(--text-sm)', color: 'var(--color-text-secondary)', marginBottom: 'var(--space-3)'}}>
+                                            Máte právo na přístup k vašim údajům, jejich opravu, výmaz, přenositelnost a omezení zpracování.
+                                            Pro uplatnění práv nás kontaktujte na <a href="mailto:gdpr@fixo.cz" style={{color: 'var(--color-primary)'}}>gdpr@fixo.cz</a>.
+                                        </p>
+
+                                        <h4 style={{fontWeight: 'var(--font-semibold)', marginBottom: 'var(--space-2)', marginTop: 'var(--space-4)'}}>Cookies</h4>
+                                        <p style={{fontSize: 'var(--text-sm)', color: 'var(--color-text-secondary)'}}>
+                                            Používáme pouze nezbytné cookies pro funkčnost aplikace (přihlášení, jazykové nastavení, tmavý režim).
+                                            Nepoužíváme reklamní nebo sledovací cookies třetích stran.
+                                        </p>
+                                    </div>
+                                </div>
+
+                                {/* Omezení odpovědnosti za AI rady */}
+                                <div className="card mb-6" style={{borderColor: '#f59e0b', borderWidth: '2px'}}>
+                                    <div className="card-header" style={{background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)'}}>
+                                        <h3 className="card-title">
+                                            <i className="fas fa-exclamation-triangle mr-2"></i>
+                                            Omezení odpovědnosti za AI rady
+                                        </h3>
+                                    </div>
+                                    <div className="card-body" style={{lineHeight: 1.7}}>
+                                        <div className="alert" style={{background: '#fef3c7', border: '1px solid #f59e0b', marginBottom: 'var(--space-4)'}}>
+                                            <p style={{fontWeight: 'var(--font-semibold)', color: '#92400e'}}>
+                                                <i className="fas fa-info-circle mr-2"></i>
+                                                DŮLEŽITÉ: AI poskytuje pouze doporučení, nikoliv profesionální rady
+                                            </p>
+                                        </div>
+
+                                        <p style={{fontSize: 'var(--text-sm)', color: 'var(--color-text-secondary)', marginBottom: 'var(--space-3)'}}>
+                                            <strong>1. Pouze informativní účely:</strong> Návody a analýzy poskytované FIXO AI jsou pouze informativní
+                                            a neslouží jako náhrada za profesionální poradenství odborníka (elektrikář, instalatér, technik).
+                                        </p>
+
+                                        <p style={{fontSize: 'var(--text-sm)', color: 'var(--color-text-secondary)', marginBottom: 'var(--space-3)'}}>
+                                            <strong>2. Přesnost není garantována:</strong> I když se snažíme poskytovat přesné informace,
+                                            AI může udělat chybu. Vždy si ověřte postup a dodržujte bezpečnostní předpisy.
+                                        </p>
+
+                                        <p style={{fontSize: 'var(--text-sm)', color: 'var(--color-text-secondary)', marginBottom: 'var(--space-3)'}}>
+                                            <strong>3. Vyloučení odpovědnosti:</strong> FIXO nenese odpovědnost za škody způsobené
+                                            při provádění oprav dle našich návodů. Jednáte na vlastní riziko.
+                                        </p>
+
+                                        <p style={{fontSize: 'var(--text-sm)', color: 'var(--color-text-secondary)'}}>
+                                            <strong>4. Kdy volat profesionála:</strong> U složitých, nebezpečných nebo zákonem
+                                            regulovaných prací (plyn, vysoké napětí, nosné konstrukce) vždy kontaktujte certifikovaného odborníka.
+                                        </p>
+                                    </div>
+                                </div>
+
+                                {/* DIY Disclaimer */}
+                                <div className="card mb-6" style={{borderColor: 'var(--color-danger)', borderWidth: '2px'}}>
+                                    <div className="card-header" style={{background: 'var(--color-danger)'}}>
+                                        <h3 className="card-title">
+                                            <i className="fas fa-hard-hat mr-2"></i>
+                                            Bezpečnostní upozornění pro kutily
+                                        </h3>
+                                    </div>
+                                    <div className="card-body" style={{lineHeight: 1.7}}>
+                                        <div className="alert" style={{background: '#fee2e2', border: '1px solid var(--color-danger)', marginBottom: 'var(--space-4)'}}>
+                                            <p style={{fontWeight: 'var(--font-semibold)', color: '#991b1b'}}>
+                                                <i className="fas fa-exclamation-circle mr-2"></i>
+                                                BEZPEČNOST PŘEDEVŠÍM - Vždy dodržujte bezpečnostní postupy!
+                                            </p>
+                                        </div>
+
+                                        <h4 style={{fontWeight: 'var(--font-semibold)', marginBottom: 'var(--space-2)', marginTop: 'var(--space-4)', color: 'var(--color-danger)'}}>
+                                            ⚡ Elektřina
+                                        </h4>
+                                        <p style={{fontSize: 'var(--text-sm)', color: 'var(--color-text-secondary)', marginBottom: 'var(--space-3)'}}>
+                                            Vždy vypněte jistič před prací s elektroinstalací. Pokud si nejste jisti, zavolejte elektrikáře.
+                                            Práce na hlavním rozvaděči nebo zásahy do veřejné sítě smí provádět pouze autorizovaná osoba.
+                                        </p>
+
+                                        <h4 style={{fontWeight: 'var(--font-semibold)', marginBottom: 'var(--space-2)', marginTop: 'var(--space-4)', color: '#3b82f6'}}>
+                                            💧 Voda a plyn
+                                        </h4>
+                                        <p style={{fontSize: 'var(--text-sm)', color: 'var(--color-text-secondary)', marginBottom: 'var(--space-3)'}}>
+                                            Uzavřete hlavní přívod vody před opravami. U plynových zařízení vždy kontaktujte odborníka -
+                                            práce s plynem jsou životu nebezpečné a musí je provádět certifikovaný technik.
+                                        </p>
+
+                                        <h4 style={{fontWeight: 'var(--font-semibold)', marginBottom: 'var(--space-2)', marginTop: 'var(--space-4)', color: '#10b981'}}>
+                                            🛠️ Nástroje a OOPP
+                                        </h4>
+                                        <p style={{fontSize: 'var(--text-sm)', color: 'var(--color-text-secondary)', marginBottom: 'var(--space-3)'}}>
+                                            Používejte správné nástroje a ochranné pomůcky (brýle, rukavice, respirátor).
+                                            Nikdy nepracujte pod vlivem alkoholu nebo léků.
+                                        </p>
+
+                                        <h4 style={{fontWeight: 'var(--font-semibold)', marginBottom: 'var(--space-2)', marginTop: 'var(--space-4)'}}>
+                                            📋 Stavební předpisy
+                                        </h4>
+                                        <p style={{fontSize: 'var(--text-sm)', color: 'var(--color-text-secondary)'}}>
+                                            Některé úpravy vyžadují stavební povolení nebo ohlášení. Informujte se u stavebního úřadu
+                                            před velkými zásahy do konstrukce, fasády nebo rozvodů.
+                                        </p>
+                                    </div>
+                                </div>
+
+                                {/* Kontakt */}
+                                <div className="card">
+                                    <div className="card-body text-center" style={{padding: 'var(--space-6)'}}>
+                                        <h3 style={{fontWeight: 'var(--font-semibold)', marginBottom: 'var(--space-3)'}}>
+                                            Máte otázky k právním podmínkám?
+                                        </h3>
+                                        <p style={{fontSize: 'var(--text-sm)', color: 'var(--color-text-secondary)', marginBottom: 'var(--space-4)'}}>
+                                            Kontaktujte nás na:
+                                        </p>
+                                        <div style={{display: 'flex', flexDirection: 'column', gap: 'var(--space-2)', alignItems: 'center'}}>
+                                            <a href="mailto:podpora@fixo.cz" style={{color: 'var(--color-primary)', fontSize: 'var(--text-sm)'}}>
+                                                <i className="fas fa-envelope mr-2"></i>podpora@fixo.cz
+                                            </a>
+                                            <a href="mailto:gdpr@fixo.cz" style={{color: 'var(--color-primary)', fontSize: 'var(--text-sm)'}}>
+                                                <i className="fas fa-shield-alt mr-2"></i>gdpr@fixo.cz (ochrana údajů)
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="alert alert-info" style={{marginTop: 'var(--space-4)'}}>
+                                    <p style={{fontSize: 'var(--text-sm)'}}>
+                                        <i className="fas fa-calendar-alt mr-2"></i>
+                                        Tyto podmínky jsou platné od 26. 11. 2025. Změny budeme oznamovat e-mailem.
+                                    </p>
                                 </div>
                             </div>
                         )}
