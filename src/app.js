@@ -3291,25 +3291,26 @@
                                         </div>
 
                                         <div className="glass-card">
-                                            <div className="flex flex-col md:flex-row gap-6 items-start md:items-center justify-between">
-                                                {/* FIXO sekce */}
-                                                <div className="flex-1">
-                                                    <div className="text-2xl font-bold mb-2">
-                                                        <span style={{
-                                                            background: 'var(--gradient-primary)',
-                                                            WebkitBackgroundClip: 'text',
-                                                            WebkitTextFillColor: 'transparent',
-                                                            backgroundClip: 'text'
-                                                        }}>FIXO</span>
-                                                    </div>
-                                                    <p className="text-sm text-secondary m-0">
-                                                        První světový standard pro vizuální diagnostiku domácích závad.
-                                                    </p>
+                                            {/* Horní sekce - Logo a popis */}
+                                            <div className="mb-6">
+                                                <div className="text-3xl font-bold mb-3">
+                                                    <span style={{
+                                                        background: 'var(--gradient-primary)',
+                                                        WebkitBackgroundClip: 'text',
+                                                        WebkitTextFillColor: 'transparent',
+                                                        backgroundClip: 'text'
+                                                    }}>FIXO</span>
                                                 </div>
+                                                <p className="text-xs md:text-sm text-secondary m-0 leading-tight">
+                                                    První světový standard pro vizuální diagnostiku domácích závad.
+                                                </p>
+                                            </div>
 
-                                                {/* Funkce */}
+                                            {/* Spodní sekce - Dva sloupce */}
+                                            <div className="flex flex-col md:flex-row gap-6">
+                                                {/* Levý sloupec - Funkce */}
                                                 <div className="flex-1">
-                                                    <h4 className="font-semibold text-sm mb-2">Funkce</h4>
+                                                    <h4 className="font-semibold text-sm mb-3">Funkce</h4>
                                                     <ul className="text-sm text-secondary m-0 p-0">
                                                         <li className="mb-1">• AI analýza fotografií</li>
                                                         <li className="mb-1">• 500+ návodů na opravy</li>
@@ -3317,9 +3318,9 @@
                                                     </ul>
                                                 </div>
 
-                                                {/* Kontakt */}
+                                                {/* Pravý sloupec - Kontakt */}
                                                 <div className="flex-1">
-                                                    <h4 className="font-semibold text-sm mb-2">Kontakt</h4>
+                                                    <h4 className="font-semibold text-sm mb-3">Kontakt</h4>
                                                     <a href="mailto:support@fixo.app" className="text-sm text-primary">
                                                         support@fixo.app
                                                     </a>
