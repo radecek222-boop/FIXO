@@ -3268,22 +3268,42 @@
                                             </div>
                                         </div>
 
-                                        {/* Footer uvnitř pravého sloupce */}
-                                        <div className="text-center py-6">
-                                            <div className="text-2xl font-bold mb-2">
-                                                <span className="bg-gradient-primary" style={{
-                                                    background: 'var(--gradient-primary)',
-                                                    WebkitBackgroundClip: 'text',
-                                                    WebkitTextFillColor: 'transparent',
-                                                    backgroundClip: 'text'
-                                                }}>FIXO</span>
+                                        {/* Footer uvnitř pravého sloupce - horizontální layout */}
+                                        <div className="glass-card">
+                                            <div className="flex flex-col md:flex-row gap-6 items-start md:items-center justify-between">
+                                                {/* FIXO sekce */}
+                                                <div className="flex-1">
+                                                    <div className="text-2xl font-bold mb-2">
+                                                        <span style={{
+                                                            background: 'var(--gradient-primary)',
+                                                            WebkitBackgroundClip: 'text',
+                                                            WebkitTextFillColor: 'transparent',
+                                                            backgroundClip: 'text'
+                                                        }}>FIXO</span>
+                                                    </div>
+                                                    <p className="text-sm text-secondary m-0">
+                                                        První světový standard pro vizuální diagnostiku domácích závad.
+                                                    </p>
+                                                </div>
+
+                                                {/* Funkce */}
+                                                <div className="flex-1">
+                                                    <h4 className="font-semibold text-sm mb-2">Funkce</h4>
+                                                    <ul className="text-sm text-secondary m-0 p-0">
+                                                        <li className="mb-1">• AI analýza fotografií</li>
+                                                        <li className="mb-1">• 500+ návodů na opravy</li>
+                                                        <li className="m-0">• Bezpečnostní upozornění</li>
+                                                    </ul>
+                                                </div>
+
+                                                {/* Kontakt */}
+                                                <div className="flex-1">
+                                                    <h4 className="font-semibold text-sm mb-2">Kontakt</h4>
+                                                    <a href="mailto:support@fixo.app" className="text-sm text-primary">
+                                                        support@fixo.app
+                                                    </a>
+                                                </div>
                                             </div>
-                                            <p className="text-sm text-secondary mb-3">
-                                                "Fix Anything. Anywhere. Instantly."
-                                            </p>
-                                            <p className="text-xs text-muted">
-                                                © 2025 FIXO • Váš domácí pomocník
-                                            </p>
                                         </div>
                                     </div>
                                 </div>
