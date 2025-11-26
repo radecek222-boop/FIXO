@@ -341,7 +341,36 @@
     text-align: center;
 }
 
-/* Hide desktop navigation if exists - hamburger menu is now used on all screen sizes */
-.desktop-nav {
-    display: none;
+/* Desktop Header Responsive */
+@media (max-width: 768px) {
+    /* Hide desktop navigation on mobile */
+    .desktop-nav {
+        display: none !important;
+    }
+
+    .logo-section div {
+        font-size: var(--text-xl) !important;
+    }
+
+    .desktop-header {
+        padding: var(--space-3) var(--space-4) !important;
+    }
+
+    /* Show hamburger on mobile */
+    .hamburger-btn {
+        display: flex !important;
+    }
+}
+
+@media (min-width: 769px) {
+    /* Hide hamburger menu on desktop */
+    .hamburger-btn {
+        display: none !important;
+    }
+
+    /* Hide mobile menu on desktop */
+    .mobile-menu,
+    .mobile-menu-overlay {
+        display: none !important;
+    }
 }
