@@ -10,7 +10,7 @@
     <meta name="theme-color" content="#6366f1">
 
     <!-- PWA Meta Tags -->
-    <link rel="manifest" href="manifest.json">
+    <link rel="manifest" href="./manifest.json">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -43,8 +43,8 @@
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/service-worker.js')
-                    .then(reg => console.log('Service Worker registered'))
+                navigator.serviceWorker.register('./service-worker.js')
+                    .then(reg => console.log('FIXO: Service Worker registrován', reg))
                     .catch(err => console.log('Service Worker registration failed:', err));
             });
         }
