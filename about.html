@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <base href="/FIXO/">
+    <title>FIXO - O nás</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="public/icons/icon-72x72.png">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body>
+    <!-- HEADER -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo">
+                    <i class="fas fa-tools"></i>
+                    <span>FIXO</span>
+                </a>
+
+                <nav>
+                    <a href="index.html">
+                        <i class="fas fa-home"></i>
+                        <span>Domů</span>
+                    </a>
+                    <a href="repair.html">
+                        <i class="fas fa-wrench"></i>
+                        <span>Databáze oprav</span>
+                    </a>
+                    <a href="partners.html">
+                        <i class="fas fa-handshake"></i>
+                        <span>Partneři</span>
+                    </a>
+                    <a href="about.html" class="active">
+                        <i class="fas fa-info-circle"></i>
+                        <span>O nás</span>
+                    </a>
+                    <a href="contacts.html">
+                        <i class="fas fa-envelope"></i>
+                        <span>Kontakt</span>
+                    </a>
+                </nav>
+
+                <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+
+            <div class="mobile-nav" id="mobileNav">
+                <a href="index.html">
+                    <i class="fas fa-home"></i>
+                    <span>Domů</span>
+                </a>
+                <a href="repair.html">
+                    <i class="fas fa-wrench"></i>
+                    <span>Databáze oprav</span>
+                </a>
+                <a href="partners.html">
+                    <i class="fas fa-handshake"></i>
+                    <span>Partneři</span>
+                </a>
+                <a href="about.html" class="active">
+                    <i class="fas fa-info-circle"></i>
+                    <span>O nás</span>
+                </a>
+                <a href="contacts.html">
+                    <i class="fas fa-envelope"></i>
+                    <span>Kontakt</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main>
+        <div class="container" style="padding: var(--space-4) var(--space-4);">
+
+            <!-- Header -->
+            <div style="background: var(--color-bg-primary); border-radius: var(--radius-2xl); padding: var(--space-6); box-shadow: var(--shadow-xl); margin-bottom: var(--space-4); text-center;">
+                <h1 style="font-size: var(--font-size-3xl); font-weight: 700; color: var(--color-primary); margin-bottom: var(--space-3);">
+                    <i class="fas fa-rocket"></i> O projektu FIXO
+                </h1>
+                <p style="color: var(--color-text-secondary); font-size: var(--font-size-lg); max-width: 800px; margin: 0 auto;">
+                    První AI asistent pro diagnostiku a opravu domácích závad. Ušetříme vám čas a peníze s profesionálními návody.
+                </p>
+            </div>
+
+            <!-- Content Grid -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: var(--space-4); margin-bottom: var(--space-4);">
+
+                <div class="info-card" style="padding: var(--space-4);">
+                    <h3 style="font-size: var(--font-size-lg); margin-bottom: var(--space-3);">
+                        <i class="fas fa-bullseye"></i> Naše mise
+                    </h3>
+                    <p>Zpřístupnit odborné znalosti každému. Díky umělé inteligenci a rozsáhlé databázi návod
+ů umožňujeme lidem řešit domácí problémy bez čekání na řemeslníka.</p>
+                </div>
+
+                <div class="info-card" style="padding: var(--space-4);">
+                    <h3 style="font-size: var(--font-size-lg); margin-bottom: var(--space-3);">
+                        <i class="fas fa-chart-line"></i> Naše čísla
+                    </h3>
+                    <p><strong>500+</strong> detailních návodů<br>
+                    <strong>50 000+</strong> úspěšných analýz<br>
+                    <strong>98%</strong> spokojenost uživatelů<br>
+                    <strong>2-5 000 Kč</strong> průměrná úspora</p>
+                </div>
+
+                <div class="info-card" style="padding: var(--space-4);">
+                    <h3 style="font-size: var(--font-size-lg); margin-bottom: var(--space-3);">
+                        <i class="fas fa-brain"></i> AI Technologie
+                    </h3>
+                    <p>Využíváme nejmodernější počítačové vidění a strojové učení pro automatickou identifikaci závad z fotografií.</p>
+                </div>
+
+            </div>
+
+            <!-- How It Works -->
+            <div style="background: var(--color-bg-primary); border-radius: var(--radius-2xl); padding: var(--space-6); box-shadow: var(--shadow-xl);">
+                <h2 style="font-size: var(--font-size-2xl); font-weight: 700; color: var(--color-primary); margin-bottom: var(--space-4); text-align: center;">
+                    <i class="fas fa-cogs"></i> Jak to funguje?
+                </h2>
+
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: var(--space-4);">
+
+                    <div style="text-align: center;">
+                        <div style="font-size: 3rem; margin-bottom: var(--space-2);">📸</div>
+                        <h3 style="font-size: var(--font-size-lg); font-weight: 600; margin-bottom: var(--space-2);">1. Vyfoťte</h3>
+                        <p style="color: var(--color-text-secondary); font-size: var(--font-size-sm);">
+                            Stačí vyfotit problém mobilem nebo nahrát existující fotku
+                        </p>
+                    </div>
+
+                    <div style="text-align: center;">
+                        <div style="font-size: 3rem; margin-bottom: var(--space-2);">🤖</div>
+                        <h3 style="font-size: var(--font-size-lg); font-weight: 600; margin-bottom: var(--space-2);">2. AI Analýza</h3>
+                        <p style="color: var(--color-text-secondary); font-size: var(--font-size-sm);">
+                            Umělá inteligence identifikuje závadu během několika sekund
+                        </p>
+                    </div>
+
+                    <div style="text-align: center;">
+                        <div style="font-size: 3rem; margin-bottom: var(--space-2);">🔧</div>
+                        <h3 style="font-size: var(--font-size-lg); font-weight: 600; margin-bottom: var(--space-2);">3. Opravte</h3>
+                        <p style="color: var(--color-text-secondary); font-size: var(--font-size-sm);">
+                            Postupujte podle krok-za-krokem návodu s potřebnými nástroji
+                        </p>
+                    </div>
+
+                    <div style="text-align: center;">
+                        <div style="font-size: 3rem; margin-bottom: var(--space-2);">💰</div>
+                        <h3 style="font-size: var(--font-size-lg); font-weight: 600; margin-bottom: var(--space-2);">4. Ušetřete</h3>
+                        <p style="color: var(--color-text-secondary); font-size: var(--font-size-sm);">
+                            Průměrně ušetříte 2000-5000 Kč za každou opravu
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>FIXO</h3>
+                    <p>AI asistent pro okamžité opravy domácích závad. Ušetřete čas i peníze s profesionálními návody.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Právní informace</h3>
+                    <ul class="footer-links">
+                        <li><a href="contacts.html#gdpr"><i class="fas fa-shield-alt"></i> Ochrana osobních údajů</a></li>
+                        <li><a href="contacts.html#terms"><i class="fas fa-file-contract"></i> Obchodní podmínky</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 FIXO. Všechna práva vyhrazena.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        // Mobile menu toggle
+        document.getElementById('mobileMenuToggle').addEventListener('click', function() {
+            this.classList.toggle('active');
+            document.getElementById('mobileNav').classList.toggle('active');
+        });
+    </script>
+</body>
+</html>

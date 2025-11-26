@@ -11,6 +11,8 @@ const morgan = require('morgan');
 const path = require('path');
 const fs = require('fs');
 const { v4: uuidv4 } = require('uuid');
+const aiAnalyzer = require('./src/aiAnalyzer');
+const paymentGateway = require('./src/paymentGateway');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -359,6 +361,29 @@ app.post('/api/analyze-base64', async (req, res) => {
         const { image } = req.body;
 
         if (!image) {
+            return res.status(400).json({ success: false, error: 'Nebyl poskytnut base64 obrázek' });
+        }
+
+        // Použít AI Analyzer
+        const analysisResult = await aiAnalyzer.analyze(image);
+
+        return res.json({ success: true, data: analysisResult });
+    } catch (error) {
+        console.error('Chyba při analýze obrázku:', error);
+        return res.status(500).json({
+            success: false,
+            error: 'Chyba při zpracování obrázku',
+            message: error.message
+        });
+    }
+});
+
+// DEPRECATED: Stará verze pro zpětnou kompatibilitu
+app.post('/api/analyze-base64-old', async (req, res) => {
+    try {
+        const { image } = req.body;
+
+        if (!image) {
             return res.status(400).json({ error: 'Nebyl poskytnut base64 obrázek' });
         }
 
@@ -586,6 +611,62 @@ app.get('/api/tools', (req, res) => {
     res.json({ tools });
 });
 
+// ============================================
+// PAYMENT ENDPOINTS
+// ============================================
+
+// Get pricing plans
+app.get('/api/pricing', (req, res) => {
+    try {
+        const plans = paymentGateway.getPricingPlans();
+        res.json({ success: true, data: plans });
+    } catch (error) {
+        console.error('Error fetching pricing:', error);
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+// Create payment intent
+app.post('/api/payment/create-intent', async (req, res) => {
+    try {
+        const { amount, currency, description, metadata } = req.body;
+
+        if (!amount) {
+            return res.status(400).json({ success: false, error: 'Amount is required' });
+        }
+
+        const paymentIntent = await paymentGateway.createPaymentIntent({
+            amount,
+            currency: currency || 'czk',
+            description,
+            metadata
+        });
+
+        res.json({ success: true, data: paymentIntent });
+    } catch (error) {
+        console.error('Payment intent error:', error);
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+// Verify payment
+app.post('/api/payment/verify', async (req, res) => {
+    try {
+        const { paymentIntentId } = req.body;
+
+        if (!paymentIntentId) {
+            return res.status(400).json({ success: false, error: 'Payment intent ID is required' });
+        }
+
+        const verification = await paymentGateway.verifyPayment(paymentIntentId);
+
+        res.json({ success: true, data: verification });
+    } catch (error) {
+        console.error('Payment verification error:', error);
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
 // Error handling middleware
 app.use((err, req, res, next) => {
     console.error(err.stack);
@@ -620,6 +701,9 @@ app.listen(PORT, () => {
     console.log('  POST /api/history        - Uložit historii');
     console.log('  GET  /api/stats          - Statistiky');
     console.log('  GET  /api/tools          - Seznam nástrojů');
+    console.log('  GET  /api/pricing        - Cenové plány');
+    console.log('  POST /api/payment/create-intent - Vytvořit platbu');
+    console.log('  POST /api/payment/verify - Ověřit platbu');
 });
 
 module.exports = app;

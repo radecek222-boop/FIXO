@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <base href="/FIXO/">
+    <title>FIXO - Databáze oprav</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="public/icons/icon-72x72.png">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="assets/css/main.css">
+    <style>
+        .repair-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: var(--space-3);
+            margin-bottom: var(--space-4);
+        }
+
+        .repair-card {
+            background: var(--color-bg-primary);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-lg);
+            padding: var(--space-3);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .repair-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+            border-color: var(--color-primary);
+        }
+
+        .repair-card-icon {
+            font-size: 2.5rem;
+            margin-bottom: var(--space-2);
+            text-align: center;
+        }
+
+        .repair-card-title {
+            font-size: var(--font-size-base);
+            font-weight: 600;
+            color: var(--color-text-primary);
+            text-align: center;
+            margin-bottom: var(--space-2);
+        }
+
+        .repair-card-info {
+            font-size: var(--font-size-xs);
+            color: var(--color-text-secondary);
+            text-align: center;
+        }
+
+        .category-badge {
+            display: inline-block;
+            padding: var(--space-1) var(--space-2);
+            border-radius: var(--radius-full);
+            font-size: var(--font-size-xs);
+            font-weight: 600;
+            margin-top: var(--space-2);
+        }
+
+        .category-voda {
+            background: #E0F2FE;
+            color: #0369A1;
+        }
+
+        .category-elektrika {
+            background: #FEF3C7;
+            color: #92400E;
+        }
+
+        .category-topeni {
+            background: #FEE2E2;
+            color: #991B1B;
+        }
+
+        .category-dvere {
+            background: #F3E8FF;
+            color: #6B21A8;
+        }
+    </style>
+</head>
+<body>
+    <!-- HEADER -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo">
+                    <i class="fas fa-tools"></i>
+                    <span>FIXO</span>
+                </a>
+
+                <nav>
+                    <a href="index.html">
+                        <i class="fas fa-home"></i>
+                        <span>Domů</span>
+                    </a>
+                    <a href="repair.html" class="active">
+                        <i class="fas fa-wrench"></i>
+                        <span>Databáze oprav</span>
+                    </a>
+                    <a href="partners.html">
+                        <i class="fas fa-handshake"></i>
+                        <span>Partneři</span>
+                    </a>
+                    <a href="about.html">
+                        <i class="fas fa-info-circle"></i>
+                        <span>O nás</span>
+                    </a>
+                    <a href="contacts.html">
+                        <i class="fas fa-envelope"></i>
+                        <span>Kontakt</span>
+                    </a>
+                </nav>
+
+                <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+
+            <div class="mobile-nav" id="mobileNav">
+                <a href="index.html">
+                    <i class="fas fa-home"></i>
+                    <span>Domů</span>
+                </a>
+                <a href="repair.html" class="active">
+                    <i class="fas fa-wrench"></i>
+                    <span>Databáze oprav</span>
+                </a>
+                <a href="partners.html">
+                    <i class="fas fa-handshake"></i>
+                    <span>Partneři</span>
+                </a>
+                <a href="about.html">
+                    <i class="fas fa-info-circle"></i>
+                    <span>O nás</span>
+                </a>
+                <a href="contacts.html">
+                    <i class="fas fa-envelope"></i>
+                    <span>Kontakt</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main>
+        <div class="container" style="padding: var(--space-4) var(--space-4);">
+
+            <!-- Header -->
+            <div style="background: var(--color-bg-primary); border-radius: var(--radius-2xl); padding: var(--space-4); box-shadow: var(--shadow-xl); margin-bottom: var(--space-4);">
+                <h1 style="font-size: var(--font-size-2xl); font-weight: 700; color: var(--color-primary); margin-bottom: var(--space-2);">
+                    <i class="fas fa-wrench"></i> Databáze oprav
+                </h1>
+                <p style="color: var(--color-text-secondary); font-size: var(--font-size-sm);">
+                    Procházejte naši rozsáhlou databázi oprav domácích závad. Každý návod obsahuje krok-za-krokem instrukce, odhad času a nákladů.
+                </p>
+            </div>
+
+            <!-- Repair Grid -->
+            <div id="repairGrid" class="repair-grid">
+                <!-- Načte se pomocí JS -->
+                <div style="grid-column: 1 / -1; text-center; padding: var(--space-8);">
+                    <i class="fas fa-spinner fa-spin" style="font-size: 2rem; color: var(--color-primary);"></i>
+                    <p style="margin-top: var(--space-2); color: var(--color-text-secondary);">Načítám databázi...</p>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>FIXO</h3>
+                    <p>AI asistent pro okamžité opravy domácích závad. Ušetřete čas i peníze s profesionálními návody.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Právní informace</h3>
+                    <ul class="footer-links">
+                        <li><a href="contacts.html#gdpr"><i class="fas fa-shield-alt"></i> Ochrana osobních údajů</a></li>
+                        <li><a href="contacts.html#terms"><i class="fas fa-file-contract"></i> Obchodní podmínky</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 FIXO. Všechna práva vyhrazena.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="assets/js/api.js"></script>
+    <script>
+        // Mobile menu toggle
+        document.getElementById('mobileMenuToggle').addEventListener('click', function() {
+            this.classList.toggle('active');
+            document.getElementById('mobileNav').classList.toggle('active');
+        });
+
+        // Načíst databázi oprav
+        async function loadRepairs() {
+            try {
+                const response = await fetch('data/repairs.json');
+                const data = await response.json();
+
+                displayRepairs(data.repairs);
+            } catch (error) {
+                console.error('Chyba při načítání databáze:', error);
+                document.getElementById('repairGrid').innerHTML = `
+                    <div style="grid-column: 1 / -1; text-center; padding: var(--space-8);">
+                        <i class="fas fa-exclamation-triangle" style="font-size: 2rem; color: var(--color-danger);"></i>
+                        <p style="margin-top: var(--space-2); color: var(--color-danger);">Chyba při načítání databáze</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Zobrazit opravy
+        function displayRepairs(repairs) {
+            const grid = document.getElementById('repairGrid');
+            grid.innerHTML = '';
+
+            Object.entries(repairs).forEach(([key, repair]) => {
+                const card = document.createElement('div');
+                card.className = 'repair-card';
+                card.onclick = () => showRepairDetail(key, repair);
+
+                const issuesCount = repair.issues ? repair.issues.length : 0;
+
+                card.innerHTML = `
+                    <div class="repair-card-icon">${repair.icon || '🔧'}</div>
+                    <div class="repair-card-title">${repair.name}</div>
+                    <div class="repair-card-info">${issuesCount} ${issuesCount === 1 ? 'problém' : issuesCount < 5 ? 'problémy' : 'problémů'}</div>
+                    <div style="text-align: center;">
+                        <span class="category-badge category-${repair.category || 'voda'}">${repair.category || 'Voda'}</span>
+                    </div>
+                `;
+
+                grid.appendChild(card);
+            });
+        }
+
+        // Detail opravy
+        function showRepairDetail(key, repair) {
+            FIXO_API.showNotification(`Detail pro "${repair.name}" připravujeme...`, 'info');
+            // TODO: Implementovat modal s detailem opravy
+        }
+
+        // Načíst při startu
+        loadRepairs();
+    </script>
+</body>
+</html>
