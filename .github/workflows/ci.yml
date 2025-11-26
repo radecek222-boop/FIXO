@@ -34,8 +34,10 @@ jobs:
       - name: Validate JSON Files
         run: |
           echo "🔍 Validating JSON syntax..."
-          for file in data/*.json manifest.json 2>/dev/null; do
-            [ -f "$file" ] && python3 -m json.tool "$file" > /dev/null && echo "✅ $file" || exit 1
+          for file in manifest.json data/*.json; do
+            if [ -f "$file" ]; then
+              python3 -m json.tool "$file" > /dev/null && echo "✅ $file" || exit 1
+            fi
           done
 
       - name: Check HTML Syntax
