@@ -3203,7 +3203,7 @@
                                             <h2 className="text-xl font-bold text-primary mb-2">
                                                 {t('homeTitle')}
                                             </h2>
-                                            <p className="text-secondary" className="text-sm">
+                                            <p className="text-secondary text-sm">
                                                 {t('homeSubtitle')}
                                             </p>
                                         </div>
@@ -3219,12 +3219,11 @@
                                             {/* Drag & Drop Zone */}
                                             <div
                                                 ref={dropZoneRef}
-                                                className={`drop-zone ${isDragging ? 'drag-over' : ''}`}
+                                                className={`drop-zone p-6 ${isDragging ? 'drag-over' : ''}`}
                                                 onDragOver={handleDragOver}
                                                 onDragLeave={handleDragLeave}
                                                 onDrop={handleDrop}
                                                 onClick={() => fileInputRef.current.click()}
-                                                className="p-6"
                                             >
                                                 <div className="drop-zone-icon">
                                                     {isDragging ? (
@@ -3236,13 +3235,13 @@
                                                 <p className="text-base font-semibold mb-1 text-primary">
                                                     {isDragging ? t('dropzoneDrop') : t('dropzoneText')}
                                                 </p>
-                                                <p className="text-secondary" className="text-sm">
+                                                <p className="text-secondary text-sm">
                                                     {t('dropzoneHint')}
                                                 </p>
                                             </div>
 
                                             {/* Quick Examples - kompaktní */}
-                                            <div className="grid grid-6 mt-4 gap-2" className="grid-cols-6">
+                                            <div className="grid grid-6 grid-cols-6 mt-4 gap-2">
                                                 {[
                                                     { icon: 'fa-tint', name: 'Kohoutek' },
                                                     { icon: 'fa-toilet', name: 'WC' },
@@ -3251,8 +3250,8 @@
                                                     { icon: 'fa-lightbulb', name: 'Světlo' },
                                                     { icon: 'fa-thermometer-half', name: 'Topení' }
                                                 ].map((item, idx) => (
-                                                    <div key={idx} className="example-card" className="p-2">
-                                                        <i className={`fas ${item.icon}`} className="text-lg text-primary"></i>
+                                                    <div key={idx} className="example-card p-2">
+                                                        <i className={`fas ${item.icon} text-lg text-primary`}></i>
                                                         <div className="text-xs text-secondary">{item.name}</div>
                                                     </div>
                                                 ))}
@@ -3267,7 +3266,7 @@
                                                 className="p-3 rounded-lg bg-primary-light cursor-pointer text-center"
                                             >
                                                 <div className="flex items-center justify-center gap-2">
-                                                    <i className="fas fa-keyboard" className="text-lg text-primary"></i>
+                                                    <i className="fas fa-keyboard text-lg text-primary"></i>
                                                     <span className="font-semibold text-primary-dark text-sm">
                                                         Nelze vyfotit? Popište problém
                                                     </span>
