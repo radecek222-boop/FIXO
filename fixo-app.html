@@ -879,7 +879,7 @@
                                             Potřebné nástroje a materiál
                                         </h3>
                                         <div className="flex flex-wrap gap-2">
-                                            {selectedIssue.tools.map((tool, idx) => (
+                                            {(selectedIssue.tools || []).map((tool, idx) => (
                                                 <span key={idx} className="bg-white px-3 py-1 rounded-full text-sm">
                                                     {tool}
                                                 </span>
@@ -912,7 +912,7 @@
                                         <div className="mb-6">
                                             <h3 className="font-semibold text-gray-700 mb-3">Přehled všech kroků</h3>
                                             <div className="space-y-2">
-                                                {selectedIssue.steps.map((step, idx) => (
+                                                {(selectedIssue.steps || []).map((step, idx) => (
                                                     <div 
                                                         key={idx}
                                                         className={`flex items-center p-3 rounded-lg ${

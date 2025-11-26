@@ -4148,7 +4148,7 @@
                                             </button>
                                         </div>
                                         <div className="flex flex-col gap-2">
-                                            {selectedIssue.tools.map((tool, idx) => (
+                                            {(selectedIssue.tools || []).map((tool, idx) => (
                                                 <div key={idx} className="rounded-lg border border-border">
                                                     <span className="font-medium text-sm">
                                                         <i className="fas fa-wrench mr-2 text-primary opacity-70"></i>
@@ -4241,7 +4241,7 @@
                                         <div className="mb-6">
                                             <h3 className="font-semibold mb-3">{t('allStepsOverview')}</h3>
                                             <div className="steps-timeline">
-                                                {selectedIssue.steps.map((step, idx) => (
+                                                {(selectedIssue.steps || []).map((step, idx) => (
                                                     <div
                                                         key={idx}
                                                         className={`step-item ${
