@@ -6,15 +6,18 @@
 
 // API Configuration
 const API_CONFIG = {
-    // Pro localhost development
-    LOCAL: 'http://localhost:3000',
+    // Pro localhost development (zkusí oba porty)
+    LOCAL: window.location.port ? `http://localhost:${window.location.port}` : 'http://localhost:3001',
     // Pro production (Render.com)
     PRODUCTION: 'https://fixo-api.onrender.com',
     // Automatická detekce
     get BASE_URL() {
-        return window.location.hostname === 'localhost'
-            ? this.LOCAL
-            : this.PRODUCTION;
+        // Pokud je to localhost nebo 127.0.0.1, použij LOCAL
+        if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+            return this.LOCAL;
+        }
+        // Jinak použij PRODUCTION
+        return this.PRODUCTION;
     }
 };
 

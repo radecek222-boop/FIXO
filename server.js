@@ -18,7 +18,18 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Middleware
-app.use(helmet());
+app.use(helmet({
+    contentSecurityPolicy: {
+        directives: {
+            defaultSrc: ["'self'"],
+            scriptSrc: ["'self'", "'unsafe-inline'", "https://cdn.tailwindcss.com", "https://unpkg.com", "https://cdnjs.cloudflare.com"],
+            styleSrc: ["'self'", "'unsafe-inline'", "https://cdnjs.cloudflare.com", "https://fonts.googleapis.com"],
+            fontSrc: ["'self'", "https://cdnjs.cloudflare.com", "https://fonts.gstatic.com"],
+            imgSrc: ["'self'", "data:", "blob:", "https:"],
+            connectSrc: ["'self'", "http://localhost:3001", "http://localhost:3000"]
+        }
+    }
+}));
 app.use(compression());
 
 // CORS konfigurace - povolit GitHub Pages a localhost
@@ -47,8 +58,40 @@ const limiter = rateLimit({
 });
 app.use('/api/', limiter);
 
-// Servírování statických souborů (frontend)
+// Servírování statických souborů (CSS, JS, images)
+app.use('/assets', express.static(path.join(__dirname, 'assets')));
+app.use('/data', express.static(path.join(__dirname, 'data')));
+
+// Servírování HTML stránek
 app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+app.get('/index.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+app.get('/analytics.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'analytics.html'));
+});
+
+app.get('/repair.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'repair.html'));
+});
+
+app.get('/partners.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'partners.html'));
+});
+
+app.get('/about.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'about.html'));
+});
+
+app.get('/contacts.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'contacts.html'));
+});
+
+app.get('/fixo-app.html', (req, res) => {
     res.sendFile(path.join(__dirname, 'fixo-app.html'));
 });
 
