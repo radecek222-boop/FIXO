@@ -36,10 +36,10 @@
     }
 }
 
-/* Desktop - 84% šířky obrazovky */
-@media (min-width: 1024px) {
+/* Desktop - 80% šířky obrazovky */
+@media (min-width: 769px) {
     .app-container {
-        max-width: 84%;
+        max-width: 80%;
         padding: 0 var(--space-8);
     }
 }
@@ -983,9 +983,9 @@
     box-shadow: 0 -4px 20px rgba(0,0,0,0.1);
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 769px) {
     .bottom-nav {
-        max-width: 84%;
+        max-width: 80%;
     }
 }
 

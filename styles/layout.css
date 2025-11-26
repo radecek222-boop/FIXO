@@ -596,9 +596,9 @@
     padding: 0 var(--space-4);
   }
 
-  @media (min-width: 1024px) {
+  @media (min-width: 769px) {
     .footer > .container {
-      max-width: 84%;
+      max-width: 80%;
     }
   }
 
@@ -695,6 +695,18 @@
 
   .footer-links li {
     color: rgba(255, 255, 255, 0.85);
+  }
+
+  .footer-links li a {
+    color: rgba(255, 255, 255, 0.85);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+    cursor: pointer;
+  }
+
+  .footer-links li a:hover {
+    color: white;
+    text-decoration: underline;
   }
 
   .footer-link {
