@@ -3119,83 +3119,37 @@
                                         </div>
                                     </div>
 
-                                    {/* Premium Section */}
-                                    <div style={{
-                                        background: 'linear-gradient(135deg, #fef3c7 0%, #fde68a 100%)',
-                                        padding: 'var(--space-6)',
-                                        borderTop: '2px solid #f59e0b'
-                                    }}>
-                                        <div className="flex-between mb-4">
-                                            <h3 style={{fontWeight: 'var(--font-bold)', color: '#92400e'}}>
-                                                <i className="fas fa-crown mr-2" style={{color: '#f59e0b'}}></i>
-                                                FIXO Premium
-                                            </h3>
-                                            <span className="badge" style={{background: '#f59e0b', color: 'white', fontSize: 'var(--text-lg)', padding: 'var(--space-2) var(--space-4)'}}>
-                                                3,99 €
-                                            </span>
+                                    {/* Premium Banner - Compact */}
+                                    <button
+                                        style={{
+                                            width: '100%',
+                                            background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
+                                            color: 'white',
+                                            padding: 'var(--space-3) var(--space-4)',
+                                            border: 'none',
+                                            cursor: 'pointer',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'space-between',
+                                            gap: 'var(--space-3)'
+                                        }}
+                                        onClick={() => alert('Platební brána bude dostupná brzy!\n\nCena: 3,99 €/měsíc\n\nZískáte:\n• Detailní schéma\n• Odkazy na produkty\n• Kontakty na opraváře\n• Video návod')}
+                                    >
+                                        <div style={{display: 'flex', alignItems: 'center', gap: 'var(--space-2)'}}>
+                                            <i className="fas fa-crown"></i>
+                                            <span style={{fontWeight: 'var(--font-semibold)'}}>FIXO Premium</span>
+                                            <span style={{fontSize: 'var(--text-sm)', opacity: 0.9}}>— schéma, video, e-shop odkazy</span>
                                         </div>
-
-                                        <div style={{display: 'grid', gap: 'var(--space-3)'}}>
-                                            {/* Detailní schéma */}
-                                            <div className="flex items-center gap-3" style={{padding: 'var(--space-3)', background: 'rgba(255,255,255,0.7)', borderRadius: 'var(--radius-lg)'}}>
-                                                <i className="fas fa-project-diagram" style={{fontSize: 'var(--text-xl)', color: '#6366f1'}}></i>
-                                                <div>
-                                                    <strong>Detailní schéma opravy</strong>
-                                                    <p style={{fontSize: 'var(--text-sm)', color: 'var(--color-text-muted)', margin: 0}}>
-                                                        Interaktivní diagram s rozloženým pohledem
-                                                    </p>
-                                                </div>
-                                            </div>
-
-                                            {/* Doporučené produkty */}
-                                            <div className="flex items-center gap-3" style={{padding: 'var(--space-3)', background: 'rgba(255,255,255,0.7)', borderRadius: 'var(--radius-lg)'}}>
-                                                <i className="fas fa-shopping-cart" style={{fontSize: 'var(--text-xl)', color: '#16a34a'}}></i>
-                                                <div>
-                                                    <strong>Doporučené produkty</strong>
-                                                    <p style={{fontSize: 'var(--text-sm)', color: 'var(--color-text-muted)', margin: 0}}>
-                                                        Nástroje a materiály s odkazy na e-shopy
-                                                    </p>
-                                                </div>
-                                            </div>
-
-                                            {/* Místní opraváři */}
-                                            <div className="flex items-center gap-3" style={{padding: 'var(--space-3)', background: 'rgba(255,255,255,0.7)', borderRadius: 'var(--radius-lg)'}}>
-                                                <i className="fas fa-map-marker-alt" style={{fontSize: 'var(--text-xl)', color: '#dc2626'}}></i>
-                                                <div>
-                                                    <strong>Opraváři ve vašem okolí</strong>
-                                                    <p style={{fontSize: 'var(--text-sm)', color: 'var(--color-text-muted)', margin: 0}}>
-                                                        Kontakty na ověřené odborníky poblíž
-                                                    </p>
-                                                </div>
-                                            </div>
-
-                                            {/* Video návod */}
-                                            <div className="flex items-center gap-3" style={{padding: 'var(--space-3)', background: 'rgba(255,255,255,0.7)', borderRadius: 'var(--radius-lg)'}}>
-                                                <i className="fas fa-video" style={{fontSize: 'var(--text-xl)', color: '#9333ea'}}></i>
-                                                <div>
-                                                    <strong>Video návod</strong>
-                                                    <p style={{fontSize: 'var(--text-sm)', color: 'var(--color-text-muted)', margin: 0}}>
-                                                        Krok za krokem s profesionálem
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <button
-                                            className="btn w-full mt-4"
-                                            style={{
-                                                background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
-                                                color: 'white',
-                                                fontWeight: 'var(--font-bold)',
-                                                fontSize: 'var(--text-lg)',
-                                                padding: 'var(--space-4)'
-                                            }}
-                                            onClick={() => alert('Platební brána bude dostupná brzy!\n\nCena: 3,99 €\n\nZískáte:\n• Detailní schéma\n• Odkazy na produkty\n• Kontakty na opraváře\n• Video návod')}
-                                        >
-                                            <i className="fas fa-unlock mr-2"></i>
-                                            Odemknout Premium
-                                        </button>
-                                    </div>
+                                        <span style={{
+                                            background: 'rgba(255,255,255,0.2)',
+                                            padding: 'var(--space-1) var(--space-3)',
+                                            borderRadius: 'var(--radius-full)',
+                                            fontWeight: 'var(--font-bold)',
+                                            fontSize: 'var(--text-sm)'
+                                        }}>
+                                            3,99 €
+                                        </span>
+                                    </button>
                                 </div>
                             </div>
                         )}
