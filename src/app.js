@@ -1878,7 +1878,7 @@
                     {/* Modal pro popis problému */}
                     {showDescribeModal && (
                         <div className="translating-overlay" onClick={() => setShowDescribeModal(false)}>
-                            <div className="translating-box" style={{maxWidth: '400px', width: '90%'}} onClick={e => e.stopPropagation()}>
+                            <div className="translating-box" onClick={e => e.stopPropagation()}>
                                 <h3 style={{fontSize: 'var(--text-xl)', fontWeight: 'var(--font-bold)', marginBottom: 'var(--space-4)'}}>
                                     <i className="fas fa-comment-alt mr-2" style={{color: 'var(--color-primary)'}}></i>
                                     Popište problém
@@ -1949,7 +1949,7 @@
                     {/* Před-opravní checklist modal */}
                     {showChecklist && pendingIssue && (
                         <div className="translating-overlay" onClick={cancelChecklist}>
-                            <div className="translating-box" style={{maxWidth: '450px', width: '95%', maxHeight: '90vh', overflow: 'auto'}} onClick={e => e.stopPropagation()}>
+                            <div className="translating-box" onClick={e => e.stopPropagation()}>
                                 <h3 style={{fontSize: 'var(--text-xl)', fontWeight: 'var(--font-bold)', marginBottom: 'var(--space-2)', display: 'flex', alignItems: 'center', gap: 'var(--space-2)'}}>
                                     <i className="fas fa-clipboard-check" style={{color: 'var(--color-primary)'}}></i>
                                     Před zahájením opravy
@@ -2066,7 +2066,7 @@
                     {/* Craftsmen Modal */}
                     {showCraftsmen && craftsmenData && (
                         <div className="translating-overlay" onClick={() => setShowCraftsmen(false)}>
-                            <div className="translating-box" style={{maxWidth: '600px', width: '95%', maxHeight: '90vh', overflow: 'auto'}} onClick={e => e.stopPropagation()}>
+                            <div className="translating-box" onClick={e => e.stopPropagation()}>
                                 <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--space-4)'}}>
                                     <h3 style={{fontSize: 'var(--text-xl)', fontWeight: 'var(--font-bold)', display: 'flex', alignItems: 'center', gap: 'var(--space-2)'}}>
                                         <i className="fas fa-hard-hat" style={{color: 'var(--color-primary)'}}></i>
@@ -2228,7 +2228,7 @@
                     {/* Social Share Modal - po dokončení opravy */}
                     {showShareModal && shareData && (
                         <div className="translating-overlay" onClick={closeShareAndFinish}>
-                            <div className="translating-box" style={{maxWidth: '450px', width: '95%', textAlign: 'center'}} onClick={e => e.stopPropagation()}>
+                            <div className="translating-box" onClick={e => e.stopPropagation()}>
                                 {/* Success animation */}
                                 <div style={{
                                     fontSize: '4rem',

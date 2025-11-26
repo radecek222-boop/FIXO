@@ -166,11 +166,13 @@
 
   .btn-warning {
     background-color: var(--color-warning);
-    color: var(--color-text-primary);
+    color: var(--color-text-inverse);
+    box-shadow: var(--shadow-md);
   }
 
   .btn-warning:hover {
     background-color: var(--color-warning-hover);
+    transform: translateY(-2px);
   }
 
   .btn-ghost {

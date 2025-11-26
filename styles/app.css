@@ -45,16 +45,25 @@
     text-align: center;
 }
 
+/* Clickable Cards - Unified System */
 .example-card {
     background: var(--color-bg-secondary);
     border: 2px solid var(--color-border);
     border-radius: var(--radius-2xl);
     padding: var(--space-6);
-    text-align: center;
     cursor: pointer;
     transition: all var(--transition-normal);
     position: relative;
     overflow: hidden;
+    /* Ensure text is readable */
+    color: var(--color-text-primary);
+    /* Consistent sizing */
+    min-height: 120px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
 }
 
 .example-card::after {
@@ -70,8 +79,8 @@
 }
 
 .example-card:hover {
-    transform: translateY(-4px) scale(1.02);
-    box-shadow: var(--shadow-xl);
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-xl), var(--glow-primary);
     border-color: var(--color-primary);
 }
 
@@ -80,7 +89,14 @@
 }
 
 .example-card:active {
-    transform: translateY(-2px) scale(1.01);
+    transform: translateY(-2px);
+}
+
+/* Ensure all text in cards is readable */
+.example-card * {
+    position: relative;
+    z-index: 1;
+    color: inherit;
 }
 
 .result-header {
@@ -98,6 +114,15 @@
     transition: all var(--transition-normal);
     position: relative;
     overflow: hidden;
+    /* Ensure readable text */
+    color: var(--color-text-primary);
+    /* Consistent sizing */
+    min-height: 80px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
 }
 
 .info-box::before {
@@ -114,6 +139,12 @@
     background: var(--color-bg-tertiary);
     transform: translateX(4px);
     box-shadow: var(--shadow-md);
+}
+
+/* Ensure all text in info boxes is readable */
+.info-box * {
+    position: relative;
+    z-index: 1;
 }
 
 .step-box {
@@ -399,26 +430,88 @@
     font-size: var(--text-lg);
 }
 
+/* Modal System - Unified & Consistent */
 .translating-overlay {
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0,0,0,0.85);
-    backdrop-filter: blur(8px);
+    background: rgba(0,0,0,0.9);
+    backdrop-filter: blur(12px);
     display: flex;
     align-items: center;
     justify-content: center;
     z-index: 9999;
+    padding: var(--space-4);
 }
 
 .translating-box {
-    background: var(--color-bg-primary);
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-border);
     padding: var(--space-8);
     border-radius: var(--radius-2xl);
-    text-align: center;
-    box-shadow: var(--shadow-2xl);
+    box-shadow: var(--shadow-2xl), var(--glow-primary);
+    /* Unified sizing */
+    max-width: 480px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    /* Better contrast */
+    color: var(--color-text-primary);
+}
+
+.translating-box h3 {
+    color: var(--color-text-primary);
+}
+
+.translating-box p {
+    color: var(--color-text-secondary);
+}
+
+/* Modal Input Styling - Better Contrast */
+.translating-box textarea,
+.translating-box input {
+    background: var(--color-bg-primary);
+    color: var(--color-text-primary);
+    border: 2px solid var(--color-border-dark); /* Lighter border for visibility */
+}
+
+.translating-box textarea:focus,
+.translating-box input:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px oklch(60% 0.20 264 / 0.2);
+}
+
+.translating-box textarea::placeholder,
+.translating-box input::placeholder {
+    color: var(--color-text-muted);
+}
+
+/* Modal Checkboxes & Radio - Better Visibility */
+.translating-box input[type="checkbox"],
+.translating-box input[type="radio"] {
+    border: 2px solid var(--color-text-secondary); /* Light border */
+    width: 20px;
+    height: 20px;
+}
+
+.translating-box input[type="checkbox"]:checked,
+.translating-box input[type="radio"]:checked {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+}
+
+/* Modal Labels - Better Contrast */
+.translating-box label {
+    background: var(--color-bg-primary);
+    border: 2px solid var(--color-border-dark); /* Lighter border */
+    color: var(--color-text-primary);
+}
+
+.translating-box label:hover {
+    border-color: var(--color-primary);
 }
 
 /* Hamburger Menu */

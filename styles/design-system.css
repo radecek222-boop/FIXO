@@ -37,37 +37,41 @@
     --color-primary-h: 264;
     --color-primary: oklch(60% 0.20 var(--color-primary-h));
     --color-primary-hover: oklch(68% 0.22 var(--color-primary-h));
-    --color-primary-light: oklch(20% 0.10 var(--color-primary-h));
+    --color-primary-light: oklch(25% 0.12 var(--color-primary-h)); /* Lighter for better contrast */
     --color-primary-dark: oklch(45% 0.18 var(--color-primary-h));
 
     /* Secondary - Cyan */
     --color-secondary-h: 195;
     --color-secondary: oklch(60% 0.15 var(--color-secondary-h));
     --color-secondary-hover: oklch(68% 0.17 var(--color-secondary-h));
-    --color-secondary-light: oklch(18% 0.08 var(--color-secondary-h));
+    --color-secondary-light: oklch(25% 0.10 var(--color-secondary-h)); /* Lighter for better contrast */
 
     /* Success - Zelená */
     --color-success-h: 145;
     --color-success: oklch(58% 0.18 var(--color-success-h));
     --color-success-hover: oklch(65% 0.20 var(--color-success-h));
-    --color-success-light: oklch(18% 0.10 var(--color-success-h));
+    --color-success-light: oklch(25% 0.12 var(--color-success-h)); /* Lighter for better contrast */
+    --color-success-text: oklch(75% 0.20 var(--color-success-h)); /* Bright text for dark bg */
 
     /* Warning - Žlutá */
     --color-warning-h: 85;
     --color-warning: oklch(70% 0.18 var(--color-warning-h));
     --color-warning-hover: oklch(78% 0.20 var(--color-warning-h));
-    --color-warning-light: oklch(20% 0.10 var(--color-warning-h));
+    --color-warning-light: oklch(30% 0.12 var(--color-warning-h)); /* Lighter for better contrast */
+    --color-warning-text: oklch(85% 0.18 var(--color-warning-h)); /* Bright text for dark bg */
 
     /* Danger - Červená */
     --color-danger-h: 25;
     --color-danger: oklch(58% 0.22 var(--color-danger-h));
     --color-danger-hover: oklch(65% 0.24 var(--color-danger-h));
-    --color-danger-light: oklch(18% 0.10 var(--color-danger-h));
+    --color-danger-light: oklch(25% 0.14 var(--color-danger-h)); /* Lighter for better contrast */
+    --color-danger-text: oklch(75% 0.22 var(--color-danger-h)); /* Bright text for dark bg */
 
     /* Info - Světle modrá */
     --color-info-h: 220;
     --color-info: oklch(60% 0.18 var(--color-info-h));
-    --color-info-light: oklch(18% 0.08 var(--color-info-h));
+    --color-info-light: oklch(25% 0.10 var(--color-info-h)); /* Lighter for better contrast */
+    --color-info-text: oklch(75% 0.18 var(--color-info-h)); /* Bright text for dark bg */
 
     /* ==========================================
        BARVY - Dark Indigo Theme (Default)
