@@ -8,13 +8,13 @@
 ## AKTUÁLNÍ STAV
 
 ```
-📅 Poslední aktualizace: 2025-11-25
+📅 Poslední aktualizace: 2025-11-26
 👤 Aktualizoval: Claude AI
-📍 Aktuální fáze: MIGRACE NA NEXT.JS (fixo-v2) - HOTOVO
-✅ Poslední dokončený krok: Kompletní UI komponenty + stránky + API
-⏳ Aktuálně se dělá: Připraveno k merge
-🔜 Další krok: Nasazení na Vercel, připojení databáze
-⚠️ Poznámka: Platební brána Stripe až PO nasazení na skutečnou doménu
+📍 Aktuální fáze: OPTIMALIZACE PRO GITHUB PAGES - HOTOVO ✅
+✅ Poslední dokončený krok: Kompletní refaktoring na modulární strukturu
+⏳ Aktuálně se dělá: Připraveno k nasazení
+🔜 Další krok: Testování a případné bugfixy
+⚠️ Poznámka: Next.js verze byla odstraněna - zaměřujeme se na statické GitHub Pages
 ```
 
 ---
@@ -53,52 +53,40 @@
 ## STRUKTURA PROJEKTU
 
 ```
-FIXO/
-├── 📁 STARÁ VERZE (v1) - GitHub Pages
-│   ├── index.html              # Hlavní aplikace (React in HTML)
-│   ├── landing.html            # Landing page
-│   ├── server.js               # Backend API (Node.js)
-│   ├── data/                   # JSON data
-│   │   ├── languages.json
-│   │   ├── translations.json
-│   │   ├── repairs.json
-│   │   └── craftsmen.json
-│   └── public/
-│       ├── css/                # Design system v1 + v2
-│       └── js/                 # JavaScript moduly
+FIXO/ (Optimalizovaná v2 - GitHub Pages)
+├── index.html              # Hlavní HTML (čistý, 55 řádků)
+├── manifest.json           # PWA manifest
+├── service-worker.js       # Offline podpora v3.0
 │
-├── 📁 NOVÁ VERZE (fixo-v2) - Next.js
-│   ├── src/
-│   │   ├── app/                # Next.js App Router
-│   │   │   ├── (app)/          # Aplikace (dashboard, history, repairs)
-│   │   │   ├── (marketing)/    # Marketing stránky (pricing)
-│   │   │   ├── auth/           # Autentizace (login, error)
-│   │   │   └── api/            # API routes (health, repairs, analyze, auth, cron)
-│   │   ├── components/         # React komponenty
-│   │   │   ├── ui/             # Button, Card, Input, Badge
-│   │   │   ├── layout/         # Header, Footer
-│   │   │   └── providers/      # SessionProvider
-│   │   ├── hooks/              # React hooks (useUser, useAnalysis)
-│   │   ├── lib/                # Utility funkce (auth, prisma)
-│   │   └── styles/             # Tailwind CSS
-│   ├── prisma/
-│   │   ├── schema.prisma       # Databázové schéma
-│   │   └── seed.ts             # Seed script
-│   ├── package.json
-│   ├── tailwind.config.ts
-│   ├── next.config.js
-│   ├── middleware.ts           # Route protection
-│   └── vercel.json             # Vercel config
+├── src/
+│   └── app.js              # React aplikace (4820 řádků)
 │
-├── 📁 CI/CD
-│   └── .github/workflows/
-│       ├── ci.yml              # Continuous Integration
-│       └── deploy.yml          # Deploy to GitHub Pages
+├── styles/
+│   ├── main.css            # Hlavní stylesheet (importuje vše)
+│   ├── design-system.css   # Design tokens (oklch barvy, spacing)
+│   ├── components.css      # UI komponenty
+│   ├── layout.css          # Layout systém
+│   └── app.css             # Aplikační styly
 │
-└── 📄 Dokumentace
-    ├── PROJECT_PLAN.md         # TENTO DOKUMENT
-    ├── ROADMAP_2025.md         # Detailní roadmapa
-    └── README.md               # Základní dokumentace
+├── data/
+│   ├── repairs.json        # 343 KB databáze oprav
+│   ├── craftsmen.json      # Databáze řemeslníků
+│   ├── translations.json   # Překlady
+│   └── languages.json      # Seznam jazyků
+│
+├── assets/
+│   ├── icons/              # PWA ikony (72-512px)
+│   └── images/             # Obrázky (připraveno)
+│
+├── .github/workflows/
+│   ├── ci.yml              # CI
+│   └── deploy.yml          # Deploy to GitHub Pages
+│
+└── docs/
+    ├── PROJECT_PLAN.md     # TENTO DOKUMENT
+    ├── ROADMAP_2025.md     # Detailní roadmapa
+    ├── DEPLOY_VERCEL.md    # Návod na Vercel (archiv)
+    └── README.md           # Základní dokumentace
 ```
 
 ---
@@ -311,6 +299,14 @@ FIXO/
 | 2025-11-25 | Claude AI | UI komponenty: Dialog, Tabs, Select, DropdownMenu, AlertDialog, Label |
 | 2025-11-25 | Claude AI | Oprava CI workflow pro fixo-v2 subdirectory |
 | 2025-11-25 | Claude AI | **FÁZE 3 KÓDOVĚ HOTOVO** - Připraveno k merge a nasazení |
+| 2025-11-26 | Claude AI | **OPTIMALIZACE GITHUB PAGES** - Kompletní refaktoring struktury |
+| 2025-11-26 | Claude AI | Extrakce React kódu do src/app.js (4820 řádků) |
+| 2025-11-26 | Claude AI | Vytvoření modulárního CSS systému (styles/) |
+| 2025-11-26 | Claude AI | Čistý index.html (55 řádků vs. původních 5370) |
+| 2025-11-26 | Claude AI | Přesunutí ikon do assets/icons/ |
+| 2025-11-26 | Claude AI | Aktualizace service-worker.js na v3.0 |
+| 2025-11-26 | Claude AI | Odstranění fixo-v2/ (Next.js) - zaměření na statické GitHub Pages |
+| 2025-11-26 | Claude AI | **V2 OPTIMALIZACE HOTOVA** - Modulární, čistá, rychlá struktura |
 
 ---
 
