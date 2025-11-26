@@ -4940,38 +4940,6 @@
                             </div>
                         )}
                     </main>
-
-                    {/* Footer */}
-                    <footer className="footer">
-                        <div className="container">
-                            <div className="footer-grid">
-                                <div>
-                                    <h3 className="footer-title">{t('appName')}</h3>
-                                    <p className="footer-text">
-                                        {t('footerSlogan')}
-                                    </p>
-                                </div>
-                                <div>
-                                    <h3 className="footer-title">{t('footerFeatures')}</h3>
-                                    <ul className="footer-links">
-                                        <li><a href="#" onClick={(e) => { e.preventDefault(); setCurrentView('home'); }}>• {t('footerAI')}</a></li>
-                                        <li><a href="#" onClick={(e) => { e.preventDefault(); setCurrentView('knowledge'); }}>• {t('footer500guides')}</a></li>
-                                        <li><a href="#" onClick={(e) => { e.preventDefault(); alert(t('safetyDisclaimer')); }}>• {t('footerSafety')}</a></li>
-                                    </ul>
-                                </div>
-                                <div>
-                                    <h3 className="footer-title">{t('footerContact')}</h3>
-                                    <p className="footer-text">
-                                        support@fixo.app<br/>
-                                        "{t('footerQuote')}"
-                                    </p>
-                                </div>
-                            </div>
-                            <div className="footer-bottom">
-                                {t('footerCopyright')}
-                            </div>
-                        </div>
-                    </footer>
                 </div>
             );
         }
