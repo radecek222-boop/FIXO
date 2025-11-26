@@ -3020,6 +3020,22 @@
                                 FIXO
                             </div>
 
+                            {/* Stats - pouze na desktop */}
+                            <div className="header-stats hide-md">
+                                <div className="header-stat">
+                                    <span className="text-base font-bold text-primary">500+</span>
+                                    <span className="text-xs text-muted">Závad</span>
+                                </div>
+                                <div className="header-stat">
+                                    <span className="text-base font-bold text-primary">30s</span>
+                                    <span className="text-xs text-muted">Analýza</span>
+                                </div>
+                                <div className="header-stat">
+                                    <span className="text-base font-bold text-primary">AI</span>
+                                    <span className="text-xs text-muted">Powered</span>
+                                </div>
+                            </div>
+
                             {/* Header Actions */}
                             <div className="header-actions">
                                 {/* Dark Mode Toggle */}
@@ -3062,30 +3078,6 @@
                             </div>
                         </div>
                     </header>
-
-                    {/* Sub-header info bar se stats */}
-                    <div className="sub-header-bar">
-                        <div className="sub-header-content">
-                            <div className="sub-header-info">
-                                <span className="sub-header-brand">FIXO</span>
-                                <span className="sub-header-tagline">První světový standard pro vizuální diagnostiku domácích závad</span>
-                            </div>
-                            <div className="sub-header-stats">
-                                <div className="sub-header-stat">
-                                    <span className="sub-header-stat-value">500+</span>
-                                    <span className="sub-header-stat-label">Závad</span>
-                                </div>
-                                <div className="sub-header-stat">
-                                    <span className="sub-header-stat-value">30s</span>
-                                    <span className="sub-header-stat-label">Analýza</span>
-                                </div>
-                                <div className="sub-header-stat">
-                                    <span className="sub-header-stat-value">AI</span>
-                                    <span className="sub-header-stat-label">Powered</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
 
                     {/* NEW: Bottom Navigation Bar */}
                     <nav className="bottom-nav">

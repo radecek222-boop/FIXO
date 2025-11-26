@@ -76,6 +76,19 @@
   cursor: pointer;
 }
 
+.header-stats {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.header-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
 .header-actions {
   display: flex;
   align-items: center;
