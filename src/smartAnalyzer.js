@@ -1162,7 +1162,7 @@ class SmartAnalyzer {
         this.config = {
             hashSimilarityThreshold: 0.88,    // Práh pro hash match
             embeddingSimilarityThreshold: 0.75, // Práh pro embedding match
-            classifierConfidenceThreshold: 0.7, // Práh pro lokální klasifikátor
+            classifierConfidenceThreshold: 0.3, // Práh pro lokální klasifikátor (sníženo pro lepší využití)
             useEmbeddings: true,               // Používat embedding search
             useClassifier: true,               // Používat lokální klasifikátor
             learnFromApi: true,                // Učit se z API odpovědí
