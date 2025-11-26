@@ -8,14 +8,14 @@
 @layer app {
 
 /* ==========================================
-   APP CONTAINER - BEZ 80% omezení
+   APP CONTAINER - Fixní full-screen layout
    ========================================== */
 .app-container {
   width: 100%;
   max-width: var(--container-2xl);
   margin: 0 auto;
   padding: 0 var(--space-4);
-  flex: 1;
+  height: 100%;
   display: flex;
   flex-direction: column;
 }
@@ -33,12 +33,77 @@
 }
 
 /* ==========================================
-   MAIN CONTENT
+   MAIN CONTENT - Fixní výška bez scrollování
    ========================================== */
 .main-content {
-  padding-top: calc(70px + env(safe-area-inset-top, 0));
-  padding-bottom: calc(90px + env(safe-area-inset-bottom, 0));
-  min-height: 100dvh;
+  position: fixed;
+  top: 70px;
+  left: 0;
+  right: 0;
+  bottom: 80px;
+  overflow: hidden;
+  padding-top: env(safe-area-inset-top, 0);
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
+
+/* Dvousloupcový layout vyplňující celou výšku */
+.content-two-columns {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-4);
+  height: 100%;
+  padding: var(--space-4);
+  overflow-y: auto;
+}
+
+@media (min-width: 1024px) {
+  .content-two-columns {
+    grid-template-columns: 1fr 1fr;
+    overflow: hidden;
+  }
+}
+
+/* Levý blok - akční */
+.content-left {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  height: 100%;
+  overflow-y: auto;
+  padding-right: var(--space-2);
+}
+
+/* Pravý blok - informativní */
+.content-right {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  height: 100%;
+  overflow-y: auto;
+  padding-right: var(--space-2);
+}
+
+/* Custom scrollbar pro content bloky */
+.content-left::-webkit-scrollbar,
+.content-right::-webkit-scrollbar {
+  width: 6px;
+}
+
+.content-left::-webkit-scrollbar-track,
+.content-right::-webkit-scrollbar-track {
+  background: var(--color-bg-secondary);
+  border-radius: var(--radius-full);
+}
+
+.content-left::-webkit-scrollbar-thumb,
+.content-right::-webkit-scrollbar-thumb {
+  background: var(--color-border-dark);
+  border-radius: var(--radius-full);
+}
+
+.content-left::-webkit-scrollbar-thumb:hover,
+.content-right::-webkit-scrollbar-thumb:hover {
+  background: var(--color-primary);
 }
 
 /* ==========================================
@@ -383,13 +448,6 @@
 
 /* Desktop grid layouts */
 @media (min-width: 1024px) {
-  .home-two-columns {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: var(--space-6);
-    align-items: start;
-  }
-
   .desktop-two-col {
     display: grid;
     grid-template-columns: 1fr 1fr;

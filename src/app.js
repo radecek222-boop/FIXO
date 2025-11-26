@@ -3140,11 +3140,10 @@
                     <main className="main-content">
                         {/* Home View - Single Page s Hero */}
                         {currentView === 'home' && (
-                            <div className="app-container">
-                                {/* Desktop: Upload + Jak to funguje vedle sebe */}
-                                <div className="home-two-columns">
-                                    {/* Main Upload Section */}
-                                    <div className="upload-card glass-card upload-card-compact">
+                            <div className="content-two-columns">
+                                {/* Levý blok - AKČNÍ */}
+                                <div className="content-left">
+                                    <div className="upload-card glass-card">
                                         <div className="text-center mb-4">
                                             <h2 className="text-xl font-bold text-primary mb-2">
                                                 {t('homeTitle')}
@@ -3220,9 +3219,10 @@
                                             </div>
                                         </div>
                                     </div>
+                                </div>
 
-                                    {/* Pravý sloupec: Jak to funguje + Footer */}
-                                    <div className="flex flex-col gap-4">
+                                {/* Pravý blok - INFORMATIVNÍ */}
+                                <div className="content-right">
                                         {/* Jak to funguje */}
                                         <div className="glass-card flex flex-col">
                                             <h3 className="section-title mb-4">
@@ -3297,7 +3297,6 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
                                 </div>
                             </div>
                         )}
