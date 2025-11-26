@@ -11,6 +11,7 @@ const morgan = require('morgan');
 const path = require('path');
 const fs = require('fs');
 const { v4: uuidv4 } = require('uuid');
+const aiAnalyzer = require('./src/aiAnalyzer');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -355,6 +356,29 @@ app.post('/api/analyze', upload.single('image'), async (req, res) => {
 
 // Analyzovat obrázek ze base64 (pro frontend)
 app.post('/api/analyze-base64', async (req, res) => {
+    try {
+        const { image } = req.body;
+
+        if (!image) {
+            return res.status(400).json({ success: false, error: 'Nebyl poskytnut base64 obrázek' });
+        }
+
+        // Použít AI Analyzer
+        const analysisResult = await aiAnalyzer.analyze(image);
+
+        return res.json({ success: true, data: analysisResult });
+    } catch (error) {
+        console.error('Chyba při analýze obrázku:', error);
+        return res.status(500).json({
+            success: false,
+            error: 'Chyba při zpracování obrázku',
+            message: error.message
+        });
+    }
+});
+
+// DEPRECATED: Stará verze pro zpětnou kompatibilitu
+app.post('/api/analyze-base64-old', async (req, res) => {
     try {
         const { image } = req.body;
 
