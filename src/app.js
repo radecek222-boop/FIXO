@@ -740,10 +740,10 @@
                     const data = await response.json();
                     repairDatabase = data.repairs || {};
                     categoriesData = data.categories || [];
-                    console.log('<i className="fas fa-check-circle"></i> Databáze načtena:', Object.keys(repairDatabase).length, 'položek');
+                    console.log('✅ Databáze načtena:', Object.keys(repairDatabase).length, 'položek');
                 }
             } catch (error) {
-                console.error('<i className="fas fa-times-circle"></i> Chyba při načítání databáze:', error);
+                console.error('❌ Chyba při načítání databáze:', error);
             }
         })();
 
@@ -784,10 +784,10 @@
                             categoriesData = data.categories || [];
                             setCategories(categoriesData.length > 0 ? categoriesData : defaultCategories);
                             setDbLoaded(true);
-                            console.log('<i className="fas fa-check-circle"></i> Databáze načtena v React:', Object.keys(repairDatabase).length, 'položek');
+                            console.log('✅ Databáze načtena v React:', Object.keys(repairDatabase).length, 'položek');
                         }
                     } catch (error) {
-                        console.error('<i className="fas fa-times-circle"></i> Chyba při načítání databáze:', error);
+                        console.error('❌ Chyba při načítání databáze:', error);
                         setDbLoaded(true); // I při chybě pokračuj s prázdnou databází
                     }
                 };
@@ -848,7 +848,7 @@
                         const analyzer = new window.SmartAnalyzer(API_URL);
                         await analyzer.init();
                         setSmartAnalyzer(analyzer);
-                        console.log('<i className="fas fa-brain"></i> SmartAnalyzer inicializován');
+                        console.log('🧠 SmartAnalyzer inicializován');
 
                         // Načíst statistiky
                         const stats = await analyzer.getStats();
@@ -1400,7 +1400,7 @@
             const translateTexts = async (targetLang) => {
                 // Pokud máme předgenerované překlady, použij je (funguje i offline!)
                 if (prebuiltTranslations[targetLang]) {
-                    console.log(`<i className="fas fa-rocket"></i> Používám předgenerovaný překlad pro ${targetLang}`);
+                    console.log(`🚀 Používám předgenerovaný překlad pro ${targetLang}`);
                     setCurrentLanguage(targetLang);
                     localStorage.setItem('fixo_language', targetLang);
                     return;
@@ -1408,7 +1408,7 @@
 
                 // Pokud už máme překlady v cache, použij je (instant!)
                 if (translations[targetLang]) {
-                    console.log(`<i className="fas fa-books"></i> Používám cache pro ${targetLang}`);
+                    console.log(`📚 Používám cache pro ${targetLang}`);
                     setCurrentLanguage(targetLang);
                     localStorage.setItem('fixo_language', targetLang);
                     return;
@@ -1462,7 +1462,7 @@
                             setCurrentLanguage(targetLang);
                             localStorage.setItem('fixo_language', targetLang);
 
-                            console.log(`<i className="fas fa-check-circle"></i> ${langData?.name || targetLang} přidán do slovníku! Celkem jazyků: ${Object.keys(newTranslations).length}`);
+                            console.log(`✅ ${langData?.name || targetLang} přidán do slovníku! Celkem jazyků: ${Object.keys(newTranslations).length}`);
                         }
                     }
                 } catch (error) {
@@ -1497,7 +1497,7 @@
                 try {
                     // Použít SmartAnalyzer pokud je dostupný
                     if (smartAnalyzer && imageData) {
-                        console.log('<i className="fas fa-brain"></i> Používám SmartAnalyzer s učením...');
+                        console.log('🧠 Používám SmartAnalyzer s učením...');
 
                         const result = await smartAnalyzer.analyze(imageData);
 
@@ -1531,7 +1531,7 @@
 
                     // Fallback: Původní API volání (pokud SmartAnalyzer není dostupný)
                     if (API_URL && imageData) {
-                        console.log('<i className="fas fa-rocket"></i> Fallback: Odesílám přímo na API:', API_URL);
+                        console.log('🚀 Fallback: Odesílám přímo na API:', API_URL);
 
                         const response = await fetch(`${API_URL}/api/analyze-base64`, {
                             method: 'POST',

@@ -535,11 +535,15 @@ class LocalClassifier {
         this.isLoading = true;
 
         try {
-            // Zkusit načíst TensorFlow.js
+            // Zkontrolovat, zda je TensorFlow.js k dispozici
             if (typeof tf === 'undefined') {
-                console.log('📦 Načítám TensorFlow.js...');
-                await this._loadTensorFlow();
+                console.warn('⚠️ TensorFlow.js není k dispozici, pokračuji bez lokálního modelu');
+                this.isLoaded = false;
+                this.isLoading = false;
+                return;
             }
+
+            console.log('📦 TensorFlow.js detekován, načítám model...');
 
             // Zkusit načíst uložený model z IndexedDB
             try {
@@ -558,16 +562,6 @@ class LocalClassifier {
         }
 
         this.isLoading = false;
-    }
-
-    async _loadTensorFlow() {
-        return new Promise((resolve, reject) => {
-            const script = document.createElement('script');
-            script.src = 'https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.17.0/dist/tf.min.js';
-            script.onload = resolve;
-            script.onerror = reject;
-            document.head.appendChild(script);
-        });
     }
 
     async _createModel() {
