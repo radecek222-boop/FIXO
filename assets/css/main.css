@@ -14,6 +14,11 @@
 }
 
 :root {
+    /* Barvy - Pastelově žluto-oranžová paleta */
+    --color-accent: #FFD6A5;        /* Pastelově oranžová */
+    --color-accent-light: #FFECCC;  /* Světlejší */
+    --color-accent-border: #FFCC80; /* Pro lemování */
+
     /* Barvy - Hlavní paleta */
     --color-primary: #2563eb;
     --color-primary-hover: #1d4ed8;
@@ -46,6 +51,7 @@
     --color-bg-primary: #ffffff;
     --color-bg-secondary: #f9fafb;
     --color-bg-tertiary: #f3f4f6;
+    --color-bg-dark: #1f2937;
 
     /* Barvy - Okraje */
     --color-border: #e5e7eb;
@@ -93,23 +99,38 @@
     --transition-fast: 150ms ease;
     --transition-normal: 250ms ease;
     --transition-slow: 350ms ease;
+
+    /* Layout Heights */
+    --header-height: 70px;
+    --footer-height: 60px;
+}
+
+html, body {
+    height: 100%;
+    overflow: hidden; /* Žádné scrollování */
 }
 
 body {
     font-family: var(--font-sans);
     font-size: var(--font-size-base);
     color: var(--color-text-primary);
-    background: var(--color-bg-secondary);
+    background-image: url('../images/background.png');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
+    display: flex;
+    flex-direction: column;
 }
 
 /* ==========================================
-   LAYOUT
+   LAYOUT - 100vh bez scrollování
    ========================================== */
 .container {
     width: 100%;
-    max-width: 1200px;
+    max-width: 1400px;
     margin: 0 auto;
     padding: 0 var(--space-4);
 }
@@ -119,26 +140,29 @@ body {
 }
 
 .container-lg {
-    max-width: 1400px;
+    max-width: 1600px;
 }
 
 /* ==========================================
-   HEADER & NAVIGATION
+   HEADER & NAVIGATION - Bílý header
    ========================================== */
 header {
-    background: var(--color-bg-primary);
-    border-bottom: 1px solid var(--color-border);
-    padding: var(--space-4) 0;
+    background: var(--color-bg-primary); /* Bílý header */
+    border-bottom: 3px solid var(--color-accent-border); /* Pastelově oranžové lemování */
+    padding: var(--space-3) 0;
     position: sticky;
     top: 0;
     z-index: 100;
-    box-shadow: var(--shadow-sm);
+    box-shadow: var(--shadow-md);
+    height: var(--header-height);
+    flex-shrink: 0;
 }
 
 .header-content {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    height: 100%;
 }
 
 .logo {
@@ -187,14 +211,14 @@ nav a::after {
     left: 50%;
     width: 0;
     height: 2px;
-    background: var(--color-primary);
+    background: var(--color-accent-border);
     transition: all var(--transition-fast);
     transform: translateX(-50%);
 }
 
 nav a:hover {
     color: var(--color-primary);
-    background: var(--color-primary-light);
+    background: var(--color-accent-light);
 }
 
 nav a:hover::after {
@@ -204,7 +228,7 @@ nav a:hover::after {
 nav a.active {
     color: var(--color-primary);
     font-weight: 600;
-    background: var(--color-primary-light);
+    background: var(--color-accent-light);
 }
 
 nav a.active::after {
@@ -280,33 +304,50 @@ nav a.active::after {
 }
 
 /* ==========================================
-   FOOTER
+   MAIN CONTENT - 100vh layout
+   ========================================== */
+main {
+    flex: 1;
+    overflow: hidden; /* Žádné scrollování */
+    display: flex;
+    flex-direction: column;
+}
+
+main .container {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ==========================================
+   FOOTER - Kompaktní footer
    ========================================== */
 footer {
     background: var(--color-bg-dark);
     color: var(--color-text-inverse);
-    padding: var(--space-12) 0 var(--space-6) 0;
-    margin-top: var(--space-16);
+    padding: var(--space-4) 0;
+    border-top: 3px solid var(--color-accent-border);
+    flex-shrink: 0;
+    height: var(--footer-height);
 }
 
 .footer-content {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: var(--space-8);
-    margin-bottom: var(--space-8);
 }
 
 .footer-section h3 {
     font-size: var(--font-size-lg);
     font-weight: 700;
-    margin-bottom: var(--space-4);
+    margin-bottom: var(--space-3);
     color: var(--color-text-inverse);
 }
 
 .footer-section p {
     color: rgba(255, 255, 255, 0.8);
-    line-height: 1.8;
-    margin-bottom: var(--space-3);
+    line-height: 1.6;
+    font-size: var(--font-size-sm);
 }
 
 .footer-links {
@@ -314,7 +355,7 @@ footer {
 }
 
 .footer-links li {
-    margin-bottom: var(--space-2);
+    margin-bottom: var(--space-1);
 }
 
 .footer-links a {
@@ -324,43 +365,246 @@ footer {
     display: inline-flex;
     align-items: center;
     gap: var(--space-2);
+    font-size: var(--font-size-sm);
 }
 
 .footer-links a:hover {
     color: var(--color-text-inverse);
-    text-decoration: underline;
 }
 
 .footer-social {
     display: flex;
-    gap: var(--space-3);
-    margin-top: var(--space-4);
+    gap: var(--space-2);
+    margin-top: var(--space-2);
 }
 
 .footer-social a {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 40px;
-    height: 40px;
+    width: 32px;
+    height: 32px;
     border-radius: var(--radius-full);
     background: rgba(255, 255, 255, 0.1);
     color: var(--color-text-inverse);
     text-decoration: none;
     transition: all var(--transition-fast);
+    font-size: var(--font-size-sm);
 }
 
 .footer-social a:hover {
-    background: var(--color-primary);
+    background: var(--color-accent-border);
     transform: translateY(-2px);
 }
 
 .footer-bottom {
     border-top: 1px solid rgba(255, 255, 255, 0.1);
-    padding-top: var(--space-4);
+    padding-top: var(--space-2);
+    margin-top: var(--space-2);
     text-align: center;
     color: rgba(255, 255, 255, 0.6);
+    font-size: var(--font-size-xs);
+}
+
+/* ==========================================
+   BLOKOVÉ ROZHRANÍ - Bílé bloky s lemováním
+   ========================================== */
+
+/* Kontejner pro bloky - zabere celý dostupný prostor */
+.blocks-container {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: var(--space-6);
+    height: 100%;
+    padding: var(--space-6) 0;
+}
+
+/* Blok A - ACTION - Bílý s žluto-oranžovým lemováním */
+.block-a {
+    background: var(--color-bg-primary); /* Bílý */
+    border-radius: var(--radius-2xl);
+    padding: var(--space-6);
+    box-shadow: var(--shadow-xl);
+    display: flex;
+    flex-direction: column;
+    border: 4px solid var(--color-accent-border); /* Pastelově oranžové lemování */
+    overflow: hidden;
+}
+
+.block-a-header {
+    margin-bottom: var(--space-4);
+    padding-bottom: var(--space-3);
+    border-bottom: 2px solid var(--color-accent-border);
+}
+
+.block-a-header h2 {
+    font-size: var(--font-size-xl);
+    font-weight: 700;
+    color: var(--color-primary);
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+}
+
+.block-a-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    overflow-y: auto;
+}
+
+.block-a-section {
+    padding: var(--space-4);
+    background: var(--color-bg-secondary);
+    border-radius: var(--radius-lg);
+    border: 2px solid var(--color-accent-light);
+}
+
+.block-a-section h3 {
+    font-size: var(--font-size-base);
+    font-weight: 600;
+    margin-bottom: var(--space-3);
+    color: var(--color-text-primary);
+}
+
+/* Blok I - INFORMATION - Bílý s žluto-oranžovým lemováním */
+.block-i {
+    background: var(--color-bg-primary); /* Bílý */
+    border-radius: var(--radius-2xl);
+    box-shadow: var(--shadow-xl);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border: 4px solid var(--color-accent-border); /* Pastelově oranžové lemování */
+}
+
+/* Horní část (2/3 výšky) - Informace */
+.block-i-info {
+    flex: 2;
+    padding: var(--space-6);
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
+
+.block-i-header {
+    margin-bottom: var(--space-4);
+    padding-bottom: var(--space-3);
+    border-bottom: 2px solid var(--color-accent-border);
+}
+
+.block-i-header h2 {
+    font-size: var(--font-size-xl);
+    font-weight: 700;
+    color: var(--color-primary);
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+}
+
+.block-i-content {
+    flex: 1;
+}
+
+/* Dolní část (1/3 výšky) - Tlačítka a akce */
+.block-i-actions {
+    flex: 1;
+    padding: var(--space-6);
+    background: var(--color-accent-light); /* Světle oranžové pozadí */
+    border-top: 3px solid var(--color-accent-border);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+}
+
+.block-i-actions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: var(--space-3);
+}
+
+/* Action Box (klikací box) */
+.action-box {
+    background: var(--color-bg-primary);
+    border: 2px solid var(--color-accent-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-4);
+    text-align: center;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-2);
+}
+
+.action-box:hover {
+    border-color: var(--color-primary);
+    background: var(--color-accent-light);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.action-box i {
+    font-size: var(--font-size-2xl);
+    color: var(--color-primary);
+}
+
+.action-box span {
     font-size: var(--font-size-sm);
+    font-weight: 600;
+    color: var(--color-text-primary);
+}
+
+/* Drop Zone Placeholder */
+.drop-placeholder {
+    border: 3px dashed var(--color-accent-border);
+    border-radius: var(--radius-xl);
+    padding: var(--space-8);
+    text-align: center;
+    background: var(--color-accent-light);
+    cursor: pointer;
+    transition: all var(--transition-normal);
+}
+
+.drop-placeholder:hover,
+.drop-placeholder.active {
+    border-color: var(--color-primary);
+    background: var(--color-primary-light);
+}
+
+.drop-placeholder i {
+    font-size: 3rem;
+    color: var(--color-primary);
+    margin-bottom: var(--space-3);
+    display: block;
+}
+
+.drop-placeholder p {
+    color: var(--color-text-secondary);
+    font-weight: 500;
+}
+
+/* Info Card (uvnitř bloku I) */
+.info-card {
+    background: var(--color-bg-tertiary);
+    border-radius: var(--radius-lg);
+    padding: var(--space-4);
+    margin-bottom: var(--space-4);
+    border-left: 4px solid var(--color-accent-border);
+}
+
+.info-card h3 {
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    margin-bottom: var(--space-2);
+    color: var(--color-text-primary);
+}
+
+.info-card p {
+    color: var(--color-text-secondary);
+    line-height: 1.6;
 }
 
 /* ==========================================
@@ -393,349 +637,6 @@ footer {
     box-shadow: var(--shadow-md);
 }
 
-.btn-secondary {
-    background: var(--color-bg-tertiary);
-    color: var(--color-text-primary);
-}
-
-.btn-secondary:hover {
-    background: var(--color-border-dark);
-}
-
-.btn-success {
-    background: var(--color-success);
-    color: var(--color-text-inverse);
-}
-
-.btn-outline {
-    background: transparent;
-    border: 2px solid var(--color-primary);
-    color: var(--color-primary);
-}
-
-.btn-outline:hover {
-    background: var(--color-primary);
-    color: var(--color-text-inverse);
-}
-
-.btn-lg {
-    padding: var(--space-4) var(--space-8);
-    font-size: var(--font-size-lg);
-    min-height: 52px;
-}
-
-.btn-sm {
-    padding: var(--space-2) var(--space-4);
-    font-size: var(--font-size-sm);
-    min-height: 36px;
-}
-
-/* ==========================================
-   CARDS
-   ========================================== */
-.card {
-    background: var(--color-bg-primary);
-    border-radius: var(--radius-xl);
-    padding: var(--space-6);
-    box-shadow: var(--shadow-md);
-    transition: all var(--transition-normal);
-}
-
-.card:hover {
-    box-shadow: var(--shadow-lg);
-    transform: translateY(-2px);
-}
-
-.card-header {
-    margin-bottom: var(--space-4);
-    padding-bottom: var(--space-4);
-    border-bottom: 1px solid var(--color-border);
-}
-
-.card-title {
-    font-size: var(--font-size-xl);
-    font-weight: 700;
-    color: var(--color-text-primary);
-    margin-bottom: var(--space-2);
-}
-
-.card-subtitle {
-    font-size: var(--font-size-sm);
-    color: var(--color-text-secondary);
-}
-
-/* ==========================================
-   HERO SECTION
-   ========================================== */
-.hero {
-    background: var(--gradient-primary);
-    color: var(--color-text-inverse);
-    padding: var(--space-16) 0;
-    text-align: center;
-}
-
-.hero h1 {
-    font-size: var(--font-size-4xl);
-    font-weight: 800;
-    margin-bottom: var(--space-4);
-}
-
-.hero p {
-    font-size: var(--font-size-xl);
-    margin-bottom: var(--space-8);
-    opacity: 0.95;
-}
-
-/* ==========================================
-   UPLOAD ZONE
-   ========================================== */
-.upload-zone {
-    border: 3px dashed var(--color-border-dark);
-    border-radius: var(--radius-2xl);
-    padding: var(--space-12);
-    text-align: center;
-    cursor: pointer;
-    transition: all var(--transition-normal);
-    background: var(--color-bg-primary);
-}
-
-.upload-zone:hover {
-    border-color: var(--color-primary);
-    background: var(--color-primary-light);
-}
-
-.upload-zone.active {
-    border-color: var(--color-primary);
-    background: var(--color-primary-light);
-}
-
-.upload-icon {
-    font-size: 4rem;
-    color: var(--color-primary);
-    margin-bottom: var(--space-4);
-}
-
-/* ==========================================
-   GRID LAYOUTS
-   ========================================== */
-.grid {
-    display: grid;
-    gap: var(--space-6);
-}
-
-.grid-2 {
-    grid-template-columns: repeat(2, 1fr);
-}
-
-.grid-3 {
-    grid-template-columns: repeat(3, 1fr);
-}
-
-.grid-4 {
-    grid-template-columns: repeat(4, 1fr);
-}
-
-/* ==========================================
-   BLOKOVÉ ROZHRANÍ (Block Interface)
-   ========================================== */
-
-/* Kontejner pro bloky */
-.blocks-container {
-    display: grid;
-    grid-template-columns: 1fr 2fr;
-    gap: var(--space-6);
-    min-height: 600px;
-}
-
-/* Blok A - ACTION */
-.block-a {
-    background: var(--color-bg-primary);
-    border-radius: var(--radius-xl);
-    padding: var(--space-6);
-    box-shadow: var(--shadow-lg);
-    display: flex;
-    flex-direction: column;
-    border-left: 4px solid var(--color-primary);
-}
-
-.block-a-header {
-    margin-bottom: var(--space-4);
-    padding-bottom: var(--space-3);
-    border-bottom: 1px solid var(--color-border);
-}
-
-.block-a-header h2 {
-    font-size: var(--font-size-xl);
-    font-weight: 700;
-    color: var(--color-primary);
-    display: flex;
-    align-items: center;
-    gap: var(--space-2);
-}
-
-.block-a-body {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-4);
-}
-
-.block-a-section {
-    padding: var(--space-4);
-    background: var(--color-bg-secondary);
-    border-radius: var(--radius-lg);
-    border: 1px solid var(--color-border);
-}
-
-.block-a-section h3 {
-    font-size: var(--font-size-base);
-    font-weight: 600;
-    margin-bottom: var(--space-3);
-    color: var(--color-text-primary);
-}
-
-/* Blok I - INFORMATION */
-.block-i {
-    background: var(--color-bg-primary);
-    border-radius: var(--radius-xl);
-    box-shadow: var(--shadow-lg);
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    border-left: 4px solid var(--color-info);
-    min-height: 600px; /* Zajistit minimální výšku */
-}
-
-/* Horní část (2/3 výšky) - Informace */
-.block-i-info {
-    flex: 2; /* 2/3 výšky */
-    min-height: 400px;
-    padding: var(--space-6);
-    display: flex;
-    flex-direction: column;
-    overflow-y: auto;
-}
-
-.block-i-header {
-    margin-bottom: var(--space-4);
-    padding-bottom: var(--space-3);
-    border-bottom: 1px solid var(--color-border);
-}
-
-.block-i-header h2 {
-    font-size: var(--font-size-xl);
-    font-weight: 700;
-    color: var(--color-info);
-    display: flex;
-    align-items: center;
-    gap: var(--space-2);
-}
-
-.block-i-content {
-    flex: 1;
-}
-
-/* Dolní část (1/3 výšky) - Tlačítka a akce */
-.block-i-actions {
-    flex: 1; /* 1/3 výšky */
-    min-height: 200px;
-    padding: var(--space-6);
-    background: var(--color-bg-secondary);
-    border-top: 3px solid var(--color-primary); /* Výraznější oddělení */
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-3);
-}
-
-.block-i-actions-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-    gap: var(--space-3);
-}
-
-/* Action Box (klikací box) */
-.action-box {
-    background: var(--color-bg-primary);
-    border: 2px solid var(--color-border);
-    border-radius: var(--radius-lg);
-    padding: var(--space-4);
-    text-align: center;
-    cursor: pointer;
-    transition: all var(--transition-fast);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: var(--space-2);
-}
-
-.action-box:hover {
-    border-color: var(--color-primary);
-    background: var(--color-primary-light);
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-md);
-}
-
-.action-box i {
-    font-size: var(--font-size-2xl);
-    color: var(--color-primary);
-}
-
-.action-box span {
-    font-size: var(--font-size-sm);
-    font-weight: 600;
-    color: var(--color-text-primary);
-}
-
-/* Drop Zone Placeholder */
-.drop-placeholder {
-    border: 3px dashed var(--color-border-dark);
-    border-radius: var(--radius-xl);
-    padding: var(--space-8);
-    text-align: center;
-    background: var(--color-bg-tertiary);
-    cursor: pointer;
-    transition: all var(--transition-normal);
-}
-
-.drop-placeholder:hover,
-.drop-placeholder.active {
-    border-color: var(--color-primary);
-    background: var(--color-primary-light);
-}
-
-.drop-placeholder i {
-    font-size: 3rem;
-    color: var(--color-primary);
-    margin-bottom: var(--space-3);
-    display: block;
-}
-
-.drop-placeholder p {
-    color: var(--color-text-secondary);
-    font-weight: 500;
-}
-
-/* Info Card (uvnitř bloku I) */
-.info-card {
-    background: var(--color-bg-tertiary);
-    border-radius: var(--radius-lg);
-    padding: var(--space-4);
-    margin-bottom: var(--space-4);
-    border-left: 3px solid var(--color-info);
-}
-
-.info-card h3 {
-    font-size: var(--font-size-lg);
-    font-weight: 600;
-    margin-bottom: var(--space-2);
-    color: var(--color-text-primary);
-}
-
-.info-card p {
-    color: var(--color-text-secondary);
-    line-height: 1.6;
-}
-
 /* ==========================================
    UTILITY CLASSES
    ========================================== */
@@ -743,211 +644,10 @@ footer {
 .text-left { text-align: left; }
 .text-right { text-align: right; }
 
-.mb-2 { margin-bottom: var(--space-2); }
-.mb-4 { margin-bottom: var(--space-4); }
-.mb-6 { margin-bottom: var(--space-6); }
-.mb-8 { margin-bottom: var(--space-8); }
-
-.mt-4 { margin-top: var(--space-4); }
-.mt-6 { margin-top: var(--space-6); }
-.mt-8 { margin-top: var(--space-8); }
-
-.flex { display: flex; }
-.flex-col { flex-direction: column; }
-.items-center { align-items: center; }
-.justify-center { justify-content: center; }
-.gap-2 { gap: var(--space-2); }
-.gap-4 { gap: var(--space-4); }
-.gap-6 { gap: var(--space-6); }
-
-/* ==========================================
-   MODALS & OVERLAYS
-   ========================================== */
-
-/* Full-page overlay */
-.overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.6);
-    backdrop-filter: blur(4px);
-    z-index: 999;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    animation: fadeIn 0.2s ease;
-}
-
-.overlay.hidden {
-    display: none;
-}
-
-/* Modal Window */
-.modal {
-    background: var(--color-bg-primary);
-    border-radius: var(--radius-2xl);
-    box-shadow: var(--shadow-xl);
-    max-width: 600px;
-    width: 90%;
-    max-height: 90vh;
-    overflow-y: auto;
-    animation: slideUp 0.3s ease;
-}
-
-.modal-header {
-    padding: var(--space-6);
-    border-bottom: 1px solid var(--color-border);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.modal-title {
-    font-size: var(--font-size-xl);
-    font-weight: 700;
-    color: var(--color-text-primary);
-}
-
-.modal-close {
-    background: none;
-    border: none;
-    font-size: var(--font-size-2xl);
-    color: var(--color-text-secondary);
-    cursor: pointer;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: var(--radius-md);
-    transition: all var(--transition-fast);
-}
-
-.modal-close:hover {
-    background: var(--color-bg-tertiary);
-    color: var(--color-text-primary);
-}
-
-.modal-body {
-    padding: var(--space-6);
-}
-
-.modal-footer {
-    padding: var(--space-6);
-    border-top: 1px solid var(--color-border);
-    display: flex;
-    gap: var(--space-3);
-    justify-content: flex-end;
-}
-
-/* Modal - Large */
-.modal-lg {
-    max-width: 900px;
-}
-
-/* Modal - Small */
-.modal-sm {
-    max-width: 400px;
-}
-
-/* Mini Overlay (Notifications/Tooltips) */
-.mini-overlay {
-    position: fixed;
-    top: var(--space-4);
-    right: var(--space-4);
-    background: var(--color-bg-primary);
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-xl);
-    padding: var(--space-4);
-    max-width: 320px;
-    z-index: 1000;
-    animation: slideInRight 0.3s ease;
-}
-
-.mini-overlay.success {
-    border-left: 4px solid var(--color-success);
-}
-
-.mini-overlay.error {
-    border-left: 4px solid var(--color-danger);
-}
-
-.mini-overlay.warning {
-    border-left: 4px solid var(--color-warning);
-}
-
-.mini-overlay.info {
-    border-left: 4px solid var(--color-info);
-}
-
-.mini-overlay-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: var(--space-2);
-}
-
-.mini-overlay-title {
-    font-weight: 600;
-    font-size: var(--font-size-base);
-    display: flex;
-    align-items: center;
-    gap: var(--space-2);
-}
-
-.mini-overlay-close {
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: var(--color-text-secondary);
-    font-size: var(--font-size-lg);
-}
-
-.mini-overlay-body {
-    font-size: var(--font-size-sm);
-    color: var(--color-text-secondary);
-}
-
-/* ==========================================
-   ANIMATIONS
-   ========================================== */
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-
-@keyframes slideUp {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-@keyframes slideInRight {
-    from {
-        opacity: 0;
-        transform: translateX(100px);
-    }
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
-}
-
 /* ==========================================
    RESPONSIVE
    ========================================== */
-@media (max-width: 768px) {
-    .grid-2, .grid-3, .grid-4 {
-        grid-template-columns: 1fr;
-    }
-
+@media (max-width: 968px) {
     /* Mobile navigation */
     nav {
         display: none;
@@ -957,42 +657,15 @@ footer {
         display: flex;
     }
 
-    .hero h1 {
-        font-size: var(--font-size-2xl);
-    }
-
-    .hero p {
-        font-size: var(--font-size-base);
-    }
-
-    .modal {
-        width: 95%;
-        max-height: 95vh;
-    }
-
-    .mini-overlay {
-        left: var(--space-4);
-        right: var(--space-4);
-        max-width: none;
-    }
-
-    /* Blokové rozhraní - mobile */
+    /* Blokové rozhraní - mobile stacking */
     .blocks-container {
         grid-template-columns: 1fr;
         gap: var(--space-4);
+        overflow-y: auto;
     }
 
     .block-a, .block-i {
         min-height: auto;
-    }
-
-    .block-i-info {
-        flex: auto;
-        min-height: 300px;
-    }
-
-    .block-i-actions {
-        flex: auto;
     }
 
     .block-i-actions-grid {
