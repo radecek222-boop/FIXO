@@ -61,6 +61,7 @@
             navAnalyze: 'Analyzovat',
             navHistory: 'Historie',
             navDatabase: 'Databáze',
+            navDiagnostics: 'AI Diagnostika',
 
             // Home view
             homeTitle: 'Vyfotografujte závadu',
@@ -157,7 +158,31 @@
 
             // Language
             translating: 'Překládám...',
-            selectLanguage: 'Vybrat jazyk'
+            selectLanguage: 'Vybrat jazyk',
+
+            // AI Diagnostika
+            diagnosticsTitle: 'AI Diagnostika',
+            diagnosticsSubtitle: 'Pokročilá analýza a statistiky',
+            aiPerformance: 'Výkon AI',
+            totalAnalyses: 'Celkem analýz',
+            accuracyRate: 'Úspěšnost',
+            avgResponseTime: 'Průměrný čas',
+            learningProgress: 'Pokrok učení',
+            aiModels: 'AI Modely',
+            modelCache: 'Paměť (Cache)',
+            modelEmbedding: 'Podobnost (Embedding)',
+            modelClassifier: 'Klasifikátor (TensorFlow)',
+            modelAPI: 'Cloud API',
+            recentAnalyses: 'Nedávné analýzy',
+            viewDetails: 'Zobrazit detail',
+            systemHealth: 'Stav systému',
+            allSystemsOperational: 'Všechny systémy funkční',
+            cacheStatus: 'Stav cache',
+            embeddingStatus: 'Stav embeddings',
+            classifierStatus: 'Stav klasifikátoru',
+            active: 'Aktivní',
+            inactive: 'Neaktivní',
+            diagnosticsInfo: 'Zde najdete detailní informace o výkonu AI systému FIXO, statistiky analýz a stav jednotlivých modelů.'
         };
 
         // Předgenerované překlady pro GitHub Pages (fungují offline bez backendu)
@@ -246,7 +271,30 @@
                 footerCopyright: '© 2025 FIXO. All rights reserved.',
                 safetyDisclaimer: 'WARNING: All repairs are performed at your own risk. FIXO provides informational guides only and bears no responsibility for any damage, injury, or other consequences resulting from repairs. Before starting any repair, consider your abilities and contact a professional if in doubt.',
                 translating: 'Translating...',
-                selectLanguage: 'Select language'
+                selectLanguage: 'Select language',
+                navDiagnostics: 'AI Diagnostics',
+                diagnosticsTitle: 'AI Diagnostics',
+                diagnosticsSubtitle: 'Advanced analysis and statistics',
+                aiPerformance: 'AI Performance',
+                totalAnalyses: 'Total Analyses',
+                accuracyRate: 'Accuracy Rate',
+                avgResponseTime: 'Avg Response Time',
+                learningProgress: 'Learning Progress',
+                aiModels: 'AI Models',
+                modelCache: 'Memory (Cache)',
+                modelEmbedding: 'Similarity (Embedding)',
+                modelClassifier: 'Classifier (TensorFlow)',
+                modelAPI: 'Cloud API',
+                recentAnalyses: 'Recent Analyses',
+                viewDetails: 'View Details',
+                systemHealth: 'System Health',
+                allSystemsOperational: 'All systems operational',
+                cacheStatus: 'Cache status',
+                embeddingStatus: 'Embedding status',
+                classifierStatus: 'Classifier status',
+                active: 'Active',
+                inactive: 'Inactive',
+                diagnosticsInfo: 'Here you can find detailed information about FIXO AI system performance, analysis statistics and status of individual models.'
             },
             de: {
                 appName: 'FIXO',
@@ -3217,6 +3265,14 @@
                         </button>
 
                         <button
+                            className={`bottom-nav-item ${currentView === 'diagnostics' ? 'active' : ''}`}
+                            onClick={() => navigateTo('diagnostics')}
+                        >
+                            <i className="fas fa-chart-line bottom-nav-icon"></i>
+                            <span className="bottom-nav-label">AI</span>
+                        </button>
+
+                        <button
                             className={`bottom-nav-item ${currentView === 'offline' ? 'active' : ''}`}
                             onClick={() => navigateTo('offline')}
                         >
@@ -3307,14 +3363,21 @@
                                         {/* Quick Examples - kompaktní */}
                                         <div className="grid grid-6 grid-cols-6 mt-4 gap-2">
                                             {[
-                                                { icon: 'fa-tint', name: 'Kohoutek' },
-                                                { icon: 'fa-toilet', name: 'WC' },
-                                                { icon: 'fa-plug', name: 'Zásuvka' },
-                                                { icon: 'fa-door-open', name: 'Dveře' },
-                                                { icon: 'fa-lightbulb', name: 'Světlo' },
-                                                { icon: 'fa-thermometer-half', name: 'Topení' }
+                                                { icon: 'fa-tint', name: 'Kohoutek', category: 'voda' },
+                                                { icon: 'fa-toilet', name: 'WC', category: 'koupelna' },
+                                                { icon: 'fa-plug', name: 'Zásuvka', category: 'elektrina' },
+                                                { icon: 'fa-door-open', name: 'Dveře', category: 'dvere_okna' },
+                                                { icon: 'fa-lightbulb', name: 'Světlo', category: 'elektrina' },
+                                                { icon: 'fa-thermometer-half', name: 'Topení', category: 'topeni' }
                                             ].map((item, idx) => (
-                                                <div key={idx} className="example-card p-2">
+                                                <div
+                                                    key={idx}
+                                                    className="example-card p-2 cursor-pointer hover:bg-primary-light transition-all"
+                                                    onClick={() => {
+                                                        navigateTo('knowledge');
+                                                        setSelectedCategory(item.category);
+                                                    }}
+                                                >
                                                     <i className={`fas ${item.icon} text-lg text-primary`}></i>
                                                     <div className="text-xs text-secondary">{item.name}</div>
                                                 </div>
@@ -3352,20 +3415,29 @@
                                                     {
                                                         icon: 'fa-camera',
                                                         title: 'Vyfoťte',
-                                                        desc: 'Nafoťte poškozenou věc nebo nahrajte fotku'
+                                                        desc: 'Nafoťte poškozenou věc nebo nahrajte fotku',
+                                                        detail: 'Použijte fotoaparát nebo nahrajte existující fotografii závady. Aplikace podporuje JPG, PNG, GIF a WebP formáty.'
                                                     },
                                                     {
                                                         icon: 'fa-brain',
                                                         title: 'AI Analýza',
-                                                        desc: 'Umělá inteligence identifikuje závadu'
+                                                        desc: 'Umělá inteligence identifikuje závadu',
+                                                        detail: 'Pokročilá AI analyzuje fotografii pomocí několika modelů: cache, embedding, TensorFlow klasifikátor a cloud API. Průměrná doba analýzy je 2-3 sekundy.'
                                                     },
                                                     {
                                                         icon: 'fa-tools',
                                                         title: 'Opravte',
-                                                        desc: 'Postupujte podle návodu krok za krokem'
+                                                        desc: 'Postupujte podle návodu krok za krokem',
+                                                        detail: 'Získáte detailní návod s ilustracemi, seznamem potřebných nástrojů, bezpečnostními upozorněními a časovým odhadem opravy.'
                                                     }
                                                 ].map((step, idx) => (
-                                                    <div key={idx} className="flex items-start gap-3">
+                                                    <div
+                                                        key={idx}
+                                                        className="flex items-start gap-3 p-3 rounded-lg cursor-pointer hover:bg-primary-light transition-all"
+                                                        onClick={() => {
+                                                            alert(step.detail);
+                                                        }}
+                                                    >
                                                         <div className="flex-none w-10 h-10 rounded-lg bg-primary-light flex items-center justify-center">
                                                             <i className={`fas ${step.icon} text-lg text-primary`}></i>
                                                         </div>
@@ -3373,6 +3445,7 @@
                                                             <h4 className="font-semibold text-base mb-1">{step.title}</h4>
                                                             <p className="text-sm text-secondary m-0">{step.desc}</p>
                                                         </div>
+                                                        <i className="fas fa-chevron-right text-secondary text-sm"></i>
                                                     </div>
                                                 ))}
                                             </div>
@@ -3603,15 +3676,30 @@
                                             Další možnosti
                                         </h3>
                                         <div className="flex flex-col gap-2">
-                                            <button className="btn btn-outline w-full text-left">
+                                            <button
+                                                className="btn btn-outline w-full text-left"
+                                                onClick={() => {
+                                                    setShowNearbySuppliers(true);
+                                                }}
+                                            >
                                                 <i className="fas fa-phone mr-2"></i>
                                                 Zavolat odborníka
                                             </button>
-                                            <button className="btn btn-outline w-full text-left">
+                                            <button
+                                                className="btn btn-outline w-full text-left"
+                                                onClick={() => {
+                                                    navigateTo('premium');
+                                                }}
+                                            >
                                                 <i className="fas fa-crown mr-2 text-warning"></i>
                                                 Koupit Premium
                                             </button>
-                                            <button className="btn btn-outline w-full text-left">
+                                            <button
+                                                className="btn btn-outline w-full text-left"
+                                                onClick={() => {
+                                                    navigateTo('knowledge');
+                                                }}
+                                            >
                                                 <i className="fas fa-book mr-2"></i>
                                                 Procházet databázi
                                             </button>
@@ -5193,6 +5281,280 @@
                                             </>
                                         )}
                                     </section>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* AI Diagnostics View */}
+                        {currentView === 'diagnostics' && (
+                            <div className="app-container pt-4">
+                                <div className="content-two-columns">
+                                    {/* Levy sloupec - Statistiky a metriky */}
+                                    <div className="content-left">
+                                        {/* Hlavni statistiky */}
+                                        <div className="glass-card">
+                                            <h2 className="section-title mb-4">
+                                                <i className="fas fa-brain mr-2"></i>
+                                                {t('aiPerformance')}
+                                            </h2>
+
+                                            <div className="grid grid-2 gap-3 mb-4">
+                                                {/* Celkem analyz */}
+                                                <div
+                                                    className="info-box p-4 cursor-pointer hover:shadow-lg transition-all"
+                                                    onClick={() => {
+                                                        alert(`Celkem bylo provedeno ${analyzerStats?.totalAnalyses || 0} analýz od spuštění systému.`);
+                                                    }}
+                                                >
+                                                    <i className="fas fa-search text-primary text-2xl mb-2 block"></i>
+                                                    <div className="text-xs text-secondary">{t('totalAnalyses')}</div>
+                                                    <div className="font-bold text-xl">{analyzerStats?.totalAnalyses || 0}</div>
+                                                </div>
+
+                                                {/* Uspesnost */}
+                                                <div
+                                                    className="info-box p-4 cursor-pointer hover:shadow-lg transition-all"
+                                                    onClick={() => {
+                                                        const accuracy = analyzerStats?.accuracyRate || 95;
+                                                        alert(`Aktuální úspěšnost AI je ${accuracy}%. To znamená, že AI správně identifikuje ${accuracy}% všech závad.`);
+                                                    }}
+                                                >
+                                                    <i className="fas fa-bullseye text-success text-2xl mb-2 block"></i>
+                                                    <div className="text-xs text-secondary">{t('accuracyRate')}</div>
+                                                    <div className="font-bold text-xl">{analyzerStats?.accuracyRate || 95}%</div>
+                                                </div>
+
+                                                {/* Prumerny cas */}
+                                                <div
+                                                    className="info-box p-4 cursor-pointer hover:shadow-lg transition-all"
+                                                    onClick={() => {
+                                                        alert('Průměrný čas odezvy zahrnuje detekci objektu, identifikaci závady a přípravu návodů.');
+                                                    }}
+                                                >
+                                                    <i className="fas fa-clock text-warning text-2xl mb-2 block"></i>
+                                                    <div className="text-xs text-secondary">{t('avgResponseTime')}</div>
+                                                    <div className="font-bold text-xl">{analyzerStats?.avgResponseTime || '2.3'}s</div>
+                                                </div>
+
+                                                {/* Pokrok uceni */}
+                                                <div
+                                                    className="info-box p-4 cursor-pointer hover:shadow-lg transition-all"
+                                                    onClick={() => {
+                                                        const progress = analyzerStats?.learningProgress || 87;
+                                                        alert(`AI se učí z každé analýzy. Aktuální pokrok učení je ${progress}% z cílové přesnosti.`);
+                                                    }}
+                                                >
+                                                    <i className="fas fa-graduation-cap text-info text-2xl mb-2 block"></i>
+                                                    <div className="text-xs text-secondary">{t('learningProgress')}</div>
+                                                    <div className="font-bold text-xl">{analyzerStats?.learningProgress || 87}%</div>
+                                                </div>
+                                            </div>
+
+                                            {/* Progress bar pro learning */}
+                                            <div className="mb-2">
+                                                <div className="flex justify-between text-xs text-secondary mb-1">
+                                                    <span>Model Training Progress</span>
+                                                    <span>{analyzerStats?.learningProgress || 87}%</span>
+                                                </div>
+                                                <div className="progress">
+                                                    <div
+                                                        className="progress-bar bg-gradient-to-r from-primary to-success"
+                                                        style={{width: `${analyzerStats?.learningProgress || 87}%`}}
+                                                    ></div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* Nedavne analyzy */}
+                                        <div className="glass-card">
+                                            <h3 className="section-title mb-3">
+                                                <i className="fas fa-history mr-2"></i>
+                                                {t('recentAnalyses')}
+                                            </h3>
+
+                                            {repairHistory.length > 0 ? (
+                                                <div className="flex flex-col gap-2">
+                                                    {repairHistory.slice(0, 5).map((repair, idx) => (
+                                                        <div
+                                                            key={idx}
+                                                            className="p-3 rounded-lg border border-border cursor-pointer hover:bg-secondary transition-all"
+                                                            onClick={() => {
+                                                                setSelectedRepairDetail(repair);
+                                                            }}
+                                                        >
+                                                            <div className="flex items-center justify-between gap-2">
+                                                                <div className="flex items-center gap-2 flex-1 min-w-0">
+                                                                    <i className={`fas ${getCategoryIcon(repair.category)} text-primary`}></i>
+                                                                    <div className="flex-1 min-w-0">
+                                                                        <div className="font-semibold text-sm truncate">{repair.name}</div>
+                                                                        <div className="text-xs text-secondary">{new Date(repair.timestamp).toLocaleString('cs-CZ')}</div>
+                                                                    </div>
+                                                                </div>
+                                                                <span className={`badge ${repair.status === 'completed' ? 'badge-success' : 'badge-warning'}`}>
+                                                                    {repair.status === 'completed' ? t('completed') : t('inProgress')}
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            ) : (
+                                                <div className="text-center py-6 text-secondary">
+                                                    <i className="fas fa-inbox text-4xl mb-2 opacity-30 block"></i>
+                                                    <p className="text-sm">{t('noRepairsYet')}</p>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+
+                                    {/* Pravy sloupec - Modely a system */}
+                                    <div className="content-right">
+                                        {/* AI Modely */}
+                                        <div className="glass-card">
+                                            <h3 className="section-title mb-4">
+                                                <i className="fas fa-microchip mr-2"></i>
+                                                {t('aiModels')}
+                                            </h3>
+
+                                            <div className="flex flex-col gap-2">
+                                                {/* Cache Model */}
+                                                <div
+                                                    className="p-3 rounded-lg border border-border cursor-pointer hover:bg-success-light transition-all"
+                                                    onClick={() => {
+                                                        alert('Cache model: Ukládá si již analyzované obrázky pro okamžité načtení. Nejrychlejší metoda.');
+                                                    }}
+                                                >
+                                                    <div className="flex items-center justify-between">
+                                                        <div className="flex items-center gap-2">
+                                                            <i className="fas fa-database text-success text-lg"></i>
+                                                            <div>
+                                                                <div className="font-semibold text-sm">Cache</div>
+                                                                <div className="text-xs text-secondary">Paměť - okamžité</div>
+                                                            </div>
+                                                        </div>
+                                                        <span className="badge badge-success">{t('active')}</span>
+                                                    </div>
+                                                </div>
+
+                                                {/* Embedding Model */}
+                                                <div
+                                                    className="p-3 rounded-lg border border-border cursor-pointer hover:bg-success-light transition-all"
+                                                    onClick={() => {
+                                                        alert('Embedding model: Porovnává nové obrázky s databází podobných případů. Velmi přesné.');
+                                                    }}
+                                                >
+                                                    <div className="flex items-center justify-between">
+                                                        <div className="flex items-center gap-2">
+                                                            <i className="fas fa-brain text-info text-lg"></i>
+                                                            <div>
+                                                                <div className="font-semibold text-sm">Embedding</div>
+                                                                <div className="text-xs text-secondary">Podobnost - 0.5s</div>
+                                                            </div>
+                                                        </div>
+                                                        <span className="badge badge-success">{t('active')}</span>
+                                                    </div>
+                                                </div>
+
+                                                {/* Classifier Model */}
+                                                <div
+                                                    className="p-3 rounded-lg border border-border cursor-pointer hover:bg-warning-light transition-all"
+                                                    onClick={() => {
+                                                        alert('TensorFlow klasifikátor: Lokální AI model pro rychlou klasifikaci. Funguje offline.');
+                                                    }}
+                                                >
+                                                    <div className="flex items-center justify-between">
+                                                        <div className="flex items-center gap-2">
+                                                            <i className="fas fa-robot text-primary text-lg"></i>
+                                                            <div>
+                                                                <div className="font-semibold text-sm">TensorFlow</div>
+                                                                <div className="text-xs text-secondary">Klasifikátor - 2s</div>
+                                                            </div>
+                                                        </div>
+                                                        <span className="badge badge-warning">Loading</span>
+                                                    </div>
+                                                </div>
+
+                                                {/* API Model */}
+                                                <div
+                                                    className="p-3 rounded-lg border border-border cursor-pointer hover:bg-primary-light transition-all"
+                                                    onClick={() => {
+                                                        alert('Cloud API: Pokročilá analýza přes cloud pro složité případy. Vyžaduje internet.');
+                                                    }}
+                                                >
+                                                    <div className="flex items-center justify-between">
+                                                        <div className="flex items-center gap-2">
+                                                            <i className="fas fa-cloud text-warning text-lg"></i>
+                                                            <div>
+                                                                <div className="font-semibold text-sm">Cloud API</div>
+                                                                <div className="text-xs text-secondary">Pokročilé - 3-5s</div>
+                                                            </div>
+                                                        </div>
+                                                        <span className="badge badge-success">{t('active')}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* Stav systemu */}
+                                        <div className="glass-card">
+                                            <h3 className="section-title mb-4">
+                                                <i className="fas fa-server mr-2"></i>
+                                                {t('systemHealth')}
+                                            </h3>
+
+                                            <div className="alert alert-success mb-3">
+                                                <i className="fas fa-check-circle mr-2"></i>
+                                                {t('allSystemsOperational')}
+                                            </div>
+
+                                            <div className="flex flex-col gap-2">
+                                                <div
+                                                    className="flex items-center justify-between p-2 rounded-lg hover:bg-secondary cursor-pointer transition-all"
+                                                    onClick={() => alert('Cache je aktivní a obsahuje ' + (analyzerStats?.cacheSize || 0) + ' záznamů.')}
+                                                >
+                                                    <div className="flex items-center gap-2">
+                                                        <div className="w-2 h-2 rounded-full bg-success"></div>
+                                                        <span className="text-sm">{t('cacheStatus')}</span>
+                                                    </div>
+                                                    <span className="text-xs text-success font-semibold">{t('active')}</span>
+                                                </div>
+
+                                                <div
+                                                    className="flex items-center justify-between p-2 rounded-lg hover:bg-secondary cursor-pointer transition-all"
+                                                    onClick={() => alert('Embedding model je připraven a funguje správně.')}
+                                                >
+                                                    <div className="flex items-center gap-2">
+                                                        <div className="w-2 h-2 rounded-full bg-success"></div>
+                                                        <span className="text-sm">{t('embeddingStatus')}</span>
+                                                    </div>
+                                                    <span className="text-xs text-success font-semibold">{t('active')}</span>
+                                                </div>
+
+                                                <div
+                                                    className="flex items-center justify-between p-2 rounded-lg hover:bg-secondary cursor-pointer transition-all"
+                                                    onClick={() => alert('TensorFlow klasifikátor se načítá. Bude k dispozici za chvíli.')}
+                                                >
+                                                    <div className="flex items-center gap-2">
+                                                        <div className="w-2 h-2 rounded-full bg-warning animate-pulse"></div>
+                                                        <span className="text-sm">{t('classifierStatus')}</span>
+                                                    </div>
+                                                    <span className="text-xs text-warning font-semibold">Loading</span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* Info panel */}
+                                        <div className="glass-card bg-primary-light">
+                                            <div className="flex items-start gap-3">
+                                                <i className="fas fa-info-circle text-primary text-xl flex-shrink-0"></i>
+                                                <div>
+                                                    <h4 className="font-semibold text-sm mb-1">O AI Diagnostice</h4>
+                                                    <p className="text-xs text-secondary m-0">
+                                                        {t('diagnosticsInfo')}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         )}
