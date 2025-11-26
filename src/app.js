@@ -2453,99 +2453,88 @@
                                 <button
                                     onClick={() => navigateTo('home')}
                                     style={{
-                                        padding: 'var(--space-2) var(--space-4)',
-                                        borderRadius: 'var(--radius-lg)',
-                                        background: currentView === 'home' ? 'var(--color-primary-light)' : 'transparent',
-                                        color: currentView === 'home' ? 'var(--color-primary)' : 'var(--color-text-primary)',
-                                        border: 'none',
+                                        padding: 'var(--space-3) var(--space-5)',
+                                        borderRadius: 'var(--radius-xl)',
+                                        background: currentView === 'home' ? 'var(--color-primary)' : 'transparent',
+                                        color: currentView === 'home' ? 'white' : 'var(--color-text-primary)',
+                                        border: currentView === 'home' ? 'none' : '1px solid var(--color-border)',
                                         cursor: 'pointer',
-                                        fontSize: 'var(--text-sm)',
-                                        fontWeight: 'var(--font-medium)',
+                                        fontSize: 'var(--text-base)',
+                                        fontWeight: currentView === 'home' ? 'var(--font-semibold)' : 'var(--font-medium)',
                                         transition: 'var(--transition-fast)',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        gap: 'var(--space-2)'
+                                        boxShadow: currentView === 'home' ? 'var(--shadow-md)' : 'none'
                                     }}
                                 >
-                                    <i className="fas fa-camera"></i>
-                                    <span>Analyzovat</span>
+                                    Analyzovat
                                 </button>
 
                                 <button
                                     onClick={() => navigateTo('history')}
                                     style={{
-                                        padding: 'var(--space-2) var(--space-4)',
-                                        borderRadius: 'var(--radius-lg)',
-                                        background: currentView === 'history' ? 'var(--color-primary-light)' : 'transparent',
-                                        color: currentView === 'history' ? 'var(--color-primary)' : 'var(--color-text-primary)',
-                                        border: 'none',
+                                        padding: 'var(--space-3) var(--space-5)',
+                                        borderRadius: 'var(--radius-xl)',
+                                        background: currentView === 'history' ? 'var(--color-primary)' : 'transparent',
+                                        color: currentView === 'history' ? 'white' : 'var(--color-text-primary)',
+                                        border: currentView === 'history' ? 'none' : '1px solid var(--color-border)',
                                         cursor: 'pointer',
-                                        fontSize: 'var(--text-sm)',
-                                        fontWeight: 'var(--font-medium)',
+                                        fontSize: 'var(--text-base)',
+                                        fontWeight: currentView === 'history' ? 'var(--font-semibold)' : 'var(--font-medium)',
                                         transition: 'var(--transition-fast)',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        gap: 'var(--space-2)'
+                                        boxShadow: currentView === 'history' ? 'var(--shadow-md)' : 'none'
                                     }}
                                 >
-                                    <i className="fas fa-history"></i>
-                                    <span>Historie</span>
+                                    Historie
                                 </button>
 
                                 <button
                                     onClick={() => navigateTo('knowledge')}
                                     style={{
-                                        padding: 'var(--space-2) var(--space-4)',
-                                        borderRadius: 'var(--radius-lg)',
-                                        background: currentView === 'knowledge' ? 'var(--color-primary-light)' : 'transparent',
-                                        color: currentView === 'knowledge' ? 'var(--color-primary)' : 'var(--color-text-primary)',
-                                        border: 'none',
+                                        padding: 'var(--space-3) var(--space-5)',
+                                        borderRadius: 'var(--radius-xl)',
+                                        background: currentView === 'knowledge' ? 'var(--color-primary)' : 'transparent',
+                                        color: currentView === 'knowledge' ? 'white' : 'var(--color-text-primary)',
+                                        border: currentView === 'knowledge' ? 'none' : '1px solid var(--color-border)',
                                         cursor: 'pointer',
-                                        fontSize: 'var(--text-sm)',
-                                        fontWeight: 'var(--font-medium)',
+                                        fontSize: 'var(--text-base)',
+                                        fontWeight: currentView === 'knowledge' ? 'var(--font-semibold)' : 'var(--font-medium)',
                                         transition: 'var(--transition-fast)',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        gap: 'var(--space-2)'
+                                        boxShadow: currentView === 'knowledge' ? 'var(--shadow-md)' : 'none'
                                     }}
                                 >
-                                    <i className="fas fa-book"></i>
-                                    <span>Databáze</span>
+                                    Databáze
                                 </button>
 
                                 <button
                                     onClick={() => navigateTo('offline')}
                                     style={{
-                                        padding: 'var(--space-2) var(--space-4)',
-                                        borderRadius: 'var(--radius-lg)',
-                                        background: currentView === 'offline' ? 'var(--color-primary-light)' : 'transparent',
-                                        color: currentView === 'offline' ? 'var(--color-primary)' : 'var(--color-text-primary)',
-                                        border: 'none',
+                                        padding: 'var(--space-3) var(--space-5)',
+                                        borderRadius: 'var(--radius-xl)',
+                                        background: currentView === 'offline' ? 'var(--color-primary)' : 'transparent',
+                                        color: currentView === 'offline' ? 'white' : 'var(--color-text-primary)',
+                                        border: currentView === 'offline' ? 'none' : '1px solid var(--color-border)',
                                         cursor: 'pointer',
-                                        fontSize: 'var(--text-sm)',
-                                        fontWeight: 'var(--font-medium)',
+                                        fontSize: 'var(--text-base)',
+                                        fontWeight: currentView === 'offline' ? 'var(--font-semibold)' : 'var(--font-medium)',
                                         transition: 'var(--transition-fast)',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        gap: 'var(--space-2)',
-                                        position: 'relative'
+                                        position: 'relative',
+                                        boxShadow: currentView === 'offline' ? 'var(--shadow-md)' : 'none'
                                     }}
                                 >
-                                    <i className="fas fa-cloud-download-alt" style={{color: savedGuides.length > 0 ? 'var(--color-success)' : undefined}}></i>
-                                    <span>Offline</span>
+                                    Offline
                                     {savedGuides.length > 0 && (
                                         <span style={{
                                             position: 'absolute',
-                                            top: '-4px',
-                                            right: '-4px',
+                                            top: '-6px',
+                                            right: '-6px',
                                             background: 'var(--color-success)',
                                             color: 'white',
-                                            padding: '2px 6px',
+                                            padding: '3px 7px',
                                             borderRadius: 'var(--radius-full)',
-                                            fontSize: '10px',
+                                            fontSize: '11px',
                                             fontWeight: 'var(--font-bold)',
-                                            minWidth: '18px',
-                                            textAlign: 'center'
+                                            minWidth: '20px',
+                                            textAlign: 'center',
+                                            boxShadow: 'var(--shadow-md)'
                                         }}>{savedGuides.length}</span>
                                     )}
                                 </button>
