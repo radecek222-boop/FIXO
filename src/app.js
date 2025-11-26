@@ -2719,33 +2719,34 @@
                         {/* Home View - Single Page s Hero */}
                         {currentView === 'home' && (
                             <div className="app-container">
-                                {/* Hero Section - Animated */}
-                                <div className="hero-section">
-                                    <h1 className="hero-title">
-                                        FIXO
-                                    </h1>
-                                    <p className="hero-subtitle">
-                                        {t('appSlogan')}
-                                    </p>
-                                    <div style={{display: 'flex', justifyContent: 'center', gap: 'var(--space-6)', flexWrap: 'wrap', marginTop: 'var(--space-4)'}}>
-                                        <div style={{textAlign: 'center'}}>
-                                            <div style={{fontSize: 'var(--text-2xl)', fontWeight: 'var(--font-bold)'}}>500+</div>
-                                            <div style={{fontSize: 'var(--text-xs)', opacity: 0.8}}>Závad</div>
-                                        </div>
-                                        <div style={{textAlign: 'center'}}>
-                                            <div style={{fontSize: 'var(--text-2xl)', fontWeight: 'var(--font-bold)'}}>30s</div>
-                                            <div style={{fontSize: 'var(--text-xs)', opacity: 0.8}}>Analýza</div>
-                                        </div>
-                                        <div style={{textAlign: 'center'}}>
-                                            <div style={{fontSize: 'var(--text-2xl)', fontWeight: 'var(--font-bold)'}}>AI</div>
-                                            <div style={{fontSize: 'var(--text-xs)', opacity: 0.8}}>Powered</div>
+                                {/* Desktop: Hero + Upload vedle sebe */}
+                                <div className="home-desktop-layout desktop-compact-spacing">
+                                    {/* Hero Section - Animated */}
+                                    <div className="hero-section home-hero-compact">
+                                        <h1 className="hero-title">
+                                            FIXO
+                                        </h1>
+                                        <p className="hero-subtitle">
+                                            {t('appSlogan')}
+                                        </p>
+                                        <div className="desktop-stats-inline" style={{display: 'flex', justifyContent: 'center', gap: 'var(--space-6)', flexWrap: 'wrap', marginTop: 'var(--space-4)'}}>
+                                            <div style={{textAlign: 'center'}}>
+                                                <div style={{fontSize: 'var(--text-2xl)', fontWeight: 'var(--font-bold)'}}>500+</div>
+                                                <div style={{fontSize: 'var(--text-xs)', opacity: 0.8}}>Závad</div>
+                                            </div>
+                                            <div style={{textAlign: 'center'}}>
+                                                <div style={{fontSize: 'var(--text-2xl)', fontWeight: 'var(--font-bold)'}}>30s</div>
+                                                <div style={{fontSize: 'var(--text-xs)', opacity: 0.8}}>Analýza</div>
+                                            </div>
+                                            <div style={{textAlign: 'center'}}>
+                                                <div style={{fontSize: 'var(--text-2xl)', fontWeight: 'var(--font-bold)'}}>AI</div>
+                                                <div style={{fontSize: 'var(--text-xs)', opacity: 0.8}}>Powered</div>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
 
-                                {/* Main Upload Section - Centralizovaná */}
-                                <div style={{padding: 'var(--space-6) 0'}}>
-                                    <div className="upload-card glass-card">
+                                    {/* Main Upload Section */}
+                                    <div className="upload-card glass-card upload-card-compact">
                                         <div className="text-center mb-6">
                                             <h2 style={{fontSize: 'var(--text-xl)', fontWeight: 'var(--font-bold)', color: 'var(--color-text-primary)', marginBottom: 'var(--space-2)'}}>
                                                 {t('homeTitle')}
@@ -2805,13 +2806,15 @@
                                         </div>
                                     </div>
 
-                                    {/* Quick Examples */}
-                                    <div className="grid grid-4 mt-6 gap-3">
+                                    {/* Quick Examples - více na desktopu */}
+                                    <div className="grid grid-4 examples-desktop mt-6 gap-3">
                                             {[
                                                 { icon: 'fa-tint', name: 'Kohoutek' },
                                                 { icon: 'fa-toilet', name: 'WC' },
                                                 { icon: 'fa-plug', name: 'Zásuvka' },
-                                                { icon: 'fa-door-open', name: 'Dveře' }
+                                                { icon: 'fa-door-open', name: 'Dveře' },
+                                                { icon: 'fa-lightbulb', name: 'Světlo' },
+                                                { icon: 'fa-thermometer-half', name: 'Topení' }
                                             ].map((item, idx) => (
                                                 <div key={idx} className="example-card">
                                                     <i className={`fas ${item.icon}`} style={{fontSize: 'var(--text-2xl)', color: 'var(--color-primary)'}}></i>
@@ -2822,13 +2825,13 @@
                                     </div>
                                 </div>
 
-                                {/* Info Section - Jak to funguje */}
-                                <div className="glass-card" style={{marginTop: 'var(--space-6)'}}>
-                                    <h3 className="section-title" style={{justifyContent: 'center'}}>
+                                {/* Info Section - Jak to funguje - desktop: všechny vedle sebe */}
+                                <div className="glass-card desktop-compact-spacing" style={{marginTop: 'var(--space-4)'}}>
+                                    <h3 className="section-title section-title-compact" style={{justifyContent: 'center'}}>
                                         <i className="fas fa-magic section-title-icon"></i>
                                         Jak to funguje?
                                     </h3>
-                                    <div style={{display: 'flex', flexDirection: 'column', gap: 'var(--space-3)'}}>
+                                    <div className="collapsible-desktop-row" style={{display: 'flex', flexDirection: 'column', gap: 'var(--space-3)'}}>
                                         {[
                                             {
                                                 num: '1', icon: 'fa-camera', title: 'Vyfoťte',
@@ -3103,17 +3106,55 @@
                         {/* Results View */}
                         {currentView === 'results' && analysisResult && (
                             <div className="app-container" style={{paddingTop: 'var(--space-4)'}}>
-                                <div className="glass-card" style={{padding: 0, overflow: 'hidden'}}>
-                                    {/* Detection Header */}
-                                    <div className="result-header">
-                                        <div className="flex-between">
-                                            <div>
-                                                <h2 style={{fontSize: 'var(--text-2xl)', fontWeight: 'var(--font-bold)', marginBottom: 'var(--space-2)'}}>
-                                                    {analysisResult.object.name}
-                                                </h2>
-                                                <p style={{opacity: 0.9}}>
-                                                    {t('detectedWith')} {analysisResult.confidence}% {t('confidence')}
-                                                </p>
+                                {/* Desktop: Obrázek vlevo, výsledky vpravo */}
+                                <div className="results-desktop-layout">
+                                    {/* Levý sloupec - analyzovaný obrázek (pouze desktop) */}
+                                    {selectedImage && (
+                                        <div className="results-image-section" style={{display: 'none'}}>
+                                            <div className="glass-card" style={{padding: 'var(--space-4)', marginBottom: 'var(--space-4)'}}>
+                                                <h3 style={{fontSize: 'var(--text-sm)', fontWeight: 'var(--font-semibold)', marginBottom: 'var(--space-3)', color: 'var(--color-text-secondary)'}}>
+                                                    <i className="fas fa-image mr-2"></i>
+                                                    Analyzovaný obrázek
+                                                </h3>
+                                                <img
+                                                    src={selectedImage}
+                                                    alt="Analyzovaný obrázek"
+                                                    style={{
+                                                        width: '100%',
+                                                        height: 'auto',
+                                                        maxHeight: '400px',
+                                                        objectFit: 'contain',
+                                                        borderRadius: 'var(--radius-lg)',
+                                                        background: 'var(--color-bg-secondary)'
+                                                    }}
+                                                />
+                                                <div style={{marginTop: 'var(--space-3)', display: 'flex', gap: 'var(--space-2)', justifyContent: 'center'}}>
+                                                    <button
+                                                        onClick={() => navigateTo('home')}
+                                                        className="btn btn-secondary"
+                                                        style={{fontSize: 'var(--text-sm)', padding: 'var(--space-2) var(--space-3)'}}
+                                                    >
+                                                        <i className="fas fa-camera mr-1"></i>
+                                                        Nová fotka
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {/* Pravý sloupec - výsledky analýzy */}
+                                    <div>
+                                        <div className="glass-card" style={{padding: 0, overflow: 'hidden'}}>
+                                            {/* Detection Header */}
+                                            <div className="result-header">
+                                                <div className="flex-between">
+                                                    <div>
+                                                        <h2 style={{fontSize: 'var(--text-xl)', fontWeight: 'var(--font-bold)', marginBottom: 'var(--space-2)'}}>
+                                                            {analysisResult.object.name}
+                                                        </h2>
+                                                        <p style={{opacity: 0.9, fontSize: 'var(--text-sm)'}}>
+                                                            {t('detectedWith')} {analysisResult.confidence}% {t('confidence')}
+                                                        </p>
                                                 {analysisResult._meta && (
                                                     <span style={{
                                                         display: 'inline-flex',
@@ -3429,6 +3470,8 @@
                                             3,99 €
                                         </span>
                                     </button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         )}
@@ -3801,64 +3844,67 @@
                                     </div>
                                 ) : (
                                     <>
-                                        {/* Statistiky */}
-                                        <div className="grid grid-3 gap-4 mb-6">
-                                            <div className="card" style={{padding: 'var(--space-4)', textAlign: 'center'}}>
-                                                <div style={{fontSize: 'var(--text-2xl)', fontWeight: 'var(--font-bold)', color: 'var(--color-primary)'}}>
-                                                    {getHistoryStats().total}
+                                        {/* Desktop: Statistiky + filtry v jednom řádku */}
+                                        <div className="history-header-desktop mb-4">
+                                            {/* Statistiky - kompaktní */}
+                                            <div className="grid grid-3 history-stats-compact gap-3">
+                                                <div className="card card-compact" style={{padding: 'var(--space-3)', textAlign: 'center'}}>
+                                                    <div style={{fontSize: 'var(--text-xl)', fontWeight: 'var(--font-bold)', color: 'var(--color-primary)'}}>
+                                                        {getHistoryStats().total}
+                                                    </div>
+                                                    <div className="text-muted" style={{fontSize: 'var(--text-xs)'}}>{t('totalRepairs')}</div>
                                                 </div>
-                                                <div className="text-muted" style={{fontSize: 'var(--text-sm)'}}>{t('totalRepairs')}</div>
+                                                <div className="card card-compact" style={{padding: 'var(--space-3)', textAlign: 'center'}}>
+                                                    <div style={{fontSize: 'var(--text-xl)', fontWeight: 'var(--font-bold)', color: 'var(--color-success)'}}>
+                                                        {getHistoryStats().completed}
+                                                    </div>
+                                                    <div className="text-muted" style={{fontSize: 'var(--text-xs)'}}>{t('completedRepairs')}</div>
+                                                </div>
+                                                <div className="card card-compact" style={{padding: 'var(--space-3)', textAlign: 'center'}}>
+                                                    <div style={{fontSize: 'var(--text-xl)', fontWeight: 'var(--font-bold)', color: 'var(--color-warning)'}}>
+                                                        {getHistoryStats().inProgress}
+                                                    </div>
+                                                    <div className="text-muted" style={{fontSize: 'var(--text-xs)'}}>{t('inProgress')}</div>
+                                                </div>
                                             </div>
-                                            <div className="card" style={{padding: 'var(--space-4)', textAlign: 'center'}}>
-                                                <div style={{fontSize: 'var(--text-2xl)', fontWeight: 'var(--font-bold)', color: 'var(--color-success)'}}>
-                                                    {getHistoryStats().completed}
+
+                                            {/* Filtrování a export */}
+                                            <div className="flex-between" style={{flexWrap: 'wrap', gap: 'var(--space-2)', marginTop: 'var(--space-3)'}}>
+                                                <div className="category-filter category-filter-desktop" style={{margin: 0}}>
+                                                    <button
+                                                        onClick={() => setHistoryFilter('all')}
+                                                        className={`category-btn ${historyFilter === 'all' ? 'active' : ''}`}
+                                                    >
+                                                        {t('filterAll')} ({repairHistory.length})
+                                                    </button>
+                                                    <button
+                                                        onClick={() => setHistoryFilter('completed')}
+                                                        className={`category-btn ${historyFilter === 'completed' ? 'active' : ''}`}
+                                                    >
+                                                        <i className="fas fa-check-circle mr-1"></i>
+                                                        {t('filterCompleted')}
+                                                    </button>
+                                                    <button
+                                                        onClick={() => setHistoryFilter('in_progress')}
+                                                        className={`category-btn ${historyFilter === 'in_progress' ? 'active' : ''}`}
+                                                    >
+                                                        <i className="fas fa-wrench mr-1"></i>
+                                                        {t('filterInProgress')}
+                                                    </button>
                                                 </div>
-                                                <div className="text-muted" style={{fontSize: 'var(--text-sm)'}}>{t('completedRepairs')}</div>
-                                            </div>
-                                            <div className="card" style={{padding: 'var(--space-4)', textAlign: 'center'}}>
-                                                <div style={{fontSize: 'var(--text-2xl)', fontWeight: 'var(--font-bold)', color: 'var(--color-warning)'}}>
-                                                    {getHistoryStats().inProgress}
-                                                </div>
-                                                <div className="text-muted" style={{fontSize: 'var(--text-sm)'}}>{t('inProgress')}</div>
+                                                <button
+                                                    onClick={exportToCSV}
+                                                    className="btn btn-secondary"
+                                                    style={{whiteSpace: 'nowrap', padding: 'var(--space-2) var(--space-3)', fontSize: 'var(--text-sm)'}}
+                                                >
+                                                    <i className="fas fa-download mr-2"></i>
+                                                    {t('exportCSV')}
+                                                </button>
                                             </div>
                                         </div>
 
-                                        {/* Filtrování a export */}
-                                        <div className="flex-between mb-4" style={{flexWrap: 'wrap', gap: 'var(--space-2)'}}>
-                                            <div className="category-filter" style={{margin: 0}}>
-                                                <button
-                                                    onClick={() => setHistoryFilter('all')}
-                                                    className={`category-btn ${historyFilter === 'all' ? 'active' : ''}`}
-                                                >
-                                                    {t('filterAll')} ({repairHistory.length})
-                                                </button>
-                                                <button
-                                                    onClick={() => setHistoryFilter('completed')}
-                                                    className={`category-btn ${historyFilter === 'completed' ? 'active' : ''}`}
-                                                >
-                                                    <i className="fas fa-check-circle mr-1"></i>
-                                                    {t('filterCompleted')}
-                                                </button>
-                                                <button
-                                                    onClick={() => setHistoryFilter('in_progress')}
-                                                    className={`category-btn ${historyFilter === 'in_progress' ? 'active' : ''}`}
-                                                >
-                                                    <i className="fas fa-wrench mr-1"></i>
-                                                    {t('filterInProgress')}
-                                                </button>
-                                            </div>
-                                            <button
-                                                onClick={exportToCSV}
-                                                className="btn btn-secondary"
-                                                style={{whiteSpace: 'nowrap'}}
-                                            >
-                                                <i className="fas fa-download mr-2"></i>
-                                                {t('exportCSV')}
-                                            </button>
-                                        </div>
-
-                                        {/* Seznam oprav */}
-                                        <div style={{display: 'flex', flexDirection: 'column', gap: 'var(--space-4)'}}>
+                                        {/* Seznam oprav - 2-3 sloupce na desktopu */}
+                                        <div className="history-list-desktop" style={{display: 'flex', flexDirection: 'column', gap: 'var(--space-3)'}}>
                                             {getFilteredHistory().length === 0 ? (
                                                 <div className="text-center text-muted" style={{padding: 'var(--space-8)'}}>
                                                     <i className="fas fa-filter" style={{fontSize: 'var(--text-3xl)', marginBottom: 'var(--space-2)', display: 'block'}}></i>
@@ -4088,8 +4134,8 @@
                                     </div>
                                 </div>
 
-                                {/* Category Filter */}
-                                <div className="category-filter">
+                                {/* Category Filter - kompaktní na desktopu */}
+                                <div className="category-filter category-filter-desktop">
                                     {categories.map(cat => (
                                         <button
                                             key={cat.id}
@@ -4103,30 +4149,29 @@
                                 </div>
 
                                 {/* Results count */}
-                                <p className="text-center text-secondary mb-6" style={{fontSize: 'var(--text-sm)'}}>
+                                <p className="text-center text-secondary mb-4" style={{fontSize: 'var(--text-sm)'}}>
                                     {t('showing')} {getFilteredDatabase().length} {t('outOf')} {Object.keys(repairDatabase).length} {t('items')}
                                 </p>
 
-                                <div className="grid grid-3 gap-6">
+                                {/* Knowledge Grid - 4-6 sloupců na desktopu */}
+                                <div className="grid grid-3 knowledge-grid-desktop gap-4">
                                     {getFilteredDatabase().map(([key, item]) => (
-                                        <div key={key} className="knowledge-card">
+                                        <div key={key} className="knowledge-card knowledge-card-compact">
                                             <div className="knowledge-card-header">
                                                 <div className="flex-between items-center">
-                                                    <h3 style={{fontWeight: 'var(--font-bold)', fontSize: 'var(--text-lg)'}}>{item.name}</h3>
-                                                    <i className={`fas ${getCategoryIcon(item.category)}`} style={{fontSize: 'var(--text-2xl)', opacity: 0.9}}></i>
+                                                    <h3 style={{fontWeight: 'var(--font-bold)', fontSize: 'var(--text-base)'}}>{item.name}</h3>
+                                                    <i className={`fas ${getCategoryIcon(item.category)}`} style={{fontSize: 'var(--text-xl)', opacity: 0.9}}></i>
                                                 </div>
                                             </div>
-                                            <div className="p-4">
-                                                <div style={{display: 'flex', flexDirection: 'column', gap: 'var(--space-3)'}}>
+                                            <div className="p-3 scrollable-content" style={{maxHeight: '180px'}}>
+                                                <div style={{display: 'flex', flexDirection: 'column', gap: 'var(--space-2)'}}>
                                                     {item.issues.map(issue => (
-                                                        <div key={issue.id} className="issue-item">
-                                                            <p style={{fontWeight: 'var(--font-semibold)'}}>{issue.name}</p>
-                                                            <p style={{fontSize: 'var(--text-sm)', color: 'var(--color-text-secondary)'}}>{issue.description}</p>
-                                                            <div style={{marginTop: 'var(--space-2)', display: 'flex', gap: 'var(--space-4)', fontSize: 'var(--text-xs)', color: 'var(--color-text-muted)'}}>
+                                                        <div key={issue.id} className="issue-item" style={{padding: 'var(--space-2)', paddingLeft: 'var(--space-3)'}}>
+                                                            <p style={{fontWeight: 'var(--font-semibold)', fontSize: 'var(--text-sm)'}}>{issue.name}</p>
+                                                            <div style={{marginTop: 'var(--space-1)', display: 'flex', gap: 'var(--space-3)', fontSize: 'var(--text-xs)', color: 'var(--color-text-muted)', flexWrap: 'wrap'}}>
                                                                 <span><i className="fas fa-clock mr-1"></i>{issue.timeEstimate}</span>
-                                                                <span><i className="fas fa-signal mr-1"></i>{issue.difficulty}</span>
-                                                                <span className={`badge badge-${issue.riskScore > 5 ? 'danger' : issue.riskScore > 2 ? 'warning' : 'success'}`} style={{fontSize: 'var(--text-xs)'}}>
-                                                                    {t('risk')}: {issue.riskScore}/10
+                                                                <span className={`badge badge-${issue.riskScore > 5 ? 'danger' : issue.riskScore > 2 ? 'warning' : 'success'}`} style={{fontSize: '10px', padding: '1px 6px'}}>
+                                                                    {issue.riskScore}/10
                                                                 </span>
                                                             </div>
                                                         </div>
@@ -4746,116 +4791,111 @@
                         {/* Offline Guides View */}
                         {currentView === 'offline' && (
                             <div className="app-container" style={{paddingTop: 'var(--space-4)'}}>
-                                {/* AI Learning Stats */}
-                                {analyzerStats && (
-                                    <div className="card mb-6">
-                                        <div className="card-body">
-                                            <h3 style={{fontWeight: 'var(--font-semibold)', marginBottom: 'var(--space-4)', display: 'flex', alignItems: 'center', gap: 'var(--space-2)'}}>
-                                                <i className="fas fa-brain" style={{color: 'var(--color-primary)'}}></i>
-                                                AI Učení
-                                            </h3>
-                                            <div style={{display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 'var(--space-4)', marginBottom: 'var(--space-4)'}}>
-                                                <div style={{textAlign: 'center', padding: 'var(--space-3)', background: 'var(--color-success-light)', borderRadius: 'var(--radius-lg)'}}>
-                                                    <div style={{fontSize: 'var(--text-2xl)', fontWeight: 'var(--font-bold)', color: 'var(--color-success)'}}>
-                                                        {analyzerStats.cacheHits || 0}
+                                {/* Desktop: AI Learning + Guides vedle sebe */}
+                                <div className="offline-desktop-layout">
+                                    {/* AI Learning Stats - levý sloupec na desktopu */}
+                                    <div>
+                                        {analyzerStats && (
+                                            <div className="card mb-4">
+                                                <div className="card-body" style={{padding: 'var(--space-4)'}}>
+                                                    <h3 style={{fontWeight: 'var(--font-semibold)', marginBottom: 'var(--space-3)', display: 'flex', alignItems: 'center', gap: 'var(--space-2)', fontSize: 'var(--text-base)'}}>
+                                                        <i className="fas fa-brain" style={{color: 'var(--color-primary)'}}></i>
+                                                        AI Učení
+                                                    </h3>
+                                                    {/* Desktop: 6 sloupců, mobil: 3 */}
+                                                    <div className="analyze-stats-desktop" style={{display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 'var(--space-2)', marginBottom: 'var(--space-3)'}}>
+                                                        <div style={{textAlign: 'center', padding: 'var(--space-2)', background: 'var(--color-success-light)', borderRadius: 'var(--radius-md)'}}>
+                                                            <div style={{fontSize: 'var(--text-lg)', fontWeight: 'var(--font-bold)', color: 'var(--color-success)'}}>
+                                                                {analyzerStats.cacheHits || 0}
+                                                            </div>
+                                                            <div style={{fontSize: '10px', color: 'var(--color-text-secondary)'}}>Cache</div>
+                                                        </div>
+                                                        <div style={{textAlign: 'center', padding: 'var(--space-2)', background: 'var(--color-info-light)', borderRadius: 'var(--radius-md)'}}>
+                                                            <div style={{fontSize: 'var(--text-lg)', fontWeight: 'var(--font-bold)', color: 'var(--color-info)'}}>
+                                                                {analyzerStats.localClassifications || 0}
+                                                            </div>
+                                                            <div style={{fontSize: '10px', color: 'var(--color-text-secondary)'}}>Lokální</div>
+                                                        </div>
+                                                        <div style={{textAlign: 'center', padding: 'var(--space-2)', background: 'rgba(168, 85, 247, 0.1)', borderRadius: 'var(--radius-md)'}}>
+                                                            <div style={{fontSize: 'var(--text-lg)', fontWeight: 'var(--font-bold)', color: '#a855f7'}}>
+                                                                {analyzerStats.apiCalls || 0}
+                                                            </div>
+                                                            <div style={{fontSize: '10px', color: 'var(--color-text-secondary)'}}>Cloud</div>
+                                                        </div>
+                                                        <div style={{textAlign: 'center', padding: 'var(--space-2)', background: 'rgba(251, 146, 60, 0.1)', borderRadius: 'var(--radius-md)'}}>
+                                                            <div style={{fontSize: 'var(--text-lg)', fontWeight: 'var(--font-bold)', color: '#fb923c'}}>
+                                                                {analyzerStats.feedbackUsed || 0}
+                                                            </div>
+                                                            <div style={{fontSize: '10px', color: 'var(--color-text-secondary)'}}>Opravy</div>
+                                                        </div>
+                                                        <div style={{textAlign: 'center', padding: 'var(--space-2)', background: 'rgba(244, 114, 182, 0.1)', borderRadius: 'var(--radius-md)'}}>
+                                                            <div style={{fontSize: 'var(--text-lg)', fontWeight: 'var(--font-bold)', color: '#f472b6'}}>
+                                                                {analyzerStats.feedbackSubmitted || 0}
+                                                            </div>
+                                                            <div style={{fontSize: '10px', color: 'var(--color-text-secondary)'}}>Odesláno</div>
+                                                        </div>
+                                                        <div style={{textAlign: 'center', padding: 'var(--space-2)', background: 'rgba(34, 211, 238, 0.1)', borderRadius: 'var(--radius-md)'}}>
+                                                            <div style={{fontSize: 'var(--text-lg)', fontWeight: 'var(--font-bold)', color: '#22d3ee'}}>
+                                                                {analyzerStats.feedback?.totalFeedbacks || 0}
+                                                            </div>
+                                                            <div style={{fontSize: '10px', color: 'var(--color-text-secondary)'}}>Feedback</div>
+                                                        </div>
                                                     </div>
-                                                    <div style={{fontSize: 'var(--text-xs)', color: 'var(--color-text-secondary)'}}>Z cache</div>
-                                                </div>
-                                                <div style={{textAlign: 'center', padding: 'var(--space-3)', background: 'var(--color-info-light)', borderRadius: 'var(--radius-lg)'}}>
-                                                    <div style={{fontSize: 'var(--text-2xl)', fontWeight: 'var(--font-bold)', color: 'var(--color-info)'}}>
-                                                        {analyzerStats.localClassifications || 0}
+                                                    <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: 'var(--space-2)', background: 'var(--color-bg-secondary)', borderRadius: 'var(--radius-md)', fontSize: 'var(--text-xs)'}}>
+                                                        <span>
+                                                            <i className="fas fa-database mr-1"></i>
+                                                            {analyzerStats.cache?.totalAnalyses || 0} závad
+                                                        </span>
+                                                        <span style={{
+                                                            padding: '2px 8px',
+                                                            background: analyzerStats.efficiency > 50 ? 'var(--color-success)' : 'var(--color-warning)',
+                                                            color: 'white',
+                                                            borderRadius: 'var(--radius-full)',
+                                                            fontWeight: 'var(--font-bold)'
+                                                        }}>
+                                                            {analyzerStats.efficiency || 0}% úspora
+                                                        </span>
                                                     </div>
-                                                    <div style={{fontSize: 'var(--text-xs)', color: 'var(--color-text-secondary)'}}>Lokální AI</div>
-                                                </div>
-                                                <div style={{textAlign: 'center', padding: 'var(--space-3)', background: 'rgba(168, 85, 247, 0.1)', borderRadius: 'var(--radius-lg)'}}>
-                                                    <div style={{fontSize: 'var(--text-2xl)', fontWeight: 'var(--font-bold)', color: '#a855f7'}}>
-                                                        {analyzerStats.apiCalls || 0}
-                                                    </div>
-                                                    <div style={{fontSize: 'var(--text-xs)', color: 'var(--color-text-secondary)'}}>Cloud AI</div>
                                                 </div>
                                             </div>
-
-                                            {/* Statistiky uživatelského feedbacku */}
-                                            <div style={{display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 'var(--space-4)', marginBottom: 'var(--space-4)'}}>
-                                                <div style={{textAlign: 'center', padding: 'var(--space-3)', background: 'rgba(251, 146, 60, 0.1)', borderRadius: 'var(--radius-lg)'}}>
-                                                    <div style={{fontSize: 'var(--text-2xl)', fontWeight: 'var(--font-bold)', color: '#fb923c'}}>
-                                                        {analyzerStats.feedbackUsed || 0}
-                                                    </div>
-                                                    <div style={{fontSize: 'var(--text-xs)', color: 'var(--color-text-secondary)'}}>Z oprav uživatelů</div>
-                                                </div>
-                                                <div style={{textAlign: 'center', padding: 'var(--space-3)', background: 'rgba(244, 114, 182, 0.1)', borderRadius: 'var(--radius-lg)'}}>
-                                                    <div style={{fontSize: 'var(--text-2xl)', fontWeight: 'var(--font-bold)', color: '#f472b6'}}>
-                                                        {analyzerStats.feedbackSubmitted || 0}
-                                                    </div>
-                                                    <div style={{fontSize: 'var(--text-xs)', color: 'var(--color-text-secondary)'}}>Odesláno oprav</div>
-                                                </div>
-                                                <div style={{textAlign: 'center', padding: 'var(--space-3)', background: 'rgba(34, 211, 238, 0.1)', borderRadius: 'var(--radius-lg)'}}>
-                                                    <div style={{fontSize: 'var(--text-2xl)', fontWeight: 'var(--font-bold)', color: '#22d3ee'}}>
-                                                        {analyzerStats.feedback?.totalFeedbacks || 0}
-                                                    </div>
-                                                    <div style={{fontSize: 'var(--text-xs)', color: 'var(--color-text-secondary)'}}>Celkem feedbacků</div>
-                                                </div>
-                                            </div>
-                                            <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: 'var(--space-3)', background: 'var(--color-bg-secondary)', borderRadius: 'var(--radius-lg)'}}>
-                                                <span style={{fontSize: 'var(--text-sm)'}}>
-                                                    <i className="fas fa-database mr-2"></i>
-                                                    {analyzerStats.cache?.totalAnalyses || 0} naučených závad
-                                                </span>
-                                                <span style={{
-                                                    padding: 'var(--space-1) var(--space-2)',
-                                                    background: analyzerStats.efficiency > 50 ? 'var(--color-success)' : 'var(--color-warning)',
-                                                    color: 'white',
-                                                    borderRadius: 'var(--radius-full)',
-                                                    fontSize: 'var(--text-xs)',
-                                                    fontWeight: 'var(--font-bold)'
-                                                }}>
-                                                    {analyzerStats.efficiency || 0}% úspora API
-                                                </span>
-                                            </div>
-                                            {analyzerStats.cache?.totalSizeKB > 0 && (
-                                                <div style={{marginTop: 'var(--space-2)', fontSize: 'var(--text-xs)', color: 'var(--color-text-muted)', textAlign: 'right'}}>
-                                                    Využitá paměť: {analyzerStats.cache.totalSizeKB} KB
-                                                </div>
-                                            )}
-                                        </div>
+                                        )}
                                     </div>
-                                )}
 
-                                <h2 className="section-title" style={{marginBottom: 'var(--space-4)'}}>
-                                    <i className="fas fa-cloud-download-alt section-title-icon"></i>
-                                    Offline návody
-                                </h2>
+                                    {/* Offline guides - pravý sloupec na desktopu */}
+                                    <div>
+                                        <h2 className="section-title section-title-compact" style={{marginBottom: 'var(--space-3)'}}>
+                                            <i className="fas fa-cloud-download-alt section-title-icon"></i>
+                                            Offline návody
+                                        </h2>
 
-                                {savedGuides.length === 0 ? (
-                                    <div className="card">
-                                        <div className="card-body text-center" style={{padding: 'var(--space-12)'}}>
-                                            <div style={{fontSize: '4rem', marginBottom: 'var(--space-4)', opacity: 0.3}}>
-                                                <i className="fas fa-cloud-download-alt"></i>
+                                        {savedGuides.length === 0 ? (
+                                            <div className="card">
+                                                <div className="card-body text-center" style={{padding: 'var(--space-6)'}}>
+                                                    <div style={{fontSize: '3rem', marginBottom: 'var(--space-3)', opacity: 0.3}}>
+                                                        <i className="fas fa-cloud-download-alt"></i>
+                                                    </div>
+                                                    <h3 style={{fontWeight: 'var(--font-semibold)', marginBottom: 'var(--space-2)', fontSize: 'var(--text-base)'}}>
+                                                        Žádné uložené návody
+                                                    </h3>
+                                                    <p style={{color: 'var(--color-text-secondary)', marginBottom: 'var(--space-4)', fontSize: 'var(--text-sm)'}}>
+                                                        Při prohlížení návodu klikni na "Uložit offline".
+                                                    </p>
+                                                    <button onClick={() => navigateTo('knowledge')} className="btn btn-primary" style={{padding: 'var(--space-2) var(--space-4)', fontSize: 'var(--text-sm)'}}>
+                                                        <i className="fas fa-book mr-2"></i>
+                                                        Procházet databázi
+                                                    </button>
+                                                </div>
                                             </div>
-                                            <h3 style={{fontWeight: 'var(--font-semibold)', marginBottom: 'var(--space-2)'}}>
-                                                Žádné uložené návody
-                                            </h3>
-                                            <p style={{color: 'var(--color-text-secondary)', marginBottom: 'var(--space-6)'}}>
-                                                Zatím nemáš žádné návody uložené pro offline použití.
-                                                <br />
-                                                Při prohlížení návodu klikni na "Uložit offline".
-                                            </p>
-                                            <button onClick={() => navigateTo('knowledge')} className="btn btn-primary">
-                                                <i className="fas fa-book mr-2"></i>
-                                                Procházet databázi
-                                            </button>
-                                        </div>
-                                    </div>
-                                ) : (
-                                    <>
-                                        <div className="alert alert-success mb-6">
-                                            <p>
-                                                <i className="fas fa-wifi-slash mr-2"></i>
-                                                <strong>Funguje i bez internetu!</strong> Tyto návody máš uložené v telefonu.
-                                            </p>
-                                        </div>
+                                        ) : (
+                                            <>
+                                                <div className="alert alert-success alert-compact mb-4">
+                                                    <p style={{margin: 0, fontSize: 'var(--text-sm)'}}>
+                                                        <i className="fas fa-wifi-slash mr-2"></i>
+                                                        <strong>Offline!</strong> Návody uložené v zařízení.
+                                                    </p>
+                                                </div>
 
-                                        <div style={{display: 'flex', flexDirection: 'column', gap: 'var(--space-4)'}}>
+                                                <div style={{display: 'flex', flexDirection: 'column', gap: 'var(--space-3)'}}>
                                             {savedGuides.map(guide => (
                                                 <div key={guide.id} className="card">
                                                     <div className="card-body">
@@ -4915,14 +4955,16 @@
                                             ))}
                                         </div>
 
-                                        <div style={{marginTop: 'var(--space-6)', textAlign: 'center'}}>
-                                            <button onClick={() => navigateTo('knowledge')} className="btn btn-secondary">
+                                        <div style={{marginTop: 'var(--space-4)', textAlign: 'center'}}>
+                                            <button onClick={() => navigateTo('knowledge')} className="btn btn-secondary" style={{padding: 'var(--space-2) var(--space-4)', fontSize: 'var(--text-sm)'}}>
                                                 <i className="fas fa-plus mr-2"></i>
                                                 Přidat další návody
                                             </button>
                                         </div>
                                     </>
-                                )}
+                                        )}
+                                    </div>
+                                </div>
                             </div>
                         )}
                     </main>

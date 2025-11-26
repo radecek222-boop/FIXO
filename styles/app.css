@@ -1660,6 +1660,332 @@
 }
 
 /* ==========================================
+   DESKTOP OPTIMIZED LAYOUT - "Kouknu a vidím"
+   Minimální scrollování, vše na první pohled
+   ========================================== */
+
+/* Desktop breakpoint - 1024px+ */
+@media (min-width: 1024px) {
+    /* Kompaktnější hero na desktopu */
+    .hero-section {
+        padding: var(--space-6) var(--space-6);
+        margin-bottom: var(--space-4);
+    }
+
+    .hero-title {
+        font-size: var(--text-3xl);
+        margin-bottom: var(--space-2);
+    }
+
+    .hero-subtitle {
+        font-size: var(--text-sm);
+    }
+
+    /* Desktop dvousloupcový layout pro hlavní obsah */
+    .desktop-two-col {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: var(--space-6);
+        align-items: start;
+    }
+
+    .desktop-three-col {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: var(--space-4);
+    }
+
+    .desktop-four-col {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: var(--space-4);
+    }
+
+    .desktop-five-col {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: var(--space-3);
+    }
+
+    .desktop-six-col {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        gap: var(--space-3);
+    }
+
+    /* Home page - Hero vlevo, upload vpravo */
+    .home-desktop-layout {
+        display: grid;
+        grid-template-columns: 1fr 1.2fr;
+        gap: var(--space-6);
+        align-items: center;
+    }
+
+    .home-hero-compact {
+        text-align: left;
+        padding: var(--space-4);
+    }
+
+    .home-hero-compact .hero-title {
+        font-size: var(--text-2xl);
+        text-align: left;
+    }
+
+    .home-hero-compact .hero-subtitle {
+        text-align: left;
+    }
+
+    /* Quick stats - inline na desktopu */
+    .desktop-stats-inline {
+        display: flex;
+        gap: var(--space-3);
+        justify-content: flex-start;
+        flex-wrap: wrap;
+    }
+
+    .desktop-stats-inline > * {
+        flex: 1;
+        min-width: 100px;
+        max-width: 140px;
+    }
+
+    /* Knowledge cards - více sloupců na desktopu */
+    .knowledge-grid-desktop {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: var(--space-4);
+    }
+
+    /* Kompaktnější knowledge karty */
+    .knowledge-card-compact .knowledge-card-header {
+        padding: var(--space-3);
+        font-size: var(--text-sm);
+    }
+
+    .knowledge-card-compact .scrollable-content {
+        max-height: 200px;
+        padding: var(--space-2);
+    }
+
+    .knowledge-card-compact .issue-item {
+        padding: var(--space-2);
+        font-size: var(--text-sm);
+    }
+
+    /* History - stats a filtry v jednom řádku */
+    .history-header-desktop {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: var(--space-4);
+        margin-bottom: var(--space-4);
+    }
+
+    .history-stats-compact {
+        display: flex;
+        gap: var(--space-3);
+    }
+
+    .history-stats-compact > * {
+        padding: var(--space-3);
+        min-width: 120px;
+    }
+
+    /* History seznam - dva sloupce */
+    .history-list-desktop {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--space-4);
+    }
+
+    /* Offline - AI učení a guides vedle sebe */
+    .offline-desktop-layout {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: var(--space-6);
+        align-items: start;
+    }
+
+    /* Results - obrázek a detaily vedle sebe */
+    .results-desktop-layout {
+        display: grid;
+        grid-template-columns: 320px 1fr;
+        gap: var(--space-6);
+        align-items: start;
+    }
+
+    .results-image-section {
+        display: block !important;
+        position: sticky;
+        top: calc(70px + var(--space-4));
+    }
+
+    /* Repair guide - kroky v gridu */
+    .repair-steps-desktop {
+        display: grid;
+        grid-template-columns: 250px 1fr;
+        gap: var(--space-6);
+    }
+
+    .repair-steps-sidebar {
+        position: sticky;
+        top: calc(70px + var(--space-4));
+        max-height: calc(100vh - 180px);
+        overflow-y: auto;
+    }
+
+    /* Collapsible cards - všechny otevřené na desktopu v řádku */
+    .collapsible-desktop-row {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: var(--space-4);
+    }
+
+    .collapsible-desktop-row .collapsible-card {
+        margin-bottom: 0;
+    }
+
+    .collapsible-desktop-row .collapsible-content {
+        max-height: none !important;
+    }
+
+    .collapsible-desktop-row .collapsible-chevron {
+        display: none;
+    }
+
+    /* Upload card kompaktnější */
+    .upload-card-compact {
+        padding: var(--space-4);
+    }
+
+    .upload-card-compact .drop-zone {
+        padding: var(--space-6);
+    }
+
+    .upload-card-compact .drop-zone-icon {
+        font-size: var(--text-4xl);
+        margin-bottom: var(--space-2);
+    }
+
+    /* Quick examples - 6 v řadě */
+    .examples-desktop {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        gap: var(--space-3);
+    }
+
+    .examples-desktop .example-card {
+        min-height: 80px;
+        padding: var(--space-3);
+    }
+
+    /* Info boxes - více v řadě */
+    .info-boxes-desktop {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: var(--space-3);
+    }
+
+    .info-boxes-desktop .info-box {
+        min-height: 70px;
+        padding: var(--space-3);
+    }
+
+    /* Kompaktnější section titles */
+    .section-title-compact {
+        font-size: var(--text-base);
+        margin-bottom: var(--space-3);
+    }
+
+    /* Menší mezery mezi sekcemi */
+    .desktop-compact-spacing {
+        margin-bottom: var(--space-4);
+    }
+
+    .desktop-compact-spacing:last-child {
+        margin-bottom: 0;
+    }
+
+    /* Alert kompaktnější */
+    .alert-compact {
+        padding: var(--space-2) var(--space-3);
+        font-size: var(--text-sm);
+    }
+
+    /* Card body kompaktnější */
+    .card-compact .card-body {
+        padding: var(--space-3);
+    }
+
+    /* Grid pro analyze stats */
+    .analyze-stats-desktop {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        gap: var(--space-3);
+    }
+
+    /* Menší dropzone padding */
+    .dropzone-compact {
+        padding: var(--space-6) var(--space-4);
+    }
+
+    /* Sidebar fixed layout */
+    .desktop-sidebar-layout {
+        display: grid;
+        grid-template-columns: 280px 1fr;
+        gap: var(--space-6);
+    }
+
+    .desktop-sidebar {
+        position: sticky;
+        top: calc(70px + var(--space-4));
+        max-height: calc(100vh - 180px);
+        overflow-y: auto;
+    }
+
+    /* Category filter - horizontal scrollable nebo wrap */
+    .category-filter-desktop {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--space-2);
+        justify-content: flex-start;
+        margin-bottom: var(--space-4);
+    }
+
+    .category-filter-desktop .category-btn {
+        padding: var(--space-1) var(--space-3);
+        font-size: var(--text-xs);
+    }
+
+    /* Search input wider */
+    .search-desktop {
+        max-width: 400px;
+    }
+}
+
+/* Extra large desktop - 1400px+ */
+@media (min-width: 1400px) {
+    .knowledge-grid-desktop {
+        grid-template-columns: repeat(5, 1fr);
+    }
+
+    .examples-desktop {
+        grid-template-columns: repeat(6, 1fr);
+    }
+
+    .history-list-desktop {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* Ultra wide - 1800px+ */
+@media (min-width: 1800px) {
+    .knowledge-grid-desktop {
+        grid-template-columns: repeat(6, 1fr);
+    }
+}
+
+/* ==========================================
    PRINT STYLES
    ========================================== */
 @media print {
