@@ -75,7 +75,7 @@
   height: 100%;
   overflow-y: auto;
   padding-right: var(--space-2);
-  justify-content: flex-start;
+  justify-content: center;
 }
 
 /* Pravý blok - INFO (informativní, návody) */
@@ -86,7 +86,7 @@
   height: 100%;
   overflow-y: auto;
   padding-right: var(--space-2);
-  justify-content: flex-start;
+  justify-content: center;
 }
 
 /* Na mobilu - jeden sloupec, scrolluje celý obsah */
@@ -484,7 +484,7 @@
   border: 1px solid var(--color-border);
   border-radius: var(--radius-2xl);
   box-shadow: var(--shadow-md);
-  padding: var(--space-6);
+  padding: var(--space-4);
   transition: all var(--transition-normal);
 }
 
@@ -499,8 +499,8 @@
   background: var(--glass-bg);
   backdrop-filter: blur(12px);
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-xl);
-  padding: var(--space-4);
+  border-radius: var(--radius-lg);
+  padding: var(--space-3);
   cursor: pointer;
   transition: all var(--transition-normal);
 }
@@ -523,13 +523,13 @@
    DROP ZONE
    ========================================== */
 .drop-zone {
-  border: 3px dashed var(--color-border-dark);
-  border-radius: var(--radius-2xl);
-  padding: var(--space-10);
+  border: 2px dashed var(--color-border-dark);
+  border-radius: var(--radius-xl);
+  padding: var(--space-6);
   text-align: center;
   transition: all var(--transition-normal);
   cursor: pointer;
-  margin-bottom: var(--space-4);
+  margin-bottom: var(--space-3);
   background: var(--gradient-subtle);
 }
 
@@ -549,9 +549,9 @@
 }
 
 .drop-zone-icon {
-  font-size: var(--text-6xl);
+  font-size: var(--text-4xl);
   color: var(--color-primary);
-  margin-bottom: var(--space-4);
+  margin-bottom: var(--space-2);
   display: block;
 }
 
