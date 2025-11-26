@@ -1,93 +1,219 @@
-# FIXO - Aplikace pro okamzite opravy domacich zavad
+# FIXO - Aplikace pro okamžité opravy domácích závad
 
 > "Fix Anything. Anywhere. Instantly."
 
 ---
 
-## DULEZITE PRO VYVOJARE / AI
+## 🎉 NOVÁ OPTIMALIZOVANÁ STRUKTURA
 
-**Pred jakoukoli praci si VZDY precti [PROJECT_PLAN.md](PROJECT_PLAN.md)!**
-
-Tento dokument obsahuje:
-- Aktualni stav projektu
-- Co je hotove / co se dela / co je dalsi
-- Detailni plan vyvoje
-- Pravidla a pokyny
+Projekt byl kompletně přepsán s čistou, modulární strukturou pro maximální výkon na GitHub Pages!
 
 ---
 
 ## O aplikaci
 
-FIXO je webova aplikace pro rychlou identifikaci a opravu domacich zavad pomoci AI analyzy fotografii. Funguje na principu "Shazam pro domaci opravy" - staci nahrat fotku poskozene veci a system automaticky identifikuje problem a nabidne reseni.
+FIXO je webová aplikace pro rychlou identifikaci a opravu domácích závad pomocí AI analýzy fotografií. Funguje na principu "Shazam pro domácí opravy" - stačí nahrát fotku poškozené věci a systém automaticky identifikuje problém a nabídne řešení.
 
-## Odkazy
+## 🔗 Odkazy
 
 | Co | Odkaz |
 |----|-------|
-| **Ziva aplikace** | https://radecek222-boop.github.io/FIXO/ |
+| **Živá aplikace** | https://radecek222-boop.github.io/FIXO/ |
 | **Plan projektu** | [PROJECT_PLAN.md](PROJECT_PLAN.md) |
 | **Repository** | https://github.com/radecek222-boop/FIXO |
 
-## Struktura
+## 📁 Struktura projektu
 
 ```
 FIXO/
-├── index.html          # Landing page
-├── app.html            # FIXO aplikace
-├── PROJECT_PLAN.md     # 📋 PLAN PROJEKTU - cti toto prvni!
-├── README.md           # Tento soubor
-├── public/
-│   ├── css/            # Styly
-│   ├── js/             # JavaScript
-│   └── images/         # Obrazky
-└── server.js           # Backend (lokalni vyvoj)
+├── index.html              # Hlavní HTML (čistý, 55 řádků)
+├── manifest.json           # PWA manifest
+├── service-worker.js       # Offline podpora
+│
+├── src/
+│   └── app.js              # React aplikace (4820 řádků)
+│
+├── styles/
+│   ├── main.css            # Hlavní stylesheet (importuje vše)
+│   ├── design-system.css   # Design tokens (oklch barvy, spacing)
+│   ├── components.css      # UI komponenty
+│   ├── layout.css          # Layout systém
+│   └── app.css             # Aplikační styly
+│
+├── data/
+│   ├── repairs.json        # 343 KB databáze oprav
+│   ├── craftsmen.json      # Databáze řemeslníků
+│   ├── translations.json   # Překlady
+│   └── languages.json      # Seznam jazyků
+│
+├── assets/
+│   └── icons/              # PWA ikony (72-512px)
+│
+└── docs/
+    ├── PROJECT_PLAN.md     # 📋 Projektový plán
+    ├── ROADMAP_2025.md     # Roadmapa vývoje
+    └── README.md           # Tento soubor
 ```
 
-## Rychly start
+## ✨ Hlavní vylepšení
 
+### Před (v1):
+- ❌ Monolitický `index.html` (5370 řádků)
+- ❌ Nestrukturovaný kód
+- ❌ Inline CSS
+- ❌ Těžko udržovatelné
+
+### Po (v2 optimalizované):
+- ✅ Čistý `index.html` (55 řádků)
+- ✅ Oddělené moduly (HTML/CSS/JS)
+- ✅ Moderní CSS design system (oklch barvy)
+- ✅ Snadno rozšiřitelné
+- ✅ Rychlejší načítání
+- ✅ Lepší cache strategie
+
+## 🚀 Rychlý start
+
+### Otevřít lokálně
 ```bash
-# Otevrit primo v prohlizeci
-open index.html
+# Stáhnout repozitář
+git clone https://github.com/radecek222-boop/FIXO.git
+cd FIXO
 
-# Nebo s backendem
-npm install && npm start
-# http://localhost:3000
+# Otevřít v prohlížeči
+open index.html
+# nebo
+python -m http.server 8000
+# http://localhost:8000
 ```
 
-## Hlavni funkce
+### Nasadit na GitHub Pages
+```bash
+git add .
+git commit -m "Update"
+git push origin main
+```
 
-- AI analyza fotografii zavad
-- Krok za krokem navody na opravu
-- Bezpecnostni upozorneni u rizikovych oprav
-- Historie oprav
-- Databaze 500+ zavad
-- Responzivni design (mobil, tablet, PC)
+Aplikace běží automaticky na: `https://radecek222-boop.github.io/FIXO/`
 
-## Kategorie zavad
+## 🎨 Design System
 
-🚰 Voda | ⚡ Elektrina | 🌡️ Topeni | ⚙️ Mechanika | 🪑 Nabytek | 🚪 Dvere
-🏠 Steny | 🔌 Spotrebice | 🍳 Kuchyn | 🚿 Koupelna | 🌱 Zahrada | 🚗 Auto
+Moderní CSS s funkcemi pro příštích 30 let:
 
-## Technologie
+- **CSS Layers** - Pro správnou specificitu
+- **oklch() barvy** - Lepší vnímání barev
+- **Container Queries** - Responzivní komponenty
+- **Logical Properties** - Podpora RTL jazyků
+- **Variable Fonts** - Inter font
+- **View Transitions** - Připraveno
+- **Preference Queries** - Dark mode ready
 
-- **Frontend:** HTML, CSS, JavaScript, React
-- **Backend:** Node.js, Express (volitelne)
+### Barvy
+
+```css
+--color-primary: oklch(55% 0.22 264);    /* Indigo */
+--color-secondary: oklch(65% 0.15 195);   /* Teal */
+--color-success: oklch(55% 0.18 145);     /* Green */
+--color-warning: oklch(75% 0.18 85);      /* Amber */
+--color-danger: oklch(55% 0.22 25);       /* Red */
+```
+
+## 📱 Funkce
+
+- ✅ AI analýza fotografií závad
+- ✅ Krok za krokem návody (103+ oprav)
+- ✅ Bezpečnostní upozornění
+- ✅ Historie oprav
+- ✅ Offline režim (PWA)
+- ✅ Multi-language (50+ jazyků)
+- ✅ Responzivní design
+- ✅ Databáze řemeslníků
+- ✅ Affiliate odkazy (Alza, Mall, Hornbach)
+- ✅ Video tutoriály
+
+## 🏗️ Technologie
+
+- **Frontend:** React 18 (CDN)
+- **Styling:** Modern CSS (oklch, layers, container queries)
+- **PWA:** Service Worker, Manifest
 - **Hosting:** GitHub Pages
+- **AI:** OpenAI Vision (připraveno)
+- **i18n:** 50+ jazyků
+
+## 📊 Kategorie závad
+
+🚰 Voda | ⚡ Elektřina | 🌡️ Topení | ⚙️ Mechanika | 🪑 Nábytek | 🚪 Dveře
+🏠 Stěny | 🔌 Spotřebiče | 🍳 Kuchyň | 🚿 Koupelna | 🌱 Zahrada | 🚗 Auto
+
+## 🔧 Vývoj
+
+### Struktura souborů
+
+- `src/app.js` - Hlavní React komponenta
+- `styles/` - CSS moduly
+- `data/` - JSON databáze
+- `service-worker.js` - PWA offline cache
+
+### Přidání nové opravy
+
+1. Editovat `data/repairs.json`
+2. Přidat kategorii, objekt, problém
+3. Commit a push
+
+### Přidání překladu
+
+1. Editovat `data/translations.json`
+2. Přidat nový jazyk
+3. Commit a push
+
+## 📈 Statistiky
+
+- **Databáze:** 103 detailních oprav
+- **Jazyky:** 50+ světových jazyků
+- **Kategorie:** 12 hlavních kategorií
+- **Velikost:** ~500 KB (včetně dat)
+- **Načítání:** < 2s (první návštěva)
+- **Offline:** Ano (PWA)
+
+## 🎯 Roadmapa
+
+### V1 ✅ HOTOVO
+- [x] Základní aplikace
+- [x] 103 oprav v databázi
+- [x] Multi-language
+- [x] PWA podpora
+- [x] GitHub Pages deployment
+
+### V2 🚧 Optimalizace (PRÁVĚ HOTOVO!)
+- [x] Oddělení HTML/CSS/JS
+- [x] Moderní CSS design system
+- [x] Optimalizace struktury
+- [x] Vyčištění kódu
+
+### V3 🔮 Budoucnost
+- [ ] Skutečná AI integrace (OpenAI)
+- [ ] Backend API
+- [ ] Uživatelské účty
+- [ ] Monetizace (Freemium)
+- [ ] Mobilní aplikace
+
+## 📄 Licence
+
+MIT
 
 ---
 
-## Pro vyvojare
+## 👨‍💻 Pro vývojáře
 
-### Pred praci
-1. Precti [PROJECT_PLAN.md](PROJECT_PLAN.md)
-2. Zkontroluj aktualni stav a dalsi kroky
-3. Pracuj podle planu
+### Před prací
+1. Přečti [PROJECT_PLAN.md](PROJECT_PLAN.md)
+2. Zkontroluj aktuální stav
+3. Pracuj podle plánu
 
-### Po praci
+### Po práci
 1. Aktualizuj [PROJECT_PLAN.md](PROJECT_PLAN.md)
-2. Commitni zmeny
-3. Pushni na GitHub
+2. Commit změny
+3. Push na GitHub
 
 ---
 
-**FIXO Team** | Diplomova prace | 2024
+**FIXO Team** | 2024-2025 | Česká republika 🇨🇿

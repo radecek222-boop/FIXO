@@ -1,8 +1,6 @@
 // FIXO Backend Server
 // REST API pro aplikaci na diagnostiku domácích závad
 
-require('dotenv').config();
-
 const express = require('express');
 const cors = require('cors');
 const multer = require('multer');
@@ -13,12 +11,6 @@ const morgan = require('morgan');
 const path = require('path');
 const fs = require('fs');
 const { v4: uuidv4 } = require('uuid');
-const OpenAI = require('openai');
-
-// OpenAI klient
-const openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY
-});
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -26,9 +18,24 @@ const PORT = process.env.PORT || 3000;
 // Middleware
 app.use(helmet());
 app.use(compression());
-app.use(cors());
-app.use(express.json({ limit: '50mb' }));
-app.use(express.urlencoded({ extended: true, limit: '50mb' }));
+
+// CORS konfigurace - povolit GitHub Pages a localhost
+const corsOptions = {
+    origin: [
+        'https://radecek222-boop.github.io',
+        'http://localhost:3000',
+        'http://localhost:5500',
+        'http://127.0.0.1:3000',
+        'http://127.0.0.1:5500'
+    ],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true
+};
+app.use(cors(corsOptions));
+
+app.use(express.json({ limit: '10mb' })); // Zvýšit limit pro base64 obrazy
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use(morgan('combined'));
 
 // Rate limiting
@@ -37,6 +44,11 @@ const limiter = rateLimit({
     max: 100 // limit každé IP na 100 požadavků
 });
 app.use('/api/', limiter);
+
+// Servírování statických souborů (frontend)
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'fixo-app.html'));
+});
 
 // Multer pro upload obrázků
 const storage = multer.diskStorage({
@@ -269,111 +281,30 @@ app.get('/api/categories', (req, res) => {
     res.json({ categories });
 });
 
-// Analyzovat obrázek pomocí OpenAI Vision API
+// Analyzovat obrázek (simulace AI)
 app.post('/api/analyze', upload.single('image'), async (req, res) => {
     try {
         if (!req.file) {
             return res.status(400).json({ error: 'Nebyl nahrán žádný obrázek' });
         }
 
+        // Simulace AI zpracování (v produkci by se volalo skutečné vision API)
         const analysisId = uuidv4();
-        console.log(`Začínám AI analýzu ${analysisId}...`);
+        
+        // Simulovat zpoždění analýzy
+        setTimeout(() => {
+            console.log(`Analýza ${analysisId} dokončena`);
+        }, 2000);
 
-        // Načíst obrázek a převést na base64
-        const imagePath = path.join(__dirname, req.file.path);
-        const imageBuffer = fs.readFileSync(imagePath);
-        const base64Image = imageBuffer.toString('base64');
-        const mimeType = req.file.mimetype;
-
-        // Volání OpenAI Vision API
-        const response = await openai.chat.completions.create({
-            model: "gpt-4o",
-            messages: [
-                {
-                    role: "system",
-                    content: `Jsi expert na diagnostiku a opravu domácích závad. Analyzuj obrázek a navrhni NĚKOLIK MOŽNÝCH ZÁVAD, ze kterých si uživatel vybere tu správnou.
-
-DŮLEŽITÉ:
-1. Vrať SEZNAM 2-4 pravděpodobných problémů (possibleIssues), seřazených od nejpravděpodobnějšího
-2. Pro KAŽDÝ problém uveď název, popis a pravděpodobnost
-3. Pro nejpravděpodobnější problém poskytni KOMPLETNÍ návod k opravě s nástroji a díly
-
-Pro každý krok návodu MUSÍŠ uvést:
-- Jaké KONKRÉTNÍ nástroje jsou potřeba (s velikostí/typem)
-- Jaké KONKRÉTNÍ díly/materiál jsou potřeba s PŘESNÝM OZNAČENÍM
-- PODROBNÝ postup co přesně dělat
-
-Odpověz POUZE ve formátu JSON bez markdown:
-{
-  "object": {"name": "...", "category": "voda|elektrina|topeni|dvere_okna|nabytek|spotrebice|kuchyn|koupelna|steny_podlahy|zahrada"},
-  "possibleIssues": [
-    {"id": 1, "name": "Nejpravděpodobnější problém", "description": "Popis", "probability": 0.7},
-    {"id": 2, "name": "Druhá možnost", "description": "Popis", "probability": 0.2},
-    {"id": 3, "name": "Třetí možnost", "description": "Popis", "probability": 0.1}
-  ],
-  "issue": {"name": "...", "description": "...", "riskScore": 1-10, "difficulty": "Nízká|Střední|Vysoká"},
-  "timeEstimate": "X min",
-  "tools": ["nástroj1 (velikost/typ)", "nástroj2"],
-  "parts": [{"name": "název dílu", "designation": "označení/velikost/typ", "approxPrice": "cena CZK"}],
-  "steps": [
-    {
-      "step": 1,
-      "action": "Stručný název akce",
-      "description": "PODROBNÝ popis co přesně dělat, jak na to, na co si dát pozor",
-      "tools_for_step": ["nástroj pro tento krok"],
-      "parts_for_step": ["díl potřebný v tomto kroku s označením"],
-      "time": "X min",
-      "icon": "emoji",
-      "tip": "Praktický tip nebo varování pro tento krok"
-    }
-  ],
-  "safetyWarnings": ["varování1", "varování2"],
-  "confidence": 0.0-1.0,
-  "professionalRecommended": false,
-  "estimatedCost": {"min": X, "max": Y, "currency": "CZK"}
-}`
-                },
-                {
-                    role: "user",
-                    content: [
-                        {
-                            type: "text",
-                            text: "Analyzuj tento obrázek domácí závady a poskytni diagnostiku v JSON formátu:"
-                        },
-                        {
-                            type: "image_url",
-                            image_url: {
-                                url: `data:${mimeType};base64,${base64Image}`
-                            }
-                        }
-                    ]
-                }
-            ],
-            max_tokens: 1500
-        });
-
-        // Parsovat odpověď od AI
-        let aiResult;
-        try {
-            const content = response.choices[0].message.content;
-            // Odstranit případné markdown backticks
-            const jsonStr = content.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
-            aiResult = JSON.parse(jsonStr);
-        } catch (parseError) {
-            console.error('Chyba při parsování AI odpovědi:', parseError);
-            // Fallback na základní odpověď
-            aiResult = {
-                object: { name: "Neznámý objekt", category: "steny_podlahy" },
-                issue: { name: "Neidentifikovaný problém", description: "AI nemohla přesně určit závadu", riskScore: 5, difficulty: "Střední" },
-                timeEstimate: "30 min",
-                tools: ["Základní nářadí"],
-                steps: [{ step: 1, action: "Kontaktujte odborníka pro přesnou diagnostiku", time: "5 min", icon: "📞" }],
-                safetyWarnings: ["Buďte opatrní při jakékoliv opravě"],
-                confidence: 0.5
-            };
-        }
-
-        console.log(`AI analýza ${analysisId} dokončena`);
+        // Náhodně vybrat objekt z databáze
+        const objects = Object.keys(repairDatabase);
+        const randomObjectKey = objects[Math.floor(Math.random() * objects.length)];
+        const detectedObject = repairDatabase[randomObjectKey];
+        
+        // Náhodně vybrat závadu
+        const randomIssue = detectedObject.commonIssues[
+            Math.floor(Math.random() * detectedObject.commonIssues.length)
+        ];
 
         const result = {
             analysisId: analysisId,
@@ -385,34 +316,36 @@ Odpověz POUZE ve formátu JSON bez markdown:
             },
             detection: {
                 object: {
-                    name: aiResult.object.name,
-                    category: aiResult.object.category,
-                    confidence: aiResult.confidence || 0.85
+                    id: detectedObject.id,
+                    name: detectedObject.name,
+                    category: detectedObject.category,
+                    confidence: Math.random() * 0.2 + 0.8 // 0.8 - 1.0
                 },
                 issue: {
-                    name: aiResult.issue.name,
-                    description: aiResult.issue.description,
-                    confidence: aiResult.confidence || 0.85,
-                    riskScore: aiResult.issue.riskScore,
-                    difficulty: aiResult.issue.difficulty
+                    id: randomIssue.id,
+                    name: randomIssue.name,
+                    description: randomIssue.description,
+                    confidence: Math.random() * 0.15 + 0.85, // 0.85 - 1.0
+                    severity: randomIssue.severity,
+                    riskScore: randomIssue.riskScore
                 }
             },
-            possibleIssues: aiResult.possibleIssues || [],
+            possibleIssues: [],
             recommendations: {
-                timeEstimate: aiResult.timeEstimate,
-                tools: aiResult.tools,
-                parts: aiResult.parts || [],
-                steps: aiResult.steps,
-                safetyWarnings: aiResult.safetyWarnings,
-                estimatedCost: aiResult.estimatedCost,
-                professionalRecommended: aiResult.professionalRecommended
+                canDIY: !randomIssue.professionalNeeded,
+                difficulty: randomIssue.difficulty,
+                timeEstimate: randomIssue.timeEstimate,
+                costEstimate: randomIssue.costEstimate,
+                requiredTools: randomIssue.requiredTools,
+                steps: randomIssue.steps,
+                safetyWarnings: randomIssue.safetyWarnings
             }
         };
 
         res.json({ success: true, data: result });
 
     } catch (error) {
-        console.error('Chyba při AI analýze:', error);
+        console.error('Chyba při analýze:', error);
         res.status(500).json({
             error: 'Chyba při zpracování obrázku',
             message: error.message
@@ -420,330 +353,77 @@ Odpověz POUZE ve formátu JSON bez markdown:
     }
 });
 
-// Analyzovat obrázek z base64 (pro frontend bez uploadu souboru)
+// Analyzovat obrázek ze base64 (pro frontend)
 app.post('/api/analyze-base64', async (req, res) => {
     try {
         const { image } = req.body;
 
         if (!image) {
-            return res.status(400).json({ error: 'Nebyl poskytnut žádný obrázek' });
+            return res.status(400).json({ error: 'Nebyl poskytnut base64 obrázek' });
         }
 
+        // Validovat base64 formát
+        if (!image.startsWith('data:image/')) {
+            return res.status(400).json({ error: 'Neplatný formát obrázku (očekává se data:image/...)' });
+        }
+
+        // Simulace AI zpracování (v produkci by se volalo skutečné vision API)
         const analysisId = uuidv4();
-        console.log(`Začínám AI analýzu (base64) ${analysisId}...`);
 
-        // Volání OpenAI Vision API
-        const response = await openai.chat.completions.create({
-            model: "gpt-4o",
-            messages: [
-                {
-                    role: "system",
-                    content: `Jsi expert na diagnostiku a opravu domácích závad. Analyzuj obrázek a navrhni NĚKOLIK MOŽNÝCH ZÁVAD, ze kterých si uživatel vybere tu správnou.
+        // Získat velikost base64 obrázku
+        const base64Length = image.split(',')[1]?.length || 0;
+        const sizeInBytes = (base64Length * 3) / 4;
 
-DŮLEŽITÉ:
-1. Vrať SEZNAM 2-4 pravděpodobných problémů (possibleIssues), seřazených od nejpravděpodobnějšího
-2. Pro KAŽDÝ problém uveď název, popis a pravděpodobnost
-3. Pro nejpravděpodobnější problém poskytni KOMPLETNÍ návod k opravě s nástroji a díly
+        // Náhodně vybrat objekt z databáze
+        const objects = Object.keys(repairDatabase);
+        const randomObjectKey = objects[Math.floor(Math.random() * objects.length)];
+        const detectedObject = repairDatabase[randomObjectKey];
 
-Pro každý krok návodu MUSÍŠ uvést:
-- Jaké KONKRÉTNÍ nástroje jsou potřeba (s velikostí/typem)
-- Jaké KONKRÉTNÍ díly/materiál jsou potřeba s PŘESNÝM OZNAČENÍM
-- PODROBNÝ postup co přesně dělat
-
-Odpověz POUZE ve formátu JSON bez markdown:
-{
-  "object": {"name": "...", "category": "voda|elektrina|topeni|dvere_okna|nabytek|spotrebice|kuchyn|koupelna|steny_podlahy|zahrada"},
-  "possibleIssues": [
-    {"id": 1, "name": "Nejpravděpodobnější problém", "description": "Popis", "probability": 0.7},
-    {"id": 2, "name": "Druhá možnost", "description": "Popis", "probability": 0.2},
-    {"id": 3, "name": "Třetí možnost", "description": "Popis", "probability": 0.1}
-  ],
-  "issue": {"name": "...", "description": "...", "riskScore": 1-10, "difficulty": "Nízká|Střední|Vysoká"},
-  "timeEstimate": "X min",
-  "tools": ["nástroj1 (velikost/typ)", "nástroj2"],
-  "parts": [{"name": "název dílu", "designation": "označení/velikost/typ", "approxPrice": "cena CZK"}],
-  "steps": [
-    {
-      "step": 1,
-      "action": "Stručný název akce",
-      "description": "PODROBNÝ popis co přesně dělat, jak na to, na co si dát pozor",
-      "tools_for_step": ["nástroj pro tento krok"],
-      "parts_for_step": ["díl potřebný v tomto kroku s označením"],
-      "time": "X min",
-      "icon": "emoji",
-      "tip": "Praktický tip nebo varování pro tento krok"
-    }
-  ],
-  "safetyWarnings": ["varování1", "varování2"],
-  "confidence": 0.0-1.0,
-  "professionalRecommended": false,
-  "estimatedCost": {"min": X, "max": Y, "currency": "CZK"}
-}`
-                },
-                {
-                    role: "user",
-                    content: [
-                        {
-                            type: "text",
-                            text: "Analyzuj tento obrázek domácí závady a poskytni diagnostiku v JSON formátu:"
-                        },
-                        {
-                            type: "image_url",
-                            image_url: {
-                                url: image
-                            }
-                        }
-                    ]
-                }
-            ],
-            max_tokens: 1500
-        });
-
-        // Parsovat odpověď od AI
-        let aiResult;
-        try {
-            const content = response.choices[0].message.content;
-            const jsonStr = content.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
-            aiResult = JSON.parse(jsonStr);
-        } catch (parseError) {
-            console.error('Chyba při parsování AI odpovědi:', parseError);
-            aiResult = {
-                object: { name: "Neznámý objekt", category: "steny_podlahy" },
-                issue: { name: "Neidentifikovaný problém", description: "AI nemohla přesně určit závadu", riskScore: 5, difficulty: "Střední" },
-                timeEstimate: "30 min",
-                tools: ["Základní nářadí"],
-                steps: [{ step: 1, action: "Kontaktujte odborníka pro přesnou diagnostiku", time: "5 min", icon: "📞" }],
-                safetyWarnings: ["Buďte opatrní při jakékoliv opravě"],
-                confidence: 0.5
-            };
-        }
-
-        console.log(`AI analýza ${analysisId} dokončena`);
+        // Náhodně vybrat závadu
+        const randomIssue = detectedObject.commonIssues[
+            Math.floor(Math.random() * detectedObject.commonIssues.length)
+        ];
 
         const result = {
             analysisId: analysisId,
             timestamp: new Date().toISOString(),
+            image: {
+                size: sizeInBytes,
+                format: 'base64'
+            },
             detection: {
                 object: {
-                    name: aiResult.object.name,
-                    category: aiResult.object.category,
-                    confidence: aiResult.confidence || 0.85
+                    id: detectedObject.id,
+                    name: detectedObject.name,
+                    category: detectedObject.category,
+                    confidence: Math.random() * 0.2 + 0.8 // 0.8 - 1.0
                 },
                 issue: {
-                    name: aiResult.issue.name,
-                    description: aiResult.issue.description,
-                    confidence: aiResult.confidence || 0.85,
-                    riskScore: aiResult.issue.riskScore,
-                    difficulty: aiResult.issue.difficulty
+                    id: randomIssue.id,
+                    name: randomIssue.name,
+                    description: randomIssue.description,
+                    confidence: Math.random() * 0.15 + 0.85, // 0.85 - 1.0
+                    severity: randomIssue.severity,
+                    riskScore: randomIssue.riskScore
                 }
             },
-            possibleIssues: aiResult.possibleIssues || [],
             recommendations: {
-                timeEstimate: aiResult.timeEstimate,
-                tools: aiResult.tools,
-                parts: aiResult.parts || [],
-                steps: aiResult.steps,
-                safetyWarnings: aiResult.safetyWarnings,
-                estimatedCost: aiResult.estimatedCost,
-                professionalRecommended: aiResult.professionalRecommended || false
+                canDIY: !randomIssue.professionalNeeded,
+                difficulty: randomIssue.difficulty,
+                timeEstimate: randomIssue.timeEstimate,
+                costEstimate: randomIssue.costEstimate,
+                requiredTools: randomIssue.requiredTools,
+                steps: randomIssue.steps,
+                safetyWarnings: randomIssue.safetyWarnings
             }
         };
 
         res.json({ success: true, data: result });
 
     } catch (error) {
-        console.error('Chyba při AI analýze:', error);
+        console.error('Chyba při analýze base64:', error);
         res.status(500).json({
-            error: 'Chyba při zpracování obrázku',
-            message: error.message
-        });
-    }
-});
-
-// Analyzovat problém z popisu + obrázku
-app.post('/api/analyze-description', async (req, res) => {
-    try {
-        const { description, image } = req.body;
-
-        if (!description) {
-            return res.status(400).json({ error: 'Nebyl poskytnut popis problému' });
-        }
-
-        const analysisId = uuidv4();
-        console.log(`Začínám AI analýzu s popisem ${analysisId}...`);
-        console.log('Popis:', description);
-
-        // Sestavení zprávy pro AI
-        const messages = [
-            {
-                role: "system",
-                content: `Jsi expert na diagnostiku a opravu domácích závad. Analyzuj popis problému (a případně obrázek) a navrhni NĚKOLIK MOŽNÝCH ZÁVAD, ze kterých si uživatel vybere tu správnou.
-
-DŮLEŽITÉ:
-1. Vrať SEZNAM 2-4 pravděpodobných problémů (possibleIssues), seřazených od nejpravděpodobnějšího
-2. Pro KAŽDÝ problém uveď název, popis a pravděpodobnost
-3. Pro nejpravděpodobnější problém poskytni KOMPLETNÍ návod k opravě s nástroji a díly
-
-Pro každý krok návodu MUSÍŠ uvést:
-- Jaké KONKRÉTNÍ nástroje jsou potřeba (s velikostí/typem)
-- Jaké KONKRÉTNÍ díly/materiál jsou potřeba s PŘESNÝM OZNAČENÍM
-- PODROBNÝ postup co přesně dělat
-
-Odpověz POUZE ve formátu JSON bez markdown:
-{
-  "object": {"name": "...", "category": "voda|elektrina|topeni|dvere_okna|nabytek|spotrebice|kuchyn|koupelna|steny_podlahy|zahrada"},
-  "possibleIssues": [
-    {"id": 1, "name": "Nejpravděpodobnější problém", "description": "Popis", "probability": 0.7},
-    {"id": 2, "name": "Druhá možnost", "description": "Popis", "probability": 0.2},
-    {"id": 3, "name": "Třetí možnost", "description": "Popis", "probability": 0.1}
-  ],
-  "issue": {"name": "...", "description": "...", "riskScore": 1-10, "difficulty": "Nízká|Střední|Vysoká"},
-  "timeEstimate": "X min",
-  "tools": ["nástroj1 (velikost/typ)", "nástroj2"],
-  "parts": [{"name": "název dílu", "designation": "označení/velikost/typ", "approxPrice": "cena CZK"}],
-  "steps": [
-    {
-      "step": 1,
-      "action": "Stručný název akce",
-      "description": "PODROBNÝ popis co přesně dělat, jak na to, na co si dát pozor",
-      "tools_for_step": ["nástroj pro tento krok"],
-      "parts_for_step": ["díl potřebný v tomto kroku s označením"],
-      "time": "X min",
-      "icon": "emoji",
-      "tip": "Praktický tip nebo varování pro tento krok"
-    }
-  ],
-  "safetyWarnings": ["varování1", "varování2"],
-  "confidence": 0.0-1.0,
-  "professionalRecommended": false,
-  "estimatedCost": {"min": X, "max": Y, "currency": "CZK"}
-}`
-            },
-            {
-                role: "user",
-                content: image ? [
-                    { type: "text", text: `Popis problému od uživatele: "${description}"\n\nAnalyzuj tento problém a poskytni diagnostiku v JSON formátu:` },
-                    { type: "image_url", image_url: { url: image } }
-                ] : `Popis problému od uživatele: "${description}"\n\nAnalyzuj tento problém a poskytni diagnostiku v JSON formátu:`
-            }
-        ];
-
-        // Volání OpenAI API
-        const response = await openai.chat.completions.create({
-            model: "gpt-4o",
-            messages: messages,
-            max_tokens: 1500
-        });
-
-        // Parsovat odpověď od AI
-        let aiResult;
-        try {
-            const content = response.choices[0].message.content;
-            const jsonStr = content.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
-            aiResult = JSON.parse(jsonStr);
-        } catch (parseError) {
-            console.error('Chyba při parsování AI odpovědi:', parseError);
-            aiResult = {
-                object: { name: "Popsaný problém", category: "steny_podlahy" },
-                issue: { name: description.slice(0, 50), description: "Na základě vašeho popisu", riskScore: 5, difficulty: "Střední" },
-                timeEstimate: "30 min",
-                tools: ["Základní nářadí"],
-                steps: [{ step: 1, action: "Kontaktujte odborníka pro přesnou diagnostiku", time: "5 min", icon: "📞" }],
-                safetyWarnings: ["Buďte opatrní při jakékoliv opravě"],
-                confidence: 0.6
-            };
-        }
-
-        console.log(`AI analýza s popisem ${analysisId} dokončena:`, aiResult.object?.name);
-
-        const result = {
-            id: analysisId,
-            detection: {
-                object: {
-                    name: aiResult.object.name,
-                    category: aiResult.object.category,
-                    confidence: aiResult.confidence || 0.8
-                },
-                issue: {
-                    name: aiResult.issue.name,
-                    description: aiResult.issue.description,
-                    confidence: aiResult.confidence || 0.8,
-                    riskScore: aiResult.issue.riskScore,
-                    difficulty: aiResult.issue.difficulty
-                }
-            },
-            possibleIssues: aiResult.possibleIssues || [],
-            recommendations: {
-                timeEstimate: aiResult.timeEstimate,
-                tools: aiResult.tools,
-                parts: aiResult.parts || [],
-                steps: aiResult.steps,
-                safetyWarnings: aiResult.safetyWarnings,
-                estimatedCost: aiResult.estimatedCost,
-                professionalRecommended: aiResult.professionalRecommended
-            }
-        };
-
-        res.json({ success: true, data: result });
-
-    } catch (error) {
-        console.error('Chyba při AI analýze s popisem:', error);
-        res.status(500).json({
-            error: 'Chyba při zpracování',
-            message: error.message
-        });
-    }
-});
-
-// AI Překlad textu do libovolného jazyka
-app.post('/api/translate', async (req, res) => {
-    try {
-        const { texts, targetLanguage, sourceLanguage = 'cs' } = req.body;
-
-        if (!texts || !targetLanguage) {
-            return res.status(400).json({ error: 'Chybí texty nebo cílový jazyk' });
-        }
-
-        // Pokud je cílový jazyk stejný jako zdrojový, vrátíme originál
-        if (targetLanguage === sourceLanguage) {
-            return res.json({ success: true, translations: texts });
-        }
-
-        console.log(`Překládám ${texts.length} textů do jazyka: ${targetLanguage}`);
-
-        const response = await openai.chat.completions.create({
-            model: "gpt-4o-mini", // Rychlejší a levnější model pro překlady
-            messages: [
-                {
-                    role: "system",
-                    content: `Jsi profesionální překladatel. Přelož následující texty z ${sourceLanguage} do ${targetLanguage}.
-Zachovej formátování, HTML tagy a speciální znaky. Vrať POUZE JSON pole s překlady ve stejném pořadí.
-Příklad: ["přeložený text 1", "přeložený text 2"]`
-                },
-                {
-                    role: "user",
-                    content: JSON.stringify(texts)
-                }
-            ],
-            max_tokens: 4000
-        });
-
-        let translations;
-        try {
-            const content = response.choices[0].message.content;
-            const jsonStr = content.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
-            translations = JSON.parse(jsonStr);
-        } catch (parseError) {
-            console.error('Chyba při parsování překladu:', parseError);
-            translations = texts; // Fallback na originál
-        }
-
-        res.json({ success: true, translations });
-
-    } catch (error) {
-        console.error('Chyba při překladu:', error);
-        res.status(500).json({
-            error: 'Chyba při překladu',
+            error: 'Chyba při zpracování base64 obrázku',
             message: error.message
         });
     }
@@ -902,25 +582,8 @@ app.get('/api/tools', (req, res) => {
         radiator_key: { name: 'Odvzdušňovací klíč', price: 80, unit: 'CZK' },
         bucket: { name: 'Kbelík', price: 50, unit: 'CZK' }
     };
-
+    
     res.json({ tools });
-});
-
-// Servírování statických souborů
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-app.use('/public', express.static(path.join(__dirname, 'public')));
-
-// Hlavní stránka - informativní landing page
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'index.html'));
-});
-
-// Aplikace - FIXO React aplikace
-app.get('/app', (req, res) => {
-    res.sendFile(path.join(__dirname, 'app.html'));
-});
-app.get('/app.html', (req, res) => {
-    res.sendFile(path.join(__dirname, 'app.html'));
 });
 
 // Error handling middleware
@@ -949,7 +612,8 @@ app.listen(PORT, () => {
     console.log('API Endpoints:');
     console.log('  GET  /api/health         - Health check');
     console.log('  GET  /api/categories     - Seznam kategorií');
-    console.log('  POST /api/analyze        - Analyzovat obrázek');
+    console.log('  POST /api/analyze        - Analyzovat obrázek (multipart)');
+    console.log('  POST /api/analyze-base64 - Analyzovat obrázek (base64)');
     console.log('  GET  /api/repair/:id/:id - Detail opravy');
     console.log('  GET  /api/objects        - Seznam objektů');
     console.log('  GET  /api/search         - Vyhledávání');

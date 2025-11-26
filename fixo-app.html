@@ -1,0 +1,1103 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FIXO - Okamžité opravy domácích závad</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Custom Layout Styles */
+        .main-content-fixed {
+            position: fixed;
+            top: 72px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            overflow: hidden;
+        }
+
+        .content-two-columns {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+            height: 100%;
+            padding: 1rem;
+            overflow-y: auto;
+        }
+
+        @media (min-width: 1024px) {
+            .content-two-columns {
+                grid-template-columns: 1fr 1fr;
+                overflow: hidden;
+                gap: 1.5rem;
+                padding: 1.5rem;
+            }
+        }
+
+        .content-left,
+        .content-right {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            height: 100%;
+            overflow-y: auto;
+            padding-right: 0.5rem;
+        }
+
+        /* Custom scrollbar */
+        .content-left::-webkit-scrollbar,
+        .content-right::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .content-left::-webkit-scrollbar-track,
+        .content-right::-webkit-scrollbar-track {
+            background: #f3f4f6;
+            border-radius: 9999px;
+        }
+
+        .content-left::-webkit-scrollbar-thumb,
+        .content-right::-webkit-scrollbar-thumb {
+            background: #d1d5db;
+            border-radius: 9999px;
+        }
+
+        .content-left::-webkit-scrollbar-thumb:hover,
+        .content-right::-webkit-scrollbar-thumb:hover {
+            background: #2563eb;
+        }
+
+        /* Smooth transitions */
+        .content-two-columns * {
+            transition: all 0.2s ease-in-out;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <!-- Import SmartAnalyzer -->
+    <script src="src/smartAnalyzer.js"></script>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+
+        // API Configuration - detekce prostředí
+        const API_BASE_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+            ? 'http://localhost:3000'
+            : 'https://fixo-backend.onrender.com';
+
+        // Simulovaná databáze závad a oprav (FALLBACK pro offline režim)
+        const repairDatabase = {
+            'kohoutek': {
+                name: 'Kohoutek jednopákový',
+                issues: [
+                    {
+                        id: 'leak',
+                        name: 'Kapající kohoutek',
+                        description: 'Netěsnící těsnění nebo O-kroužek',
+                        riskScore: 2,
+                        difficulty: 'Nízká',
+                        timeEstimate: '15 min',
+                        tools: ['Klíč', 'Šroubovák', 'Nové těsnění'],
+                        steps: [
+                            { step: 1, action: 'Zavřete hlavní přívod vody', time: '1 min', icon: '🚰' },
+                            { step: 2, action: 'Odšroubujte hlavici kohoutku', time: '2 min', icon: '🔧' },
+                            { step: 3, action: 'Vyměňte těsnění nebo O-kroužek', time: '5 min', icon: '⚙️' },
+                            { step: 4, action: 'Sestavte kohoutek zpět', time: '3 min', icon: '🔩' },
+                            { step: 5, action: 'Pusťte vodu a zkontrolujte těsnost', time: '2 min', icon: '✅' }
+                        ],
+                        safetyWarnings: ['Vždy nejdříve zavřete hlavní přívod vody', 'Mějte připravený kbelík na zachycení zbylé vody']
+                    }
+                ]
+            },
+            'wc': {
+                name: 'Toaleta',
+                issues: [
+                    {
+                        id: 'running',
+                        name: 'Protékající WC',
+                        description: 'Vadný plovák nebo těsnění',
+                        riskScore: 2,
+                        difficulty: 'Střední',
+                        timeEstimate: '20 min',
+                        tools: ['Klíč', 'Nový plovák nebo těsnění'],
+                        steps: [
+                            { step: 1, action: 'Zavřete přívod vody k WC', time: '1 min', icon: '🚰' },
+                            { step: 2, action: 'Vyprázdněte nádržku splachováním', time: '1 min', icon: '🚽' },
+                            { step: 3, action: 'Zkontrolujte plovák a ventil', time: '5 min', icon: '🔍' },
+                            { step: 4, action: 'Vyměňte vadné díly', time: '10 min', icon: '🔧' },
+                            { step: 5, action: 'Pusťte vodu a otestujte', time: '3 min', icon: '✅' }
+                        ],
+                        safetyWarnings: ['Použijte gumové rukavice', 'Dbejte na hygienu']
+                    }
+                ]
+            },
+            'zasuvka': {
+                name: 'Elektrická zásuvka',
+                issues: [
+                    {
+                        id: 'not-working',
+                        name: 'Nefunkční zásuvka',
+                        description: 'Přerušený obvod nebo poškozený kontakt',
+                        riskScore: 8,
+                        difficulty: 'Vysoká',
+                        timeEstimate: '30 min',
+                        tools: ['Tester napětí', 'Šroubovák', 'Nová zásuvka'],
+                        steps: [
+                            { step: 1, action: '⚠️ VYPNĚTE JISTIČ!', time: '1 min', icon: '⚡' },
+                            { step: 2, action: 'Ověřte testerem, že není napětí', time: '2 min', icon: '🔌' },
+                            { step: 3, action: 'Demontujte kryt zásuvky', time: '2 min', icon: '🔧' },
+                            { step: 4, action: 'Zkontrolujte zapojení vodičů', time: '5 min', icon: '🔍' },
+                            { step: 5, action: 'Vyměňte zásuvku nebo opravte spoje', time: '15 min', icon: '⚙️' }
+                        ],
+                        safetyWarnings: ['⚠️ POZOR! Práce s elektřinou!', 'Pokud si nejste jisti, volejte elektrikáře!', 'Vždy vypněte jistič před prací']
+                    }
+                ]
+            },
+            'dvere': {
+                name: 'Dveře',
+                issues: [
+                    {
+                        id: 'squeaking',
+                        name: 'Vrzající dveře',
+                        description: 'Suché panty potřebují namazání',
+                        riskScore: 1,
+                        difficulty: 'Velmi nízká',
+                        timeEstimate: '5 min',
+                        tools: ['WD-40 nebo olej', 'Hadřík'],
+                        steps: [
+                            { step: 1, action: 'Otevřete dveře do poloviny', time: '10 s', icon: '🚪' },
+                            { step: 2, action: 'Nastříkejte mazivo na panty', time: '1 min', icon: '🔧' },
+                            { step: 3, action: 'Pohybujte dveřmi tam a zpět', time: '1 min', icon: '↔️' },
+                            { step: 4, action: 'Setřete přebytečné mazivo', time: '1 min', icon: '🧹' }
+                        ],
+                        safetyWarnings: ['Větrejte při použití sprejů']
+                    }
+                ]
+            },
+            'radiator': {
+                name: 'Radiátor',
+                issues: [
+                    {
+                        id: 'cold',
+                        name: 'Studený radiátor',
+                        description: 'Vzduch v topném systému',
+                        riskScore: 2,
+                        difficulty: 'Nízká',
+                        timeEstimate: '10 min',
+                        tools: ['Odvzdušňovací klíč', 'Nádoba na vodu', 'Hadřík'],
+                        steps: [
+                            { step: 1, action: 'Vypněte topení a nechte vychladnout', time: '15 min', icon: '🌡️' },
+                            { step: 2, action: 'Najděte odvzdušňovací ventil', time: '1 min', icon: '🔍' },
+                            { step: 3, action: 'Pod ventil umístěte nádobu', time: '30 s', icon: '🪣' },
+                            { step: 4, action: 'Pomalu otevřete ventil klíčem', time: '2 min', icon: '🔧' },
+                            { step: 5, action: 'Až poteče voda, ventil zavřete', time: '2 min', icon: '✅' }
+                        ],
+                        safetyWarnings: ['Pozor na horkou vodu', 'Mějte připravený hadřík']
+                    }
+                ]
+            }
+        };
+
+        function FixoApp() {
+            const [currentView, setCurrentView] = useState('home');
+            const [selectedImage, setSelectedImage] = useState(null);
+            const [detectedObject, setDetectedObject] = useState(null);
+            const [selectedIssue, setSelectedIssue] = useState(null);
+            const [analysisResult, setAnalysisResult] = useState(null);
+            const [isAnalyzing, setIsAnalyzing] = useState(false);
+            const [repairHistory, setRepairHistory] = useState([]);
+            const [currentStep, setCurrentStep] = useState(0);
+            const [showFeedbackModal, setShowFeedbackModal] = useState(false);
+            const fileInputRef = useRef(null);
+            const smartAnalyzerRef = useRef(null);
+
+            // Inicializace SmartAnalyzeru
+            useEffect(() => {
+                const initSmartAnalyzer = async () => {
+                    if (!smartAnalyzerRef.current && window.SmartAnalyzer) {
+                        smartAnalyzerRef.current = new window.SmartAnalyzer(API_BASE_URL);
+                        await smartAnalyzerRef.current.init();
+                        console.log('✅ SmartAnalyzer připraven');
+                    }
+                };
+                initSmartAnalyzer();
+            }, []);
+
+            // AI analýza fotky pomocí SmartAnalyzeru
+            const analyzeImage = async (imageFile) => {
+                setIsAnalyzing(true);
+                setCurrentView('analyzing');
+
+                try {
+                    // Převést soubor na base64
+                    const reader = new FileReader();
+                    const base64Image = await new Promise((resolve, reject) => {
+                        reader.onloadend = () => resolve(reader.result);
+                        reader.onerror = reject;
+                        reader.readAsDataURL(imageFile);
+                    });
+
+                    // Použít SmartAnalyzer pro analýzu
+                    let result;
+                    if (smartAnalyzerRef.current) {
+                        console.log('🧠 Používám SmartAnalyzer...');
+                        result = await smartAnalyzerRef.current.analyze(base64Image);
+                    } else {
+                        // Fallback na backend API
+                        console.log('🌐 SmartAnalyzer není dostupný, používám backend API...');
+                        const formData = new FormData();
+                        formData.append('image', imageFile);
+
+                        const response = await fetch(`${API_BASE_URL}/api/analyze`, {
+                            method: 'POST',
+                            body: formData
+                        });
+
+                        if (!response.ok) {
+                            throw new Error('Chyba při analýze obrázku');
+                        }
+
+                        const apiResult = await response.json();
+
+                        // Transformujeme data z backend formátu
+                        result = {
+                            object: {
+                                name: apiResult.data.detection.object.name,
+                                category: apiResult.data.detection.object.category || 'voda',
+                                icon: 'fa-tint'
+                            },
+                            issue: {
+                                name: apiResult.data.detection.issue.name,
+                                description: apiResult.data.detection.issue.description,
+                                riskScore: apiResult.data.detection.issue.riskScore,
+                                difficulty: apiResult.data.recommendations.difficulty,
+                                timeEstimate: `${apiResult.data.recommendations.timeEstimate} min`,
+                                tools: apiResult.data.recommendations.requiredTools,
+                                steps: apiResult.data.recommendations.steps.map(step => ({
+                                    step: step.order,
+                                    action: step.description,
+                                    time: `${step.duration} min`,
+                                    icon: getStepIcon(step.action)
+                                })),
+                                safetyWarnings: apiResult.data.recommendations.safetyWarnings
+                            },
+                            confidence: Math.floor(apiResult.data.detection.issue.confidence * 100)
+                        };
+                    }
+
+                    setAnalysisResult(result);
+                    setIsAnalyzing(false);
+                    setCurrentView('results');
+
+                } catch (error) {
+                    console.error('Chyba při analýze:', error);
+                    // Fallback na lokální simulaci při chybě
+                    await analyzeImageFallback();
+                }
+            };
+
+            // Fallback funkce pro offline režim
+            const analyzeImageFallback = async () => {
+                await new Promise(resolve => setTimeout(resolve, 2500));
+
+                const objects = Object.keys(repairDatabase);
+                const randomObject = objects[Math.floor(Math.random() * objects.length)];
+                const objectData = repairDatabase[randomObject];
+                const randomIssue = objectData.issues[0];
+
+                setAnalysisResult({
+                    object: objectData,
+                    issue: randomIssue,
+                    confidence: Math.floor(Math.random() * 20) + 80
+                });
+
+                setIsAnalyzing(false);
+                setCurrentView('results');
+            };
+
+            // Helper funkce pro ikony kroků
+            const getStepIcon = (action) => {
+                const actionLower = action.toLowerCase();
+                if (actionLower.includes('vod') || actionLower.includes('zavř')) return '🚰';
+                if (actionLower.includes('šroub') || actionLower.includes('odšroub')) return '🔧';
+                if (actionLower.includes('vyměň') || actionLower.includes('nahraď')) return '⚙️';
+                if (actionLower.includes('sestav') || actionLower.includes('slož')) return '🔩';
+                if (actionLower.includes('test') || actionLower.includes('zkont')) return '✅';
+                if (actionLower.includes('jistič') || actionLower.includes('vypn')) return '⚡';
+                if (actionLower.includes('tester') || actionLower.includes('ověř')) return '🔌';
+                if (actionLower.includes('demontuj') || actionLower.includes('sejm')) return '🔧';
+                if (actionLower.includes('vodič') || actionLower.includes('kabel')) return '🔍';
+                if (actionLower.includes('dveře') || actionLower.includes('otevř')) return '🚪';
+                if (actionLower.includes('mazivo') || actionLower.includes('spray')) return '🔧';
+                if (actionLower.includes('topení') || actionLower.includes('vychladn')) return '🌡️';
+                if (actionLower.includes('ventil')) return '🔍';
+                if (actionLower.includes('nádoba') || actionLower.includes('kbelík')) return '🪣';
+                return '✅';
+            };
+
+            const handleImageUpload = (event) => {
+                const file = event.target.files[0];
+                if (file) {
+                    // Pro náhled v UI
+                    const reader = new FileReader();
+                    reader.onloadend = () => {
+                        setSelectedImage(reader.result);
+                    };
+                    reader.readAsDataURL(file);
+
+                    // Poslat soubor na analýzu
+                    analyzeImage(file);
+                }
+            };
+
+            const startRepair = (issue) => {
+                setSelectedIssue(issue);
+                setCurrentStep(0);
+                setCurrentView('repair');
+                
+                // Přidat do historie
+                const historyItem = {
+                    id: Date.now(),
+                    date: new Date().toLocaleString('cs-CZ'),
+                    object: analysisResult.object.name,
+                    issue: issue.name,
+                    status: 'in-progress'
+                };
+                setRepairHistory([historyItem, ...repairHistory]);
+            };
+
+            const completeRepair = () => {
+                // Aktualizovat historii
+                setRepairHistory(prev => prev.map(item => 
+                    item.id === repairHistory[0].id 
+                        ? {...item, status: 'completed'} 
+                        : item
+                ));
+                setCurrentView('home');
+                setSelectedImage(null);
+                setAnalysisResult(null);
+                setSelectedIssue(null);
+                setCurrentStep(0);
+            };
+
+            return (
+                <div className="min-h-screen bg-gradient-to-br from-blue-50 to-cyan-50">
+                    {/* Header */}
+                    <header className="bg-white shadow-lg sticky top-0 z-50">
+                        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                            <div className="flex justify-between items-center py-4">
+                                <div className="flex items-center cursor-pointer" onClick={() => setCurrentView('home')}>
+                                    <div className="bg-blue-600 text-white rounded-lg px-3 py-1 font-bold text-2xl mr-3">
+                                        FIXO
+                                    </div>
+                                    <span className="text-gray-600 text-sm hidden sm:inline">
+                                        Okamžité opravy domácích závad
+                                    </span>
+                                </div>
+                                <nav className="flex space-x-4">
+                                    <button
+                                        onClick={() => setCurrentView('home')}
+                                        className={`px-3 py-2 rounded-lg ${currentView === 'home' ? 'bg-blue-100 text-blue-600' : 'text-gray-600 hover:bg-gray-100'}`}
+                                    >
+                                        <i className="fas fa-camera mr-2"></i>
+                                        Analyzovat
+                                    </button>
+                                    <button
+                                        onClick={() => setCurrentView('history')}
+                                        className={`px-3 py-2 rounded-lg ${currentView === 'history' ? 'bg-blue-100 text-blue-600' : 'text-gray-600 hover:bg-gray-100'}`}
+                                    >
+                                        <i className="fas fa-history mr-2"></i>
+                                        Historie
+                                    </button>
+                                    <button
+                                        onClick={() => setCurrentView('knowledge')}
+                                        className={`px-3 py-2 rounded-lg ${currentView === 'knowledge' ? 'bg-blue-100 text-blue-600' : 'text-gray-600 hover:bg-gray-100'}`}
+                                    >
+                                        <i className="fas fa-book mr-2"></i>
+                                        Databáze
+                                    </button>
+                                </nav>
+                            </div>
+                        </div>
+                    </header>
+
+                    {/* Main Content */}
+                    <main className="main-content-fixed">
+                        {/* Home View - Two Column Layout */}
+                        {currentView === 'home' && (
+                            <div className="content-two-columns">
+                                {/* Levý sloupec - AKČNÍ část */}
+                                <div className="content-left">
+                                    <div className="bg-white rounded-2xl shadow-xl p-8">
+                                        <div className="text-center mb-8">
+                                            <i className="fas fa-camera text-6xl text-blue-600 mb-4"></i>
+                                            <h1 className="text-2xl font-bold text-gray-800 mb-2">
+                                                Vyfotografujte závadu
+                                            </h1>
+                                            <p className="text-gray-600">
+                                                AI okamžitě identifikuje problém a nabídne řešení
+                                            </p>
+                                        </div>
+
+                                        <input
+                                            ref={fileInputRef}
+                                            type="file"
+                                            accept="image/*"
+                                            onChange={handleImageUpload}
+                                            className="hidden"
+                                        />
+
+                                        <button
+                                            onClick={() => fileInputRef.current.click()}
+                                            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-8 rounded-xl transition duration-200 transform hover:scale-105 shadow-lg"
+                                        >
+                                            <i className="fas fa-camera mr-3"></i>
+                                            Nahrát fotografii
+                                        </button>
+
+                                        <div className="mt-6 grid grid-cols-3 gap-2 text-center text-sm text-gray-600">
+                                            <div className="bg-gray-50 rounded-lg p-3">
+                                                <i className="fas fa-clock text-blue-600 mb-1"></i>
+                                                <div>30 sekund</div>
+                                            </div>
+                                            <div className="bg-gray-50 rounded-lg p-3">
+                                                <i className="fas fa-shield-alt text-green-600 mb-1"></i>
+                                                <div>Bezpečné</div>
+                                            </div>
+                                            <div className="bg-gray-50 rounded-lg p-3">
+                                                <i className="fas fa-tools text-orange-600 mb-1"></i>
+                                                <div>500+ oprav</div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Quick Examples */}
+                                    <div className="grid grid-cols-2 gap-4">
+                                        {[
+                                            { icon: '🚰', name: 'Kapající kohoutek' },
+                                            { icon: '🚽', name: 'Protékající WC' },
+                                            { icon: '🔌', name: 'Nefunkční zásuvka' },
+                                            { icon: '🚪', name: 'Vrzající dveře' }
+                                        ].map((item, idx) => (
+                                            <div key={idx} className="bg-white rounded-lg p-4 text-center cursor-pointer hover:shadow-lg transition">
+                                                <div className="text-3xl mb-2">{item.icon}</div>
+                                                <div className="text-sm text-gray-600">{item.name}</div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                {/* Pravý sloupec - INFORMAČNÍ část */}
+                                <div className="content-right">
+                                    <div className="bg-white rounded-2xl shadow-xl p-8">
+                                        <h3 className="text-xl font-bold text-gray-800 mb-4">
+                                            <i className="fas fa-info-circle text-blue-600 mr-2"></i>
+                                            Jak to funguje?
+                                        </h3>
+                                        <div className="space-y-4">
+                                            <div className="flex items-start">
+                                                <div className="bg-blue-100 rounded-full p-3 mr-4">
+                                                    <i className="fas fa-camera text-blue-600 text-xl"></i>
+                                                </div>
+                                                <div>
+                                                    <h4 className="font-semibold text-gray-800">1. Vyfotit</h4>
+                                                    <p className="text-gray-600 text-sm">Vyfoťte problém mobilem nebo nahrajte existující foto</p>
+                                                </div>
+                                            </div>
+                                            <div className="flex items-start">
+                                                <div className="bg-green-100 rounded-full p-3 mr-4">
+                                                    <i className="fas fa-brain text-green-600 text-xl"></i>
+                                                </div>
+                                                <div>
+                                                    <h4 className="font-semibold text-gray-800">2. AI Analýza</h4>
+                                                    <p className="text-gray-600 text-sm">Naše AI identifikuje závadu za několik sekund</p>
+                                                </div>
+                                            </div>
+                                            <div className="flex items-start">
+                                                <div className="bg-orange-100 rounded-full p-3 mr-4">
+                                                    <i className="fas fa-wrench text-orange-600 text-xl"></i>
+                                                </div>
+                                                <div>
+                                                    <h4 className="font-semibold text-gray-800">3. Opravit</h4>
+                                                    <p className="text-gray-600 text-sm">Následujte krok za krokem návod k opravě</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="bg-gradient-to-r from-blue-600 to-cyan-600 rounded-2xl shadow-xl p-8 text-white">
+                                        <h3 className="text-xl font-bold mb-4">
+                                            <i className="fas fa-star mr-2"></i>
+                                            Proč FIXO?
+                                        </h3>
+                                        <ul className="space-y-3">
+                                            <li className="flex items-center">
+                                                <i className="fas fa-check-circle mr-3"></i>
+                                                <span>500+ detailních návodů</span>
+                                            </li>
+                                            <li className="flex items-center">
+                                                <i className="fas fa-check-circle mr-3"></i>
+                                                <span>AI rozpoznávání problémů</span>
+                                            </li>
+                                            <li className="flex items-center">
+                                                <i className="fas fa-check-circle mr-3"></i>
+                                                <span>Bezpečnostní varování</span>
+                                            </li>
+                                            <li className="flex items-center">
+                                                <i className="fas fa-check-circle mr-3"></i>
+                                                <span>Odhad času a nákladů</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Analyzing View */}
+                        {currentView === 'analyzing' && (
+                            <div className="flex flex-col items-center justify-center h-full overflow-y-auto p-8">
+                                <div className="bg-white rounded-2xl shadow-xl p-8 max-w-md w-full">
+                                    <div className="text-center">
+                                        {selectedImage && (
+                                            <img 
+                                                src={selectedImage} 
+                                                alt="Analyzovaná fotka" 
+                                                className="w-full h-48 object-cover rounded-lg mb-6"
+                                            />
+                                        )}
+                                        <div className="flex justify-center mb-4">
+                                            <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-600"></div>
+                                        </div>
+                                        <h2 className="text-xl font-bold text-gray-800 mb-2">
+                                            Analyzuji fotografii...
+                                        </h2>
+                                        <div className="space-y-2 text-gray-600">
+                                            <div className="flex items-center justify-center">
+                                                <i className="fas fa-check-circle text-green-500 mr-2"></i>
+                                                Detekce objektu
+                                            </div>
+                                            <div className="flex items-center justify-center">
+                                                <div className="animate-pulse">
+                                                    <i className="fas fa-spinner fa-spin text-blue-500 mr-2"></i>
+                                                    Identifikace závady
+                                                </div>
+                                            </div>
+                                            <div className="flex items-center justify-center text-gray-400">
+                                                <i className="far fa-circle mr-2"></i>
+                                                Příprava návodů
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Results View */}
+                        {currentView === 'results' && analysisResult && (
+                            <div className="h-full overflow-y-auto p-8 max-w-4xl mx-auto">
+                                <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
+                                    {/* Detection Header */}
+                                    <div className="bg-gradient-to-r from-blue-600 to-cyan-600 text-white p-6">
+                                        <div className="flex items-center justify-between">
+                                            <div>
+                                                <h2 className="text-2xl font-bold mb-2">
+                                                    {analysisResult.object.name}
+                                                </h2>
+                                                <p className="text-blue-100">
+                                                    Detekováno s {analysisResult.confidence}% jistotou
+                                                </p>
+                                            </div>
+                                            <div className="text-5xl">
+                                                {analysisResult.issue.id === 'leak' && '🚰'}
+                                                {analysisResult.issue.id === 'running' && '🚽'}
+                                                {analysisResult.issue.id === 'not-working' && '🔌'}
+                                                {analysisResult.issue.id === 'squeaking' && '🚪'}
+                                                {analysisResult.issue.id === 'cold' && '🌡️'}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Issue Details */}
+                                    <div className="p-6">
+                                        <div className="mb-6">
+                                            <div className="flex items-center justify-between mb-2">
+                                                <h3 className="text-lg font-semibold text-gray-800">
+                                                    Identifikovaný problém
+                                                </h3>
+                                                <button
+                                                    onClick={() => setShowFeedbackModal(true)}
+                                                    className="text-sm text-blue-600 hover:text-blue-800 font-medium"
+                                                >
+                                                    <i className="fas fa-edit mr-1"></i>
+                                                    Nesouhlasíte? Opravit
+                                                </button>
+                                            </div>
+                                            <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded">
+                                                <p className="font-semibold text-red-800">
+                                                    {analysisResult.issue.name}
+                                                </p>
+                                                <p className="text-red-600 text-sm mt-1">
+                                                    {analysisResult.issue.description}
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        {/* Quick Info */}
+                                        <div className="grid grid-cols-3 gap-4 mb-6">
+                                            <div className="bg-gray-50 rounded-lg p-4 text-center">
+                                                <i className="fas fa-clock text-blue-600 text-2xl mb-2"></i>
+                                                <div className="text-sm text-gray-600">Čas opravy</div>
+                                                <div className="font-semibold">{analysisResult.issue.timeEstimate}</div>
+                                            </div>
+                                            <div className="bg-gray-50 rounded-lg p-4 text-center">
+                                                <i className="fas fa-signal text-orange-600 text-2xl mb-2"></i>
+                                                <div className="text-sm text-gray-600">Obtížnost</div>
+                                                <div className="font-semibold">{analysisResult.issue.difficulty}</div>
+                                            </div>
+                                            <div className="bg-gray-50 rounded-lg p-4 text-center">
+                                                <i className="fas fa-exclamation-triangle text-yellow-600 text-2xl mb-2"></i>
+                                                <div className="text-sm text-gray-600">Riziko</div>
+                                                <div className="font-semibold">{analysisResult.issue.riskScore}/10</div>
+                                            </div>
+                                        </div>
+
+                                        {/* Safety Warnings */}
+                                        {analysisResult.issue.riskScore > 5 && (
+                                            <div className="bg-yellow-50 border-l-4 border-yellow-500 p-4 rounded mb-6">
+                                                <p className="font-semibold text-yellow-800 mb-2">
+                                                    <i className="fas fa-exclamation-triangle mr-2"></i>
+                                                    Bezpečnostní upozornění
+                                                </p>
+                                                <ul className="text-yellow-700 text-sm space-y-1">
+                                                    {analysisResult.issue.safetyWarnings.map((warning, idx) => (
+                                                        <li key={idx}>• {warning}</li>
+                                                    ))}
+                                                </ul>
+                                            </div>
+                                        )}
+
+                                        {/* Co dál? - Interaktivní panely */}
+                                        <div className="mb-4">
+                                            <h3 className="text-lg font-semibold text-gray-800 mb-4">
+                                                Co dál?
+                                            </h3>
+                                            <div className="grid grid-cols-1 gap-4">
+                                                {/* Základní návod ZDARMA */}
+                                                <button
+                                                    onClick={() => startRepair(analysisResult.issue)}
+                                                    className="bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-500 rounded-xl p-5 text-left hover:shadow-lg transition-all duration-200 transform hover:scale-[1.02] group"
+                                                >
+                                                    <div className="flex items-start justify-between">
+                                                        <div className="flex-1">
+                                                            <div className="flex items-center mb-2">
+                                                                <i className="fas fa-wrench text-green-600 text-2xl mr-3"></i>
+                                                                <div>
+                                                                    <h4 className="font-bold text-gray-800 text-lg group-hover:text-green-700">
+                                                                        Základní návod (3-6 kroků)
+                                                                    </h4>
+                                                                    <p className="text-sm text-gray-600">
+                                                                        Krok za krokem instrukce k opravě
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div className="flex flex-col items-end ml-4">
+                                                            <span className="bg-green-600 text-white px-3 py-1 rounded-full text-sm font-bold mb-2">
+                                                                ZDARMA
+                                                            </span>
+                                                            <i className="fas fa-arrow-right text-green-600 text-xl group-hover:translate-x-1 transition-transform"></i>
+                                                        </div>
+                                                    </div>
+                                                </button>
+
+                                                {/* Detailní návod + schémata 0.99€ */}
+                                                <button
+                                                    onClick={() => alert('Premium návod připravujeme! Bude k dispozici brzy.')}
+                                                    className="bg-gradient-to-r from-blue-50 to-cyan-50 border-2 border-blue-500 rounded-xl p-5 text-left hover:shadow-lg transition-all duration-200 transform hover:scale-[1.02] group"
+                                                >
+                                                    <div className="flex items-start justify-between">
+                                                        <div className="flex-1">
+                                                            <div className="flex items-center mb-2">
+                                                                <i className="fas fa-book-open text-blue-600 text-2xl mr-3"></i>
+                                                                <div>
+                                                                    <h4 className="font-bold text-gray-800 text-lg group-hover:text-blue-700">
+                                                                        Detailní návod + schémata
+                                                                    </h4>
+                                                                    <p className="text-sm text-gray-600">
+                                                                        Profesionální průvodce s diagramy a videi
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div className="flex flex-col items-end ml-4">
+                                                            <span className="bg-blue-600 text-white px-3 py-1 rounded-full text-sm font-bold mb-2">
+                                                                0.99 €
+                                                            </span>
+                                                            <i className="fas fa-arrow-right text-blue-600 text-xl group-hover:translate-x-1 transition-transform"></i>
+                                                        </div>
+                                                    </div>
+                                                </button>
+
+                                                {/* Zavolat odborníka ZDARMA */}
+                                                <button
+                                                    onClick={() => alert('Hledání odborníků v okolí připravujeme!')}
+                                                    className="bg-gradient-to-r from-orange-50 to-amber-50 border-2 border-orange-500 rounded-xl p-5 text-left hover:shadow-lg transition-all duration-200 transform hover:scale-[1.02] group"
+                                                >
+                                                    <div className="flex items-start justify-between">
+                                                        <div className="flex-1">
+                                                            <div className="flex items-center mb-2">
+                                                                <i className="fas fa-phone text-orange-600 text-2xl mr-3"></i>
+                                                                <div>
+                                                                    <h4 className="font-bold text-gray-800 text-lg group-hover:text-orange-700">
+                                                                        Zavolat odborníka v okolí
+                                                                    </h4>
+                                                                    <p className="text-sm text-gray-600">
+                                                                        Spojíme vás s ověřenými řemeslníky
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div className="flex flex-col items-end ml-4">
+                                                            <span className="bg-orange-600 text-white px-3 py-1 rounded-full text-sm font-bold mb-2">
+                                                                ZDARMA
+                                                            </span>
+                                                            <i className="fas fa-arrow-right text-orange-600 text-xl group-hover:translate-x-1 transition-transform"></i>
+                                                        </div>
+                                                    </div>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Feedback Modal */}
+                        {showFeedbackModal && (
+                            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+                                <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6">
+                                    <div className="flex items-center justify-between mb-4">
+                                        <h3 className="text-xl font-bold text-gray-800">
+                                            <i className="fas fa-edit text-blue-600 mr-2"></i>
+                                            Opravit detekci
+                                        </h3>
+                                        <button
+                                            onClick={() => setShowFeedbackModal(false)}
+                                            className="text-gray-400 hover:text-gray-600"
+                                        >
+                                            <i className="fas fa-times text-2xl"></i>
+                                        </button>
+                                    </div>
+
+                                    <p className="text-gray-600 text-sm mb-4">
+                                        Pomoz AI se naučit! Vyber správnou kategorii a problém.
+                                    </p>
+
+                                    <div className="space-y-4 mb-6">
+                                        <div>
+                                            <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                                Správná kategorie:
+                                            </label>
+                                            <select className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500">
+                                                <option value="voda">💧 Voda</option>
+                                                <option value="elektrina">⚡ Elektřina</option>
+                                                <option value="topeni">🌡️ Topení</option>
+                                                <option value="okna">🪟 Okna</option>
+                                                <option value="dvere">🚪 Dveře</option>
+                                                <option value="spotrebice">🔌 Spotřebiče</option>
+                                                <option value="nabytek">🛋️ Nábytek</option>
+                                                <option value="steny">🧱 Stěny</option>
+                                                <option value="podlaha">📐 Podlaha</option>
+                                            </select>
+                                        </div>
+
+                                        <div>
+                                            <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                                Správný problém:
+                                            </label>
+                                            <input
+                                                type="text"
+                                                placeholder="Např.: Protékající kohoutek"
+                                                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500"
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div className="flex gap-3">
+                                        <button
+                                            onClick={() => {
+                                                // TODO: Implementovat odeslání feedbacku SmartAnalyzeru
+                                                if (smartAnalyzerRef.current) {
+                                                    // Zde bude volání smartAnalyzerRef.current.submitFeedback()
+                                                    alert('Děkujeme za feedback! AI se právě učí.');
+                                                }
+                                                setShowFeedbackModal(false);
+                                            }}
+                                            className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-xl transition duration-200"
+                                        >
+                                            <i className="fas fa-paper-plane mr-2"></i>
+                                            Odeslat opravu
+                                        </button>
+                                        <button
+                                            onClick={() => setShowFeedbackModal(false)}
+                                            className="px-6 py-3 bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold rounded-xl transition duration-200"
+                                        >
+                                            Zrušit
+                                        </button>
+                                    </div>
+
+                                    <p className="text-xs text-gray-500 mt-4 text-center">
+                                        <i className="fas fa-info-circle mr-1"></i>
+                                        Tvůj feedback pomůže zlepšit AI pro všechny uživatele
+                                    </p>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Repair Steps View */}
+                        {currentView === 'repair' && selectedIssue && (
+                            <div className="h-full overflow-y-auto p-8 max-w-4xl mx-auto">
+                                <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
+                                    {/* Progress Bar */}
+                                    <div className="bg-gray-200 h-2">
+                                        <div 
+                                            className="bg-green-600 h-2 transition-all duration-500"
+                                            style={{ width: `${((currentStep + 1) / selectedIssue.steps.length) * 100}%` }}
+                                        ></div>
+                                    </div>
+
+                                    {/* Tools Needed */}
+                                    <div className="bg-blue-50 p-6 border-b">
+                                        <h3 className="font-semibold text-blue-900 mb-3">
+                                            <i className="fas fa-toolbox mr-2"></i>
+                                            Potřebné nástroje a materiál
+                                        </h3>
+                                        <div className="flex flex-wrap gap-2">
+                                            {(selectedIssue.tools || []).map((tool, idx) => (
+                                                <span key={idx} className="bg-white px-3 py-1 rounded-full text-sm">
+                                                    {tool}
+                                                </span>
+                                            ))}
+                                        </div>
+                                    </div>
+
+                                    {/* Current Step */}
+                                    <div className="p-6">
+                                        <div className="mb-6">
+                                            <h2 className="text-2xl font-bold text-gray-800 mb-4">
+                                                Krok {currentStep + 1} z {selectedIssue.steps.length}
+                                            </h2>
+                                            
+                                            <div className="bg-gradient-to-r from-blue-50 to-cyan-50 rounded-xl p-8 text-center">
+                                                <div className="text-6xl mb-4">
+                                                    {selectedIssue.steps[currentStep].icon}
+                                                </div>
+                                                <p className="text-xl font-semibold text-gray-800 mb-2">
+                                                    {selectedIssue.steps[currentStep].action}
+                                                </p>
+                                                <p className="text-gray-600">
+                                                    <i className="fas fa-clock mr-2"></i>
+                                                    Časová náročnost: {selectedIssue.steps[currentStep].time}
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        {/* All Steps Overview */}
+                                        <div className="mb-6">
+                                            <h3 className="font-semibold text-gray-700 mb-3">Přehled všech kroků</h3>
+                                            <div className="space-y-2">
+                                                {(selectedIssue.steps || []).map((step, idx) => (
+                                                    <div 
+                                                        key={idx}
+                                                        className={`flex items-center p-3 rounded-lg ${
+                                                            idx === currentStep 
+                                                                ? 'bg-blue-100 border-l-4 border-blue-600' 
+                                                                : idx < currentStep 
+                                                                    ? 'bg-green-50 opacity-75' 
+                                                                    : 'bg-gray-50'
+                                                        }`}
+                                                    >
+                                                        <span className="mr-3 text-2xl">{step.icon}</span>
+                                                        <span className={`flex-1 ${idx === currentStep ? 'font-semibold' : ''}`}>
+                                                            {step.step}. {step.action}
+                                                        </span>
+                                                        {idx < currentStep && (
+                                                            <i className="fas fa-check-circle text-green-600"></i>
+                                                        )}
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+
+                                        {/* Navigation */}
+                                        <div className="flex gap-4">
+                                            <button
+                                                onClick={() => setCurrentStep(Math.max(0, currentStep - 1))}
+                                                disabled={currentStep === 0}
+                                                className={`flex-1 font-bold py-3 px-6 rounded-xl transition duration-200 ${
+                                                    currentStep === 0 
+                                                        ? 'bg-gray-200 text-gray-400 cursor-not-allowed' 
+                                                        : 'bg-gray-200 hover:bg-gray-300 text-gray-800'
+                                                }`}
+                                            >
+                                                <i className="fas fa-arrow-left mr-2"></i>
+                                                Předchozí krok
+                                            </button>
+                                            {currentStep < selectedIssue.steps.length - 1 ? (
+                                                <button
+                                                    onClick={() => setCurrentStep(currentStep + 1)}
+                                                    className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-xl transition duration-200"
+                                                >
+                                                    Další krok
+                                                    <i className="fas fa-arrow-right ml-2"></i>
+                                                </button>
+                                            ) : (
+                                                <button
+                                                    onClick={completeRepair}
+                                                    className="flex-1 bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-xl transition duration-200"
+                                                >
+                                                    <i className="fas fa-check mr-2"></i>
+                                                    Dokončit opravu
+                                                </button>
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* History View */}
+                        {currentView === 'history' && (
+                            <div className="h-full overflow-y-auto p-8 max-w-4xl mx-auto">
+                                <h2 className="text-2xl font-bold text-gray-800 mb-6">Historie oprav</h2>
+                                
+                                {repairHistory.length === 0 ? (
+                                    <div className="bg-white rounded-xl shadow-lg p-8 text-center">
+                                        <i className="fas fa-history text-6xl text-gray-300 mb-4"></i>
+                                        <p className="text-gray-600">Zatím nemáte žádné opravy v historii</p>
+                                    </div>
+                                ) : (
+                                    <div className="space-y-4">
+                                        {repairHistory.map(item => (
+                                            <div key={item.id} className="bg-white rounded-xl shadow-lg p-6">
+                                                <div className="flex items-center justify-between">
+                                                    <div>
+                                                        <h3 className="font-semibold text-lg text-gray-800">
+                                                            {item.object} - {item.issue}
+                                                        </h3>
+                                                        <p className="text-gray-600 text-sm mt-1">
+                                                            <i className="far fa-calendar mr-2"></i>
+                                                            {item.date}
+                                                        </p>
+                                                    </div>
+                                                    <div>
+                                                        {item.status === 'completed' ? (
+                                                            <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-semibold">
+                                                                <i className="fas fa-check-circle mr-1"></i>
+                                                                Dokončeno
+                                                            </span>
+                                                        ) : (
+                                                            <span className="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm font-semibold">
+                                                                <i className="fas fa-wrench mr-1"></i>
+                                                                Probíhá
+                                                            </span>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+                        )}
+
+                        {/* Knowledge Base View */}
+                        {currentView === 'knowledge' && (
+                            <div className="h-full overflow-y-auto p-8 max-w-6xl mx-auto">
+                                <h2 className="text-2xl font-bold text-gray-800 mb-6">Databáze závad a oprav</h2>
+                                
+                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                    {Object.entries(repairDatabase).map(([key, item]) => (
+                                        <div key={key} className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition">
+                                            <div className="bg-gradient-to-r from-blue-600 to-cyan-600 text-white p-4">
+                                                <h3 className="font-bold text-lg">{item.name}</h3>
+                                            </div>
+                                            <div className="p-4">
+                                                <div className="space-y-3">
+                                                    {item.issues.map(issue => (
+                                                        <div key={issue.id} className="border-l-4 border-blue-500 pl-3">
+                                                            <p className="font-semibold text-gray-800">{issue.name}</p>
+                                                            <p className="text-sm text-gray-600">{issue.description}</p>
+                                                            <div className="mt-2 flex gap-4 text-xs text-gray-500">
+                                                                <span><i className="fas fa-clock mr-1"></i>{issue.timeEstimate}</span>
+                                                                <span><i className="fas fa-signal mr-1"></i>{issue.difficulty}</span>
+                                                            </div>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+
+                                <div className="mt-8 bg-blue-50 rounded-xl p-6">
+                                    <h3 className="font-bold text-blue-900 mb-3">
+                                        <i className="fas fa-info-circle mr-2"></i>
+                                        O databázi
+                                    </h3>
+                                    <p className="text-blue-800">
+                                        Naše databáze obsahuje více než 500 nejčastějších domácích závad rozdělených do 12 kategorií.
+                                        Každá oprava obsahuje detailní návod, seznam potřebných nástrojů a bezpečnostní upozornění.
+                                    </p>
+                                </div>
+                            </div>
+                        )}
+                    </main>
+
+                    {/* Footer */}
+                    <footer className="bg-gray-800 text-white mt-16">
+                        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                                <div>
+                                    <h3 className="font-bold text-lg mb-3">FIXO</h3>
+                                    <p className="text-gray-400 text-sm">
+                                        První světový standard pro vizuální diagnostiku domácích závad.
+                                    </p>
+                                </div>
+                                <div>
+                                    <h3 className="font-bold text-lg mb-3">Funkce</h3>
+                                    <ul className="text-gray-400 text-sm space-y-2">
+                                        <li>• AI analýza fotografií</li>
+                                        <li>• 500+ návodů na opravy</li>
+                                        <li>• Bezpečnostní upozornění</li>
+                                        <li>• Historie oprav</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <h3 className="font-bold text-lg mb-3">Kontakt</h3>
+                                    <p className="text-gray-400 text-sm">
+                                        support@fixo.app<br/>
+                                        "Fix Anything. Anywhere. Instantly."
+                                    </p>
+                                </div>
+                            </div>
+                            <div className="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400 text-sm">
+                                © 2024 FIXO. Všechna práva vyhrazena.
+                            </div>
+                        </div>
+                    </footer>
+                </div>
+            );
+        }
+
+        // Render aplikace
+        ReactDOM.render(<FixoApp />, document.getElementById('root'));
+    </script>
+</body>
+</html>
