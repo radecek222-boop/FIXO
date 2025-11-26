@@ -153,6 +153,7 @@
             footerContact: 'Kontakt',
             footerQuote: 'Fix Anything. Anywhere. Instantly.',
             footerCopyright: '© 2025 FIXO. Všechna práva vyhrazena.',
+            safetyDisclaimer: 'UPOZORNĚNÍ: Veškeré opravy provádíte na vlastní riziko. FIXO poskytuje pouze informativní návody a nenese žádnou odpovědnost za případné škody, zranění nebo jiné následky vzniklé při provádění oprav. Před zahájením jakékoli opravy zvažte své schopnosti a v případě pochybností kontaktujte odborníka.',
 
             // Language
             translating: 'Překládám...',
@@ -243,6 +244,7 @@
                 footerContact: 'Contact',
                 footerQuote: 'Fix Anything. Anywhere. Instantly.',
                 footerCopyright: '© 2025 FIXO. All rights reserved.',
+                safetyDisclaimer: 'WARNING: All repairs are performed at your own risk. FIXO provides informational guides only and bears no responsibility for any damage, injury, or other consequences resulting from repairs. Before starting any repair, consider your abilities and contact a professional if in doubt.',
                 translating: 'Translating...',
                 selectLanguage: 'Select language'
             },
@@ -328,6 +330,7 @@
                 footerContact: 'Kontakt',
                 footerQuote: 'Fix Anything. Anywhere. Instantly.',
                 footerCopyright: '© 2025 FIXO. Alle Rechte vorbehalten.',
+                safetyDisclaimer: 'WARNUNG: Alle Reparaturen erfolgen auf eigene Gefahr. FIXO stellt nur informative Anleitungen zur Verfügung und übernimmt keine Haftung für Schäden, Verletzungen oder andere Folgen. Prüfen Sie vor jeder Reparatur Ihre Fähigkeiten und kontaktieren Sie im Zweifelsfall einen Fachmann.',
                 translating: 'Übersetzen...',
                 selectLanguage: 'Sprache wählen'
             },
@@ -413,6 +416,7 @@
                 footerContact: 'Kontakt',
                 footerQuote: 'Fix Anything. Anywhere. Instantly.',
                 footerCopyright: '© 2025 FIXO. Všetky práva vyhradené.',
+                safetyDisclaimer: 'UPOZORNENIE: Všetky opravy vykonávate na vlastné riziko. FIXO poskytuje iba informatívne návody a nenesie žiadnu zodpovednosť za prípadné škody, zranenia alebo iné následky vzniknuté pri vykonávaní opráv. Pred začatím akejkoľvek opravy zvážte svoje schopnosti a v prípade pochybností kontaktujte odborníka.',
                 translating: 'Prekladám...',
                 selectLanguage: 'Vybrať jazyk'
             },
@@ -498,6 +502,7 @@
                 footerContact: 'Kontakt',
                 footerQuote: 'Fix Anything. Anywhere. Instantly.',
                 footerCopyright: '© 2025 FIXO. Wszelkie prawa zastrzeżone.',
+                safetyDisclaimer: 'OSTRZEŻENIE: Wszystkie naprawy wykonujesz na własne ryzyko. FIXO dostarcza jedynie informacyjne instrukcje i nie ponosi odpowiedzialności za jakiekolwiek szkody, obrażenia lub inne konsekwencje wynikające z napraw. Przed rozpoczęciem jakiejkolwiek naprawy rozważ swoje umiejętności i w razie wątpliwości skontaktuj się ze specjalistą.',
                 translating: 'Tłumaczenie...',
                 selectLanguage: 'Wybierz język'
             },
@@ -583,6 +588,7 @@
                 footerContact: 'Contacto',
                 footerQuote: 'Fix Anything. Anywhere. Instantly.',
                 footerCopyright: '© 2025 FIXO. Todos los derechos reservados.',
+                safetyDisclaimer: 'ADVERTENCIA: Todas las reparaciones se realizan bajo su propio riesgo. FIXO proporciona solo guías informativas y no asume ninguna responsabilidad por daños, lesiones u otras consecuencias derivadas de las reparaciones. Antes de comenzar cualquier reparación, considere sus habilidades y contacte a un profesional en caso de duda.',
                 translating: 'Traduciendo...',
                 selectLanguage: 'Seleccionar idioma'
             },
@@ -668,6 +674,7 @@
                 footerContact: 'Contact',
                 footerQuote: 'Fix Anything. Anywhere. Instantly.',
                 footerCopyright: '© 2025 FIXO. Tous droits réservés.',
+                safetyDisclaimer: 'AVERTISSEMENT : Toutes les réparations sont effectuées à vos propres risques. FIXO fournit uniquement des guides informatifs et décline toute responsabilité pour les dommages, blessures ou autres conséquences résultant des réparations. Avant de commencer toute réparation, évaluez vos compétences et contactez un professionnel en cas de doute.',
                 translating: 'Traduction...',
                 selectLanguage: 'Choisir la langue'
             }
@@ -4689,10 +4696,10 @@
                                 <div>
                                     <h3 className="footer-title">{t('footerFeatures')}</h3>
                                     <ul className="footer-links">
-                                        <li>• {t('footerAI')}</li>
-                                        <li>• {t('footer500guides')}</li>
-                                        <li>• {t('footerSafety')}</li>
-                                        <li>• {t('footerHistory')}</li>
+                                        <li><a href="#" onClick={(e) => { e.preventDefault(); setCurrentView('home'); }}>• {t('footerAI')}</a></li>
+                                        <li><a href="#" onClick={(e) => { e.preventDefault(); setCurrentView('knowledge'); }}>• {t('footer500guides')}</a></li>
+                                        <li><a href="#" onClick={(e) => { e.preventDefault(); alert(t('safetyDisclaimer')); }}>• {t('footerSafety')}</a></li>
+                                        <li><a href="#" onClick={(e) => { e.preventDefault(); setCurrentView('history'); }}>• {t('footerHistory')}</a></li>
                                     </ul>
                                 </div>
                                 <div>
