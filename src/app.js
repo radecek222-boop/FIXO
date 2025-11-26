@@ -3292,8 +3292,8 @@
 
                                         <div className="glass-card">
                                             {/* Horní sekce - Logo a popis */}
-                                            <div className="mb-6">
-                                                <div className="text-3xl font-bold mb-3">
+                                            <div className="mb-6 flex items-baseline gap-3">
+                                                <div className="text-3xl font-bold">
                                                     <span style={{
                                                         background: 'var(--gradient-primary)',
                                                         WebkitBackgroundClip: 'text',
