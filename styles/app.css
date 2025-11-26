@@ -45,6 +45,101 @@
 }
 
 /* ==========================================
+   SUB-HEADER BAR - Info + Stats pod headerem
+   ========================================== */
+.sub-header-bar {
+    background: var(--gradient-primary);
+    color: white;
+    padding: var(--space-2) 0;
+    width: 100%;
+}
+
+.sub-header-content {
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 0 var(--space-4);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    align-items: center;
+    text-align: center;
+}
+
+.sub-header-info {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+}
+
+.sub-header-brand {
+    font-weight: var(--font-bold);
+    font-size: var(--text-sm);
+    display: none;
+}
+
+.sub-header-tagline {
+    font-size: var(--text-xs);
+    opacity: 0.9;
+    display: none;
+}
+
+.sub-header-stats {
+    display: flex;
+    gap: var(--space-6);
+}
+
+.sub-header-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+}
+
+.sub-header-stat-value {
+    font-size: var(--text-lg);
+    font-weight: var(--font-bold);
+}
+
+.sub-header-stat-label {
+    font-size: 10px;
+    opacity: 0.85;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Tablet */
+@media (min-width: 768px) {
+    .sub-header-content {
+        max-width: 520px;
+        flex-direction: row;
+        justify-content: space-between;
+        text-align: left;
+    }
+
+    .sub-header-brand {
+        display: inline;
+    }
+
+    .sub-header-tagline {
+        display: inline;
+    }
+
+    .sub-header-info {
+        flex-direction: row;
+        gap: var(--space-2);
+        align-items: center;
+    }
+}
+
+/* Desktop */
+@media (min-width: 769px) {
+    .sub-header-content {
+        max-width: 80%;
+        padding: 0 var(--space-8);
+    }
+}
+
+/* ==========================================
    HERO SECTION - Animovaná s centralizací
    ========================================== */
 .hero-section {
