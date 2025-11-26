@@ -865,6 +865,113 @@
             const [craftsmenData, setCraftsmenData] = useState(null);
             const [selectedCraftsmanCategory, setSelectedCraftsmanCategory] = useState('all');
 
+            // Nový obchodní model - stav
+            const [showDetailedGuidePayment, setShowDetailedGuidePayment] = useState(false);
+            const [purchasedGuides, setPurchasedGuides] = useState(() => {
+                const saved = localStorage.getItem('fixo_purchased_guides');
+                return saved ? JSON.parse(saved) : [];
+            });
+            const [showNearbySuppliers, setShowNearbySuppliers] = useState(false);
+            const [userLocation, setUserLocation] = useState(null);
+            const [showSupplierRegistration, setShowSupplierRegistration] = useState(false);
+            const [registeredSuppliers, setRegisteredSuppliers] = useState(() => {
+                const saved = localStorage.getItem('fixo_registered_suppliers');
+                return saved ? JSON.parse(saved) : [];
+            });
+
+            // Uložení zakoupených návodů do localStorage
+            useEffect(() => {
+                localStorage.setItem('fixo_purchased_guides', JSON.stringify(purchasedGuides));
+            }, [purchasedGuides]);
+
+            // Získání geolokace uživatele
+            const getUserLocation = () => {
+                return new Promise((resolve, reject) => {
+                    if (!navigator.geolocation) {
+                        reject(new Error('Geolokace není podporována'));
+                        return;
+                    }
+                    navigator.geolocation.getCurrentPosition(
+                        (position) => {
+                            const loc = {
+                                lat: position.coords.latitude,
+                                lng: position.coords.longitude
+                            };
+                            setUserLocation(loc);
+                            resolve(loc);
+                        },
+                        (error) => reject(error),
+                        { enableHighAccuracy: true, timeout: 10000 }
+                    );
+                });
+            };
+
+            // Výpočet vzdálenosti mezi dvěma body (Haversine formula)
+            const calculateDistance = (lat1, lng1, lat2, lng2) => {
+                const R = 6371; // Radius Země v km
+                const dLat = (lat2 - lat1) * Math.PI / 180;
+                const dLng = (lng2 - lng1) * Math.PI / 180;
+                const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                    Math.sin(dLng/2) * Math.sin(dLng/2);
+                const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+                return R * c;
+            };
+
+            // Kontrola zda je návod zakoupený
+            const isGuidePurchased = (issueId) => {
+                return purchasedGuides.includes(issueId);
+            };
+
+            // Nákup detailního návodu
+            const purchaseDetailedGuide = (issue) => {
+                // Zde by byla integrace s platební bránou (Stripe, PayPal, etc.)
+                const issueId = issue.id || issue.name;
+                if (!purchasedGuides.includes(issueId)) {
+                    setPurchasedGuides([...purchasedGuides, issueId]);
+                    alert(`Děkujeme za nákup! Detailní návod "${issue.name}" je nyní odemčen.\n\nCena: ${PRICING.detailedGuide} ${PRICING.currency}`);
+                }
+                setShowDetailedGuidePayment(false);
+            };
+
+            // Získání nejbližších dodavatelů podle geolokace
+            const getNearbySuppliers = async (category = null) => {
+                try {
+                    const location = userLocation || await getUserLocation();
+
+                    // Demo data dodavatelů (v produkci by byla databáze)
+                    const suppliers = [
+                        { id: 1, name: 'Jan Novák - Instalatér', category: 'plumbing', lat: 50.0755, lng: 14.4378, phone: '+420 123 456 789', rating: 4.8, distance: 0, isPremium: true },
+                        { id: 2, name: 'Elektro Servis Praha', category: 'electrical', lat: 50.0855, lng: 14.4278, phone: '+420 987 654 321', rating: 4.5, distance: 0, isPremium: true },
+                        { id: 3, name: 'Truhlářství Koval', category: 'carpentry', lat: 50.0655, lng: 14.4478, phone: '+420 555 666 777', rating: 4.9, distance: 0, isPremium: true },
+                        { id: 4, name: 'Zámečnictví Rychlý', category: 'locksmith', lat: 50.0955, lng: 14.4178, phone: '+420 111 222 333', rating: 4.3, distance: 0, isPremium: false },
+                        { id: 5, name: 'TopServis - Topení', category: 'heating', lat: 50.0555, lng: 14.4578, phone: '+420 444 555 666', rating: 4.7, distance: 0, isPremium: true }
+                    ];
+
+                    // Spočítat vzdálenost a seřadit
+                    const withDistance = suppliers.map(s => ({
+                        ...s,
+                        distance: calculateDistance(location.lat, location.lng, s.lat, s.lng)
+                    }));
+
+                    // Filtrovat podle kategorie pokud je zadána
+                    let filtered = withDistance;
+                    if (category && category !== 'all') {
+                        filtered = withDistance.filter(s => s.category === category);
+                    }
+
+                    // Seřadit: Premium dodavatelé první, pak podle vzdálenosti
+                    return filtered.sort((a, b) => {
+                        if (a.isPremium && !b.isPremium) return -1;
+                        if (!a.isPremium && b.isPremium) return 1;
+                        return a.distance - b.distance;
+                    });
+                } catch (error) {
+                    console.error('Chyba při získávání polohy:', error);
+                    return [];
+                }
+            };
+
             // PWA Service Worker registration
             useEffect(() => {
                 if ('serviceWorker' in navigator) {
@@ -1659,26 +1766,65 @@
                     .sort((a, b) => b.rating - a.rating);
             };
 
-            // Affiliate odkazy na e-shopy
+            // Affiliate odkazy na e-shopy (pouze e-shopy s affiliate programem)
+            // Hornbach NEPODPORUJE affiliate program - odstraněn
             const affiliateLinks = {
                 alza: {
                     name: 'Alza',
-                    icon: '🛒',
+                    icon: 'fa-shopping-cart',
                     color: '#ff6600',
-                    baseUrl: 'https://www.alza.cz/search.htm?exps='
+                    baseUrl: 'https://www.alza.cz/search.htm?exps=',
+                    hasAffiliate: true,
+                    affiliateId: 'fixo_affiliate'
                 },
                 mall: {
                     name: 'Mall.cz',
-                    icon: '🏪',
+                    icon: 'fa-store',
                     color: '#e4002b',
-                    baseUrl: 'https://www.mall.cz/hledej?s='
+                    baseUrl: 'https://www.mall.cz/hledej?s=',
+                    hasAffiliate: true,
+                    affiliateId: 'fixo_mall'
                 },
-                hornbach: {
-                    name: 'Hornbach',
-                    icon: '🔨',
-                    color: '#ff6600',
-                    baseUrl: 'https://www.hornbach.cz/s/'
+                obi: {
+                    name: 'OBI',
+                    icon: 'fa-tools',
+                    color: '#f47920',
+                    baseUrl: 'https://www.obi.cz/search/?q=',
+                    hasAffiliate: true,
+                    affiliateId: 'fixo_obi'
+                },
+                datart: {
+                    name: 'Datart',
+                    icon: 'fa-plug',
+                    color: '#e30613',
+                    baseUrl: 'https://www.datart.cz/vyhledavani/?q=',
+                    hasAffiliate: true,
+                    affiliateId: 'fixo_datart'
+                },
+                conrad: {
+                    name: 'Conrad',
+                    icon: 'fa-microchip',
+                    color: '#0066b3',
+                    baseUrl: 'https://www.conrad.cz/search.html?search=',
+                    hasAffiliate: true,
+                    affiliateId: 'fixo_conrad'
+                },
+                mountfield: {
+                    name: 'Mountfield',
+                    icon: 'fa-tractor',
+                    color: '#009639',
+                    baseUrl: 'https://www.mountfield.cz/hledej?q=',
+                    hasAffiliate: true,
+                    affiliateId: 'fixo_mountfield'
                 }
+            };
+
+            // Cenový model
+            const PRICING = {
+                detailedGuide: 0.99, // € za jeden detailní návod
+                supplierMonthly: 9.90, // € měsíčně pro dodavatele
+                supplierYearly: 99.00, // € ročně pro dodavatele (2 měsíce zdarma)
+                currency: '€'
             };
 
             const getAffiliateUrl = (shop, toolName, issue = null) => {
@@ -1698,7 +1844,12 @@
                 }
                 // Fallback na generický vyhledávací odkaz
                 const searchTerm = encodeURIComponent(toolName);
-                return affiliateLinks[shop].baseUrl + searchTerm;
+                // Kontrola zda shop existuje a má affiliate program
+                if (affiliateLinks[shop] && affiliateLinks[shop].hasAffiliate) {
+                    return affiliateLinks[shop].baseUrl + searchTerm;
+                }
+                // Výchozí fallback na Alza
+                return affiliateLinks.alza.baseUrl + searchTerm;
             };
 
             // Export shopping list
@@ -2160,6 +2311,315 @@
                                     className="btn btn-secondary w-full"
                                 >
                                     Zrušit
+                                </button>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Modal pro platbu za detailní návod */}
+                    {showDetailedGuidePayment && analysisResult && (
+                        <div className="translating-overlay" onClick={() => setShowDetailedGuidePayment(false)}>
+                            <div className="translating-box" onClick={e => e.stopPropagation()} style={{maxWidth: '400px', textAlign: 'center'}}>
+                                <div style={{fontSize: '4rem', marginBottom: 'var(--space-4)'}}>
+                                    <i className="fas fa-crown" style={{color: '#8b5cf6'}}></i>
+                                </div>
+                                <h3 style={{fontSize: 'var(--text-xl)', fontWeight: 'var(--font-bold)', marginBottom: 'var(--space-2)'}}>
+                                    Detailní návod
+                                </h3>
+                                <p style={{fontSize: 'var(--text-sm)', color: 'var(--color-text-secondary)', marginBottom: 'var(--space-4)'}}>
+                                    Získejte kompletní návod s detailními kroky, schématy a tipy odborníků.
+                                </p>
+
+                                <div style={{
+                                    background: 'linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%)',
+                                    color: 'white',
+                                    padding: 'var(--space-4)',
+                                    borderRadius: 'var(--radius-lg)',
+                                    marginBottom: 'var(--space-4)'
+                                }}>
+                                    <div style={{fontSize: 'var(--text-3xl)', fontWeight: 'var(--font-bold)'}}>
+                                        {PRICING.detailedGuide} {PRICING.currency}
+                                    </div>
+                                    <div style={{fontSize: 'var(--text-sm)', opacity: 0.9}}>jednorázová platba</div>
+                                </div>
+
+                                <ul style={{
+                                    textAlign: 'left',
+                                    fontSize: 'var(--text-sm)',
+                                    marginBottom: 'var(--space-4)',
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    gap: 'var(--space-2)'
+                                }}>
+                                    <li><i className="fas fa-check text-success mr-2"></i>Kompletní postup s 10+ kroky</li>
+                                    <li><i className="fas fa-check text-success mr-2"></i>Technická schémata a diagramy</li>
+                                    <li><i className="fas fa-check text-success mr-2"></i>Tipy od profesionálů</li>
+                                    <li><i className="fas fa-check text-success mr-2"></i>Seznam kompatibilních náhradních dílů</li>
+                                    <li><i className="fas fa-check text-success mr-2"></i>Offline přístup navždy</li>
+                                </ul>
+
+                                <div style={{display: 'flex', gap: 'var(--space-3)'}}>
+                                    <button
+                                        onClick={() => setShowDetailedGuidePayment(false)}
+                                        className="btn btn-secondary flex-1"
+                                    >
+                                        Zrušit
+                                    </button>
+                                    <button
+                                        onClick={() => purchaseDetailedGuide(analysisResult.issue)}
+                                        className="btn btn-primary flex-1"
+                                        style={{background: 'linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%)'}}
+                                    >
+                                        <i className="fas fa-credit-card mr-2"></i>
+                                        Koupit
+                                    </button>
+                                </div>
+
+                                <p style={{fontSize: 'var(--text-xs)', color: 'var(--color-text-muted)', marginTop: 'var(--space-3)'}}>
+                                    <i className="fas fa-lock mr-1"></i>
+                                    Bezpečná platba přes Stripe
+                                </p>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Overlay pro nejbližší dodavatele/opraváře */}
+                    {showNearbySuppliers && (
+                        <div className="translating-overlay" onClick={() => setShowNearbySuppliers(false)}>
+                            <div className="translating-box" onClick={e => e.stopPropagation()} style={{maxWidth: '500px', maxHeight: '80vh', overflow: 'auto'}}>
+                                <h3 style={{fontSize: 'var(--text-xl)', fontWeight: 'var(--font-bold)', marginBottom: 'var(--space-4)', display: 'flex', alignItems: 'center', gap: 'var(--space-2)'}}>
+                                    <i className="fas fa-map-marker-alt" style={{color: 'var(--color-primary)'}}></i>
+                                    Odborníci ve vašem okolí
+                                </h3>
+
+                                <div style={{
+                                    background: 'var(--color-info-light)',
+                                    padding: 'var(--space-3)',
+                                    borderRadius: 'var(--radius-lg)',
+                                    marginBottom: 'var(--space-4)',
+                                    fontSize: 'var(--text-sm)'
+                                }}>
+                                    <i className="fas fa-info-circle mr-2" style={{color: 'var(--color-info)'}}></i>
+                                    Zobrazujeme ověřené odborníky seřazené podle vzdálenosti od vaší polohy.
+                                </div>
+
+                                {/* Seznam dodavatelů */}
+                                <div style={{display: 'flex', flexDirection: 'column', gap: 'var(--space-3)'}}>
+                                    {[
+                                        { id: 1, name: 'Jan Novák - Instalatér', category: 'Instalatérství', phone: '+420 123 456 789', rating: 4.8, distance: 1.2, isPremium: true },
+                                        { id: 2, name: 'Elektro Servis Praha', category: 'Elektrikář', phone: '+420 987 654 321', rating: 4.5, distance: 2.5, isPremium: true },
+                                        { id: 3, name: 'Truhlářství Koval', category: 'Truhlář', phone: '+420 555 666 777', rating: 4.9, distance: 3.1, isPremium: true }
+                                    ].map(supplier => (
+                                        <div key={supplier.id} style={{
+                                            padding: 'var(--space-4)',
+                                            background: supplier.isPremium ? 'linear-gradient(135deg, #fef3c7 0%, #fde68a 100%)' : 'var(--color-bg-secondary)',
+                                            borderRadius: 'var(--radius-lg)',
+                                            border: supplier.isPremium ? '2px solid #f59e0b' : '1px solid var(--color-border)'
+                                        }}>
+                                            <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 'var(--space-2)'}}>
+                                                <div>
+                                                    <div style={{display: 'flex', alignItems: 'center', gap: 'var(--space-2)'}}>
+                                                        <span style={{fontWeight: 'var(--font-bold)'}}>{supplier.name}</span>
+                                                        {supplier.isPremium && (
+                                                            <span style={{
+                                                                background: '#f59e0b',
+                                                                color: 'white',
+                                                                padding: '2px 6px',
+                                                                borderRadius: 'var(--radius-full)',
+                                                                fontSize: '10px',
+                                                                fontWeight: 'var(--font-bold)'
+                                                            }}>
+                                                                <i className="fas fa-star mr-1"></i>PREMIUM
+                                                            </span>
+                                                        )}
+                                                    </div>
+                                                    <div style={{fontSize: 'var(--text-sm)', color: 'var(--color-text-secondary)'}}>
+                                                        {supplier.category}
+                                                    </div>
+                                                </div>
+                                                <div style={{textAlign: 'right'}}>
+                                                    <div style={{display: 'flex', alignItems: 'center', gap: '2px', color: '#f59e0b', fontSize: 'var(--text-sm)'}}>
+                                                        <i className="fas fa-star"></i>
+                                                        <span style={{fontWeight: 'var(--font-bold)'}}>{supplier.rating}</span>
+                                                    </div>
+                                                    <div style={{fontSize: 'var(--text-xs)', color: 'var(--color-text-muted)'}}>
+                                                        <i className="fas fa-map-marker-alt mr-1"></i>{supplier.distance} km
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <a
+                                                href={`tel:${supplier.phone}`}
+                                                style={{
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                    gap: 'var(--space-2)',
+                                                    padding: 'var(--space-3)',
+                                                    background: 'var(--color-success)',
+                                                    color: 'white',
+                                                    borderRadius: 'var(--radius-lg)',
+                                                    textDecoration: 'none',
+                                                    fontWeight: 'var(--font-semibold)'
+                                                }}
+                                            >
+                                                <i className="fas fa-phone"></i>
+                                                {supplier.phone}
+                                            </a>
+                                        </div>
+                                    ))}
+                                </div>
+
+                                {/* Registrace pro dodavatele */}
+                                <div style={{
+                                    marginTop: 'var(--space-6)',
+                                    padding: 'var(--space-4)',
+                                    background: 'linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%)',
+                                    borderRadius: 'var(--radius-lg)',
+                                    textAlign: 'center'
+                                }}>
+                                    <p style={{fontWeight: 'var(--font-semibold)', marginBottom: 'var(--space-2)'}}>
+                                        <i className="fas fa-user-tie mr-2"></i>
+                                        Jste odborník nebo firma?
+                                    </p>
+                                    <p style={{fontSize: 'var(--text-sm)', color: 'var(--color-text-secondary)', marginBottom: 'var(--space-3)'}}>
+                                        Registrujte se a získejte nové zakázky od zákazníků ve vašem okolí.
+                                    </p>
+                                    <button
+                                        onClick={() => {
+                                            setShowNearbySuppliers(false);
+                                            setShowSupplierRegistration(true);
+                                        }}
+                                        className="btn btn-primary"
+                                    >
+                                        <i className="fas fa-plus mr-2"></i>
+                                        Registrovat se jako odborník
+                                    </button>
+                                </div>
+
+                                <button
+                                    onClick={() => setShowNearbySuppliers(false)}
+                                    className="btn btn-secondary w-full"
+                                    style={{marginTop: 'var(--space-4)'}}
+                                >
+                                    Zavřít
+                                </button>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Modal pro registraci dodavatelů/opravářů */}
+                    {showSupplierRegistration && (
+                        <div className="translating-overlay" onClick={() => setShowSupplierRegistration(false)}>
+                            <div className="translating-box" onClick={e => e.stopPropagation()} style={{maxWidth: '500px', maxHeight: '85vh', overflow: 'auto'}}>
+                                <h3 style={{fontSize: 'var(--text-xl)', fontWeight: 'var(--font-bold)', marginBottom: 'var(--space-4)', display: 'flex', alignItems: 'center', gap: 'var(--space-2)'}}>
+                                    <i className="fas fa-briefcase" style={{color: 'var(--color-primary)'}}></i>
+                                    Registrace odborníka
+                                </h3>
+
+                                <div style={{
+                                    background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
+                                    color: 'white',
+                                    padding: 'var(--space-4)',
+                                    borderRadius: 'var(--radius-lg)',
+                                    marginBottom: 'var(--space-4)',
+                                    textAlign: 'center'
+                                }}>
+                                    <p style={{fontSize: 'var(--text-sm)', marginBottom: 'var(--space-2)'}}>
+                                        Získejte zakázky od zákazníků ve vašem okolí
+                                    </p>
+                                    <div style={{fontSize: 'var(--text-xs)', opacity: 0.9}}>
+                                        Budete zobrazeni uživatelům podle geolokace - nejbližší k zakázce
+                                    </div>
+                                </div>
+
+                                {/* Cenové plány */}
+                                <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-3)', marginBottom: 'var(--space-4)'}}>
+                                    {/* Měsíční plán */}
+                                    <div style={{
+                                        padding: 'var(--space-4)',
+                                        border: '2px solid var(--color-border)',
+                                        borderRadius: 'var(--radius-lg)',
+                                        textAlign: 'center'
+                                    }}>
+                                        <div style={{fontSize: 'var(--text-sm)', fontWeight: 'var(--font-semibold)', marginBottom: 'var(--space-2)'}}>
+                                            Měsíční
+                                        </div>
+                                        <div style={{fontSize: 'var(--text-2xl)', fontWeight: 'var(--font-bold)', color: 'var(--color-primary)'}}>
+                                            {PRICING.supplierMonthly} {PRICING.currency}
+                                        </div>
+                                        <div style={{fontSize: 'var(--text-xs)', color: 'var(--color-text-muted)'}}>
+                                            /měsíc
+                                        </div>
+                                        <button
+                                            onClick={() => alert('Platební brána bude brzy dostupná.\n\nMěsíční členství: ' + PRICING.supplierMonthly + ' ' + PRICING.currency)}
+                                            className="btn btn-secondary w-full"
+                                            style={{marginTop: 'var(--space-3)', fontSize: 'var(--text-sm)'}}
+                                        >
+                                            Vybrat
+                                        </button>
+                                    </div>
+
+                                    {/* Roční plán - zvýhodněný */}
+                                    <div style={{
+                                        padding: 'var(--space-4)',
+                                        border: '2px solid var(--color-success)',
+                                        borderRadius: 'var(--radius-lg)',
+                                        textAlign: 'center',
+                                        background: 'var(--color-success-light)',
+                                        position: 'relative'
+                                    }}>
+                                        <div style={{
+                                            position: 'absolute',
+                                            top: '-10px',
+                                            left: '50%',
+                                            transform: 'translateX(-50%)',
+                                            background: 'var(--color-success)',
+                                            color: 'white',
+                                            padding: '2px 10px',
+                                            borderRadius: 'var(--radius-full)',
+                                            fontSize: '10px',
+                                            fontWeight: 'var(--font-bold)'
+                                        }}>
+                                            2 MĚSÍCE ZDARMA
+                                        </div>
+                                        <div style={{fontSize: 'var(--text-sm)', fontWeight: 'var(--font-semibold)', marginBottom: 'var(--space-2)'}}>
+                                            Roční
+                                        </div>
+                                        <div style={{fontSize: 'var(--text-2xl)', fontWeight: 'var(--font-bold)', color: 'var(--color-success)'}}>
+                                            {PRICING.supplierYearly} {PRICING.currency}
+                                        </div>
+                                        <div style={{fontSize: 'var(--text-xs)', color: 'var(--color-text-muted)'}}>
+                                            /rok ({(PRICING.supplierYearly / 12).toFixed(2)} {PRICING.currency}/měs)
+                                        </div>
+                                        <button
+                                            onClick={() => alert('Platební brána bude brzy dostupná.\n\nRoční členství: ' + PRICING.supplierYearly + ' ' + PRICING.currency + '\n\nÚspora: ' + ((PRICING.supplierMonthly * 12) - PRICING.supplierYearly).toFixed(2) + ' ' + PRICING.currency + ' (2 měsíce zdarma)')}
+                                            className="btn btn-success w-full"
+                                            style={{marginTop: 'var(--space-3)', fontSize: 'var(--text-sm)'}}
+                                        >
+                                            <i className="fas fa-star mr-1"></i>Vybrat
+                                        </button>
+                                    </div>
+                                </div>
+
+                                {/* Co získáte */}
+                                <div style={{marginBottom: 'var(--space-4)'}}>
+                                    <h4 style={{fontSize: 'var(--text-sm)', fontWeight: 'var(--font-semibold)', marginBottom: 'var(--space-2)'}}>
+                                        Co získáte:
+                                    </h4>
+                                    <ul style={{fontSize: 'var(--text-sm)', display: 'flex', flexDirection: 'column', gap: 'var(--space-2)'}}>
+                                        <li><i className="fas fa-check text-success mr-2"></i>Zobrazení uživatelům v okolí</li>
+                                        <li><i className="fas fa-check text-success mr-2"></i>Prioritní pozice (podle geolokace)</li>
+                                        <li><i className="fas fa-check text-success mr-2"></i>PREMIUM badge pro větší důvěru</li>
+                                        <li><i className="fas fa-check text-success mr-2"></i>Hodnocení a recenze od zákazníků</li>
+                                        <li><i className="fas fa-check text-success mr-2"></i>Správa profilu a specializací</li>
+                                    </ul>
+                                </div>
+
+                                <button
+                                    onClick={() => setShowSupplierRegistration(false)}
+                                    className="btn btn-secondary w-full"
+                                >
+                                    Zavřít
                                 </button>
                             </div>
                         </div>
@@ -3420,56 +3880,118 @@
                                             </div>
                                         )}
 
-                                        {/* Action Buttons */}
-                                        <div className="flex gap-4">
+                                        {/* Action Buttons - Nový obchodní model */}
+                                        <div style={{display: 'flex', flexDirection: 'column', gap: 'var(--space-3)'}}>
+                                            {/* Základní návod - ZDARMA */}
                                             <button
                                                 onClick={() => startRepair(analysisResult.issue)}
-                                                className="btn btn-success flex-1"
+                                                className="btn btn-success"
+                                                style={{width: '100%', padding: 'var(--space-4)'}}
                                             >
-                                                <i className="fas fa-wrench mr-2"></i>
-                                                {t('startRepair')}
+                                                <i className="fas fa-play-circle mr-2"></i>
+                                                Základní návod (3-6 kroků)
+                                                <span style={{
+                                                    marginLeft: 'var(--space-2)',
+                                                    background: 'rgba(255,255,255,0.2)',
+                                                    padding: '2px 8px',
+                                                    borderRadius: 'var(--radius-full)',
+                                                    fontSize: 'var(--text-xs)'
+                                                }}>ZDARMA</span>
                                             </button>
+
+                                            {/* Detailní návod - placený */}
                                             <button
-                                                onClick={() => loadCraftsmen()}
-                                                className="btn btn-secondary flex-1"
+                                                onClick={() => {
+                                                    const issueId = analysisResult.issue.id || analysisResult.issue.name;
+                                                    if (isGuidePurchased(issueId)) {
+                                                        startRepair({...analysisResult.issue, isDetailed: true});
+                                                    } else {
+                                                        setShowDetailedGuidePayment(true);
+                                                    }
+                                                }}
+                                                style={{
+                                                    width: '100%',
+                                                    padding: 'var(--space-4)',
+                                                    background: isGuidePurchased(analysisResult.issue.id || analysisResult.issue.name)
+                                                        ? 'var(--color-success)'
+                                                        : 'linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%)',
+                                                    color: 'white',
+                                                    border: 'none',
+                                                    borderRadius: 'var(--radius-lg)',
+                                                    cursor: 'pointer',
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                    gap: 'var(--space-2)',
+                                                    fontWeight: 'var(--font-semibold)'
+                                                }}
                                             >
-                                                <i className="fas fa-phone mr-2"></i>
-                                                {t('callExpert')}
+                                                <i className={`fas ${isGuidePurchased(analysisResult.issue.id || analysisResult.issue.name) ? 'fa-check-circle' : 'fa-crown'}`}></i>
+                                                Detailní návod + schémata
+                                                <span style={{
+                                                    background: 'rgba(255,255,255,0.2)',
+                                                    padding: '2px 10px',
+                                                    borderRadius: 'var(--radius-full)',
+                                                    fontSize: 'var(--text-sm)'
+                                                }}>
+                                                    {isGuidePurchased(analysisResult.issue.id || analysisResult.issue.name) ? 'ODEMČENO' : `${PRICING.detailedGuide} ${PRICING.currency}`}
+                                                </span>
                                             </button>
+
+                                            {/* Zavolat odborníka - najde nejbližšího */}
+                                            <button
+                                                onClick={async () => {
+                                                    setShowNearbySuppliers(true);
+                                                }}
+                                                className="btn btn-secondary"
+                                                style={{width: '100%', padding: 'var(--space-4)'}}
+                                            >
+                                                <i className="fas fa-user-tie mr-2"></i>
+                                                {t('callExpert')} v okolí
+                                                <span style={{
+                                                    marginLeft: 'var(--space-2)',
+                                                    background: 'var(--color-success)',
+                                                    color: 'white',
+                                                    padding: '2px 8px',
+                                                    borderRadius: 'var(--radius-full)',
+                                                    fontSize: 'var(--text-xs)'
+                                                }}>ZDARMA</span>
+                                            </button>
+                                        </div>
+
+                                        {/* Affiliate odkazy na e-shopy */}
+                                        <div style={{marginTop: 'var(--space-4)', padding: 'var(--space-3)', background: 'var(--color-bg-secondary)', borderRadius: 'var(--radius-lg)'}}>
+                                            <p style={{fontSize: 'var(--text-xs)', color: 'var(--color-text-secondary)', marginBottom: 'var(--space-2)', textAlign: 'center'}}>
+                                                <i className="fas fa-shopping-cart mr-1"></i>
+                                                Nakupte potřebný materiál:
+                                            </p>
+                                            <div style={{display: 'flex', flexWrap: 'wrap', gap: 'var(--space-2)', justifyContent: 'center'}}>
+                                                {Object.entries(affiliateLinks).filter(([_, shop]) => shop.hasAffiliate).map(([key, shop]) => (
+                                                    <a
+                                                        key={key}
+                                                        href={shop.baseUrl + encodeURIComponent(analysisResult.issue.name)}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        style={{
+                                                            display: 'inline-flex',
+                                                            alignItems: 'center',
+                                                            gap: '4px',
+                                                            padding: '4px 10px',
+                                                            background: shop.color,
+                                                            color: 'white',
+                                                            borderRadius: 'var(--radius-md)',
+                                                            textDecoration: 'none',
+                                                            fontSize: 'var(--text-xs)',
+                                                            fontWeight: 'var(--font-semibold)'
+                                                        }}
+                                                    >
+                                                        <i className={`fas ${shop.icon}`}></i>
+                                                        {shop.name}
+                                                    </a>
+                                                ))}
+                                            </div>
                                         </div>
                                     </div>
-
-                                    {/* Premium Banner - Compact */}
-                                    <button
-                                        style={{
-                                            width: '100%',
-                                            background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
-                                            color: 'white',
-                                            padding: 'var(--space-3) var(--space-4)',
-                                            border: 'none',
-                                            cursor: 'pointer',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'space-between',
-                                            gap: 'var(--space-3)'
-                                        }}
-                                        onClick={() => alert('Platební brána bude dostupná brzy!\n\nCena: 3,99 €/měsíc\n\nZískáte:\n• Detailní schéma\n• Odkazy na produkty\n• Kontakty na opraváře')}
-                                    >
-                                        <div style={{display: 'flex', alignItems: 'center', gap: 'var(--space-2)'}}>
-                                            <i className="fas fa-crown"></i>
-                                            <span style={{fontWeight: 'var(--font-semibold)'}}>FIXO Premium</span>
-                                            <span style={{fontSize: 'var(--text-sm)', opacity: 0.9}}>— schéma, e-shop odkazy</span>
-                                        </div>
-                                        <span style={{
-                                            background: 'rgba(255,255,255,0.2)',
-                                            padding: 'var(--space-1) var(--space-3)',
-                                            borderRadius: 'var(--radius-full)',
-                                            fontWeight: 'var(--font-bold)',
-                                            fontSize: 'var(--text-sm)'
-                                        }}>
-                                            3,99 €
-                                        </span>
-                                    </button>
                                         </div>
                                     </div>
                                 </div>
@@ -3624,58 +4146,35 @@
                                                         <i className="fas fa-wrench mr-2" style={{color: 'var(--color-primary)', opacity: 0.7}}></i>
                                                         {tool}
                                                     </span>
-                                                    <div style={{display: 'flex', gap: 'var(--space-1)'}}>
-                                                        <a
-                                                            href={getAffiliateUrl('alza', tool, selectedIssue)}
-                                                            target="_blank"
-                                                            rel="noopener noreferrer"
-                                                            style={{
-                                                                padding: 'var(--space-1) var(--space-2)',
-                                                                background: '#ff6600',
-                                                                color: 'white',
-                                                                borderRadius: 'var(--radius-md)',
-                                                                fontSize: 'var(--text-xs)',
-                                                                textDecoration: 'none',
-                                                                fontWeight: 'var(--font-semibold)'
-                                                            }}
-                                                            title="Koupit na Alza.cz"
-                                                        >
-                                                            Alza
-                                                        </a>
-                                                        <a
-                                                            href={getAffiliateUrl('mall', tool, selectedIssue)}
-                                                            target="_blank"
-                                                            rel="noopener noreferrer"
-                                                            style={{
-                                                                padding: 'var(--space-1) var(--space-2)',
-                                                                background: '#e4002b',
-                                                                color: 'white',
-                                                                borderRadius: 'var(--radius-md)',
-                                                                fontSize: 'var(--text-xs)',
-                                                                textDecoration: 'none',
-                                                                fontWeight: 'var(--font-semibold)'
-                                                            }}
-                                                            title="Koupit na Mall.cz"
-                                                        >
-                                                            Mall
-                                                        </a>
-                                                        <a
-                                                            href={getAffiliateUrl('hornbach', tool, selectedIssue)}
-                                                            target="_blank"
-                                                            rel="noopener noreferrer"
-                                                            style={{
-                                                                padding: 'var(--space-1) var(--space-2)',
-                                                                background: '#f97316',
-                                                                color: 'white',
-                                                                borderRadius: 'var(--radius-md)',
-                                                                fontSize: 'var(--text-xs)',
-                                                                textDecoration: 'none',
-                                                                fontWeight: 'var(--font-semibold)'
-                                                            }}
-                                                            title="Koupit v Hornbachu"
-                                                        >
-                                                            <i className="fas fa-hammer"></i>
-                                                        </a>
+                                                    {/* Affiliate odkazy - pouze e-shopy s affiliate programem */}
+                                                    <div style={{display: 'flex', gap: 'var(--space-1)', flexWrap: 'wrap'}}>
+                                                        {Object.entries(affiliateLinks)
+                                                            .filter(([_, shop]) => shop.hasAffiliate)
+                                                            .slice(0, 3) // Zobrazit max 3 e-shopy
+                                                            .map(([key, shop]) => (
+                                                            <a
+                                                                key={key}
+                                                                href={getAffiliateUrl(key, tool, selectedIssue)}
+                                                                target="_blank"
+                                                                rel="noopener noreferrer"
+                                                                style={{
+                                                                    padding: 'var(--space-1) var(--space-2)',
+                                                                    background: shop.color,
+                                                                    color: 'white',
+                                                                    borderRadius: 'var(--radius-md)',
+                                                                    fontSize: 'var(--text-xs)',
+                                                                    textDecoration: 'none',
+                                                                    fontWeight: 'var(--font-semibold)',
+                                                                    display: 'inline-flex',
+                                                                    alignItems: 'center',
+                                                                    gap: '3px'
+                                                                }}
+                                                                title={`Koupit na ${shop.name}`}
+                                                            >
+                                                                <i className={`fas ${shop.icon}`} style={{fontSize: '10px'}}></i>
+                                                                {shop.name.length > 5 ? shop.name.slice(0, 4) : shop.name}
+                                                            </a>
+                                                        ))}
                                                     </div>
                                                 </div>
                                             ))}
