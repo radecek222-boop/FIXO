@@ -263,9 +263,9 @@ class ImageHasher {
 // 3. LOCAL CACHE - IndexedDB Storage
 // ============================================
 class LocalCache {
-    constructor(dbName = 'FIXO_Cache', version = 1) {
+    constructor(dbName = 'FIXO_Cache', version = 2) {
         this.dbName = dbName;
-        this.version = version;
+        this.version = version;  // Verze 2 - přidán feedback store
         this.db = null;
     }
 
@@ -305,6 +305,14 @@ class LocalCache {
                 // Store pro statistiky
                 if (!db.objectStoreNames.contains('stats')) {
                     db.createObjectStore('stats', { keyPath: 'key' });
+                }
+
+                // Store pro uživatelský feedback (v2)
+                if (!db.objectStoreNames.contains('feedback')) {
+                    const feedbackStore = db.createObjectStore('feedback', { keyPath: 'id', autoIncrement: true });
+                    feedbackStore.createIndex('imageHash', 'imageHash', { unique: false });
+                    feedbackStore.createIndex('correctedCategory', 'correctedCategory', { unique: false });
+                    feedbackStore.createIndex('timestamp', 'timestamp', { unique: false });
                 }
             };
         });
@@ -860,7 +868,273 @@ class EmbeddingStore {
 }
 
 // ============================================
-// 6. SMART ANALYZER - Orchestrátor
+// 6. FEEDBACK STORE - Učení od uživatelů
+// ============================================
+class FeedbackStore {
+    constructor(cache) {
+        this.cache = cache;
+        this.FEEDBACK_STORE = 'feedback';
+        this.MIN_VOTES_FOR_OVERRIDE = 3;      // Minimální počet hlasů pro přepsání AI
+        this.SIMILARITY_THRESHOLD = 0.80;      // Práh podobnosti pro aplikaci feedbacku
+        this.CONFIDENCE_BOOST_PER_VOTE = 0.05; // Zvýšení confidence za každý hlas
+    }
+
+    /**
+     * Inicializace - přidá feedback store do IndexedDB pokud neexistuje
+     */
+    async init() {
+        // Feedback store se vytvoří při upgradu databáze
+        // Zde jen ověříme, že existuje
+        return this;
+    }
+
+    /**
+     * Uloží uživatelský feedback (opravu)
+     * @param {object} params
+     * @param {string} params.imageHash - Hash obrázku
+     * @param {object} params.originalResult - Původní výsledek od AI
+     * @param {object} params.correctedResult - Opravený výsledek od uživatele
+     * @param {string} params.thumbnail - Komprimovaný thumbnail
+     */
+    async submitFeedback({ imageHash, originalResult, correctedResult, thumbnail, embedding }) {
+        const db = this.cache.db;
+
+        // Vytvořit feedback store pokud neexistuje
+        if (!db.objectStoreNames.contains(this.FEEDBACK_STORE)) {
+            console.warn('Feedback store neexistuje, bude vytvořen při další inicializaci');
+            // Uložit do localStorage jako fallback
+            this._saveFeedbackToLocalStorage({ imageHash, originalResult, correctedResult, thumbnail, embedding });
+            return;
+        }
+
+        const store = db.transaction(this.FEEDBACK_STORE, 'readwrite').objectStore(this.FEEDBACK_STORE);
+
+        const feedback = {
+            imageHash,
+            originalCategory: originalResult?.object?.category || 'unknown',
+            originalIssue: originalResult?.issue?.name || 'unknown',
+            correctedCategory: correctedResult.object?.category,
+            correctedObject: correctedResult.object?.name,
+            correctedIssue: correctedResult.issue?.name,
+            correctedResult: correctedResult,
+            thumbnail,
+            embedding,
+            timestamp: Date.now(),
+            weight: 1  // Základní váha, může být zvýšena pro ověřené uživatele
+        };
+
+        return new Promise((resolve, reject) => {
+            const request = store.add(feedback);
+            request.onsuccess = () => {
+                console.log('✅ Feedback uložen:', feedback.correctedIssue);
+                resolve(request.result);
+            };
+            request.onerror = () => reject(request.error);
+        });
+    }
+
+    /**
+     * Fallback ukládání do localStorage
+     */
+    _saveFeedbackToLocalStorage(feedback) {
+        try {
+            const existing = JSON.parse(localStorage.getItem('fixo_feedback') || '[]');
+            existing.push({ ...feedback, timestamp: Date.now() });
+            // Limit na 100 záznamů
+            if (existing.length > 100) existing.shift();
+            localStorage.setItem('fixo_feedback', JSON.stringify(existing));
+            console.log('✅ Feedback uložen do localStorage');
+        } catch (e) {
+            console.error('Chyba při ukládání feedbacku:', e);
+        }
+    }
+
+    /**
+     * Najde relevantní feedbacky pro daný obrázek
+     * @param {string} imageHash - Hash obrázku
+     * @param {array} embedding - Embedding obrázku (optional)
+     * @returns {Promise<{feedbacks: array, consensus: object|null}>}
+     */
+    async findRelevantFeedback(imageHash, embedding = null) {
+        const hasher = new ImageHasher();
+        let allFeedback = [];
+
+        // Načíst z IndexedDB
+        try {
+            const db = this.cache.db;
+            if (db.objectStoreNames.contains(this.FEEDBACK_STORE)) {
+                const store = db.transaction(this.FEEDBACK_STORE, 'readonly').objectStore(this.FEEDBACK_STORE);
+                allFeedback = await new Promise((resolve) => {
+                    const req = store.getAll();
+                    req.onsuccess = () => resolve(req.result || []);
+                    req.onerror = () => resolve([]);
+                });
+            }
+        } catch (e) {
+            console.error('Chyba při čtení feedbacku z IndexedDB:', e);
+        }
+
+        // Načíst z localStorage jako fallback
+        try {
+            const localFeedback = JSON.parse(localStorage.getItem('fixo_feedback') || '[]');
+            allFeedback = [...allFeedback, ...localFeedback];
+        } catch (e) {}
+
+        if (allFeedback.length === 0) {
+            return { feedbacks: [], consensus: null };
+        }
+
+        // Najít podobné feedbacky podle hash
+        const relevantFeedback = [];
+
+        for (const fb of allFeedback) {
+            let similarity = 0;
+
+            // Porovnat hash
+            if (fb.imageHash && imageHash) {
+                similarity = hasher.compare(imageHash, fb.imageHash);
+            }
+
+            // Pokud máme embedding, použít i ten
+            if (embedding && fb.embedding && similarity < this.SIMILARITY_THRESHOLD) {
+                const embeddingSimilarity = this._cosineSimilarity(embedding, fb.embedding);
+                similarity = Math.max(similarity, embeddingSimilarity);
+            }
+
+            if (similarity >= this.SIMILARITY_THRESHOLD) {
+                relevantFeedback.push({
+                    ...fb,
+                    similarity,
+                    effectiveWeight: fb.weight * similarity  // Váha upravená podle podobnosti
+                });
+            }
+        }
+
+        // Seřadit podle podobnosti
+        relevantFeedback.sort((a, b) => b.similarity - a.similarity);
+
+        // Vypočítat konsenzus
+        const consensus = this._calculateConsensus(relevantFeedback);
+
+        return { feedbacks: relevantFeedback, consensus };
+    }
+
+    /**
+     * Vypočítá konsenzus z feedbacků pomocí váženého hlasování
+     */
+    _calculateConsensus(feedbacks) {
+        if (feedbacks.length === 0) return null;
+
+        // Seskupit podle opravené závady
+        const votesByIssue = {};
+        let totalWeight = 0;
+
+        for (const fb of feedbacks) {
+            const key = `${fb.correctedCategory}::${fb.correctedIssue}`;
+
+            if (!votesByIssue[key]) {
+                votesByIssue[key] = {
+                    category: fb.correctedCategory,
+                    object: fb.correctedObject,
+                    issue: fb.correctedIssue,
+                    result: fb.correctedResult,
+                    votes: 0,
+                    totalWeight: 0,
+                    avgSimilarity: 0,
+                    feedbacks: []
+                };
+            }
+
+            votesByIssue[key].votes++;
+            votesByIssue[key].totalWeight += fb.effectiveWeight;
+            votesByIssue[key].avgSimilarity += fb.similarity;
+            votesByIssue[key].feedbacks.push(fb);
+            totalWeight += fb.effectiveWeight;
+        }
+
+        // Najít vítěze
+        let winner = null;
+        let maxWeight = 0;
+
+        for (const key in votesByIssue) {
+            const vote = votesByIssue[key];
+            vote.avgSimilarity /= vote.votes;
+
+            if (vote.totalWeight > maxWeight) {
+                maxWeight = vote.totalWeight;
+                winner = vote;
+            }
+        }
+
+        if (!winner) return null;
+
+        // Vypočítat confidence na základě hlasování
+        const voteConfidence = winner.totalWeight / totalWeight;
+        const hasEnoughVotes = winner.votes >= this.MIN_VOTES_FOR_OVERRIDE;
+
+        return {
+            ...winner,
+            voteConfidence,
+            totalVotes: feedbacks.length,
+            hasEnoughVotes,
+            shouldOverride: hasEnoughVotes && voteConfidence > 0.6,
+            confidence: Math.min(0.95, 0.5 + (winner.votes * this.CONFIDENCE_BOOST_PER_VOTE) + (voteConfidence * 0.3))
+        };
+    }
+
+    _cosineSimilarity(a, b) {
+        if (!a || !b || a.length !== b.length) return 0;
+        let dot = 0, normA = 0, normB = 0;
+        for (let i = 0; i < a.length; i++) {
+            dot += a[i] * b[i];
+            normA += a[i] * a[i];
+            normB += b[i] * b[i];
+        }
+        const mag = Math.sqrt(normA) * Math.sqrt(normB);
+        return mag === 0 ? 0 : dot / mag;
+    }
+
+    /**
+     * Získá statistiky feedbacku
+     */
+    async getStats() {
+        let allFeedback = [];
+
+        try {
+            const db = this.cache.db;
+            if (db.objectStoreNames.contains(this.FEEDBACK_STORE)) {
+                const store = db.transaction(this.FEEDBACK_STORE, 'readonly').objectStore(this.FEEDBACK_STORE);
+                allFeedback = await new Promise((resolve) => {
+                    const req = store.getAll();
+                    req.onsuccess = () => resolve(req.result || []);
+                });
+            }
+        } catch (e) {}
+
+        try {
+            const localFeedback = JSON.parse(localStorage.getItem('fixo_feedback') || '[]');
+            allFeedback = [...allFeedback, ...localFeedback];
+        } catch (e) {}
+
+        // Statistiky podle kategorií
+        const byCategory = {};
+        for (const fb of allFeedback) {
+            const cat = fb.correctedCategory || 'unknown';
+            byCategory[cat] = (byCategory[cat] || 0) + 1;
+        }
+
+        return {
+            totalFeedbacks: allFeedback.length,
+            byCategory,
+            oldestFeedback: allFeedback.length > 0
+                ? Math.min(...allFeedback.map(f => f.timestamp))
+                : null
+        };
+    }
+}
+
+// ============================================
+// 7. SMART ANALYZER - Orchestrátor
 // ============================================
 class SmartAnalyzer {
     constructor(apiUrl = null) {
@@ -870,12 +1144,18 @@ class SmartAnalyzer {
         this.cache = new LocalCache();
         this.classifier = new LocalClassifier();
         this.embeddingStore = null;
+        this.feedbackStore = null;
+
+        // Uložit poslední analýzu pro feedback
+        this._lastAnalysis = null;
 
         this.isInitialized = false;
         this.stats = {
             cacheHits: 0,
             localClassifications: 0,
-            apiCalls: 0
+            apiCalls: 0,
+            feedbackUsed: 0,
+            feedbackSubmitted: 0
         };
 
         // Konfigurace
@@ -885,7 +1165,8 @@ class SmartAnalyzer {
             classifierConfidenceThreshold: 0.7, // Práh pro lokální klasifikátor
             useEmbeddings: true,               // Používat embedding search
             useClassifier: true,               // Používat lokální klasifikátor
-            learnFromApi: true                 // Učit se z API odpovědí
+            learnFromApi: true,                // Učit se z API odpovědí
+            useFeedback: true                  // Používat feedback od uživatelů
         };
     }
 
@@ -896,6 +1177,7 @@ class SmartAnalyzer {
 
         await this.cache.init();
         this.embeddingStore = new EmbeddingStore(this.cache);
+        this.feedbackStore = new FeedbackStore(this.cache);
 
         if (this.config.useClassifier) {
             // Načíst model na pozadí
@@ -918,7 +1200,7 @@ class SmartAnalyzer {
 
     /**
      * Hlavní metoda pro analýzu obrázku
-     * Používá kaskádový přístup: Cache -> Embeddings -> Classifier -> API
+     * Používá kaskádový přístup: Feedback -> Cache -> Embeddings -> Classifier -> API
      */
     async analyze(base64Image, options = {}) {
         if (!this.isInitialized) await this.init();
@@ -926,6 +1208,7 @@ class SmartAnalyzer {
         const startTime = Date.now();
         let source = 'unknown';
         let result = null;
+        let embedding = null;
 
         try {
             // 1. Komprimovat a zpracovat obrázek
@@ -937,47 +1220,72 @@ class SmartAnalyzer {
             const hash = await this.imageHasher.hash(processed.thumbnail);
             const hashHex = this.imageHasher.toHex(hash);
 
-            // 3. Zkusit najít v cache podle hashe
-            console.log('🔍 Hledám v cache...');
-            const cachedResult = await this.cache.findByHash(hash, this.config.hashSimilarityThreshold);
-
-            if (cachedResult) {
-                console.log(`✅ Cache hit! Podobnost: ${(cachedResult.similarity * 100).toFixed(1)}%`);
-                this.stats.cacheHits++;
-                source = 'cache';
-                result = cachedResult.result;
+            // 2.5 Získat embedding pro feedback lookup
+            if (this.classifier.isLoaded) {
+                embedding = await this.classifier.getEmbedding(processed.modelInput);
             }
 
-            // 4. Zkusit embedding similarity search
-            if (!result && this.config.useEmbeddings && this.classifier.isLoaded) {
-                console.log('🧠 Hledám podobné embeddingy...');
-                const embedding = await this.classifier.getEmbedding(processed.modelInput);
+            // 3. NEJPRVE zkontrolovat uživatelský feedback
+            if (this.config.useFeedback && this.feedbackStore) {
+                console.log('👥 Kontroluji uživatelský feedback...');
+                const { consensus } = await this.feedbackStore.findRelevantFeedback(hash, embedding);
 
-                if (embedding) {
-                    const similar = await this.embeddingStore.findSimilar(
-                        embedding,
-                        3,
-                        this.config.embeddingSimilarityThreshold
-                    );
-
-                    if (similar.length > 0) {
-                        // Získat analýzu pro nejpodobnější embedding
-                        const store = this.cache._getStore('analyses', 'readonly');
-                        const analysisRequest = await new Promise((resolve) => {
-                            const req = store.get(similar[0].analysisId);
-                            req.onsuccess = () => resolve(req.result);
-                        });
-
-                        if (analysisRequest) {
-                            console.log(`✅ Embedding match! Podobnost: ${(similar[0].similarity * 100).toFixed(1)}%`);
-                            source = 'embedding';
-                            result = analysisRequest.result;
+                if (consensus && consensus.shouldOverride) {
+                    console.log(`✅ Feedback konsenzus! ${consensus.votes} hlasů pro "${consensus.issue}" (${(consensus.voteConfidence * 100).toFixed(1)}% shoda)`);
+                    this.stats.feedbackUsed++;
+                    source = 'feedback';
+                    result = {
+                        ...consensus.result,
+                        confidence: Math.round(consensus.confidence * 100),
+                        _feedbackInfo: {
+                            votes: consensus.votes,
+                            totalVotes: consensus.totalVotes,
+                            voteConfidence: consensus.voteConfidence
                         }
+                    };
+                }
+            }
+
+            // 4. Zkusit najít v cache podle hashe
+            if (!result) {
+                console.log('🔍 Hledám v cache...');
+                const cachedResult = await this.cache.findByHash(hash, this.config.hashSimilarityThreshold);
+
+                if (cachedResult) {
+                    console.log(`✅ Cache hit! Podobnost: ${(cachedResult.similarity * 100).toFixed(1)}%`);
+                    this.stats.cacheHits++;
+                    source = 'cache';
+                    result = cachedResult.result;
+                }
+            }
+
+            // 5. Zkusit embedding similarity search
+            if (!result && this.config.useEmbeddings && embedding) {
+                console.log('🧠 Hledám podobné embeddingy...');
+
+                const similar = await this.embeddingStore.findSimilar(
+                    embedding,
+                    3,
+                    this.config.embeddingSimilarityThreshold
+                );
+
+                if (similar.length > 0) {
+                    // Získat analýzu pro nejpodobnější embedding
+                    const store = this.cache._getStore('analyses', 'readonly');
+                    const analysisRequest = await new Promise((resolve) => {
+                        const req = store.get(similar[0].analysisId);
+                        req.onsuccess = () => resolve(req.result);
+                    });
+
+                    if (analysisRequest) {
+                        console.log(`✅ Embedding match! Podobnost: ${(similar[0].similarity * 100).toFixed(1)}%`);
+                        source = 'embedding';
+                        result = analysisRequest.result;
                     }
                 }
             }
 
-            // 5. Zkusit lokální klasifikátor
+            // 6. Zkusit lokální klasifikátor
             if (!result && this.config.useClassifier && this.classifier.isLoaded) {
                 console.log('🤖 Zkouším lokální klasifikátor...');
                 const classification = await this.classifier.classify(processed.modelInput);
@@ -992,7 +1300,7 @@ class SmartAnalyzer {
                 }
             }
 
-            // 6. Fallback na API
+            // 7. Fallback na API
             if (!result && this.apiUrl) {
                 console.log('🌐 Volám API...');
                 this.stats.apiCalls++;
@@ -1006,12 +1314,23 @@ class SmartAnalyzer {
                 }
             }
 
-            // 7. Pokud stále nemáme výsledek, použít simulaci
+            // 8. Pokud stále nemáme výsledek, použít simulaci
             if (!result) {
                 console.log('⚠️ Používám simulaci...');
                 source = 'simulation';
                 result = this._getSimulatedResult();
             }
+
+            // Uložit pro možný feedback
+            this._lastAnalysis = {
+                hash,
+                hashHex,
+                thumbnail: processed.thumbnail,
+                embedding,
+                result,
+                source,
+                timestamp: Date.now()
+            };
 
             const duration = Date.now() - startTime;
             console.log(`⏱️ Analýza dokončena za ${duration}ms (zdroj: ${source})`);
@@ -1216,29 +1535,77 @@ class SmartAnalyzer {
     }
 
     /**
+     * Odeslat uživatelský feedback (opravu špatné analýzy)
+     * @param {object} correctedResult - Správný výsledek zvolený uživatelem
+     * @returns {Promise<{success: boolean, message: string}>}
+     */
+    async submitFeedback(correctedResult) {
+        if (!this._lastAnalysis) {
+            return { success: false, message: 'Žádná analýza k opravení' };
+        }
+
+        if (!this.feedbackStore) {
+            return { success: false, message: 'FeedbackStore není inicializován' };
+        }
+
+        try {
+            await this.feedbackStore.submitFeedback({
+                imageHash: this._lastAnalysis.hash,
+                originalResult: this._lastAnalysis.result,
+                correctedResult: correctedResult,
+                thumbnail: this._lastAnalysis.thumbnail,
+                embedding: this._lastAnalysis.embedding
+            });
+
+            this.stats.feedbackSubmitted++;
+            await this._saveStats();
+
+            console.log('✅ Feedback odeslán:', correctedResult.issue?.name);
+
+            return {
+                success: true,
+                message: 'Děkujeme za opravu! Pomáháte zlepšit rozpoznávání.'
+            };
+        } catch (error) {
+            console.error('Chyba při odesílání feedbacku:', error);
+            return { success: false, message: 'Chyba při ukládání feedbacku' };
+        }
+    }
+
+    /**
+     * Získá poslední analýzu (pro UI zobrazení možnosti opravy)
+     */
+    getLastAnalysis() {
+        return this._lastAnalysis;
+    }
+
+    /**
      * Získá statistiky systému
      */
     async getStats() {
         const cacheStats = await this.cache.getStats();
+        const feedbackStats = this.feedbackStore ? await this.feedbackStore.getStats() : null;
 
         return {
             ...this.stats,
             cache: cacheStats,
+            feedback: feedbackStats,
             efficiency: this._calculateEfficiency()
         };
     }
 
     _calculateEfficiency() {
-        const total = this.stats.cacheHits + this.stats.localClassifications + this.stats.apiCalls;
+        const total = this.stats.cacheHits + this.stats.localClassifications + this.stats.apiCalls + this.stats.feedbackUsed;
         if (total === 0) return 0;
 
-        const saved = this.stats.cacheHits + this.stats.localClassifications;
+        const saved = this.stats.cacheHits + this.stats.localClassifications + this.stats.feedbackUsed;
         return Math.round((saved / total) * 100);
     }
 }
 
 // Export pro použití v aplikaci
 window.SmartAnalyzer = SmartAnalyzer;
+window.FeedbackStore = FeedbackStore;
 window.ImageProcessor = ImageProcessor;
 window.ImageHasher = ImageHasher;
 window.LocalCache = LocalCache;

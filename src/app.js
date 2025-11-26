@@ -784,6 +784,11 @@
             const [smartAnalyzer, setSmartAnalyzer] = useState(null);
             const [analyzerStats, setAnalyzerStats] = useState(null);
 
+            // Feedback modal pro opravu špatné analýzy
+            const [showFeedbackModal, setShowFeedbackModal] = useState(false);
+            const [feedbackCategory, setFeedbackCategory] = useState('all');
+            const [feedbackSearch, setFeedbackSearch] = useState('');
+
             // Inicializace SmartAnalyzer
             useEffect(() => {
                 const initSmartAnalyzer = async () => {
@@ -800,6 +805,33 @@
                 };
                 initSmartAnalyzer();
             }, []);
+
+            // Funkce pro odeslání feedbacku (opravy)
+            const submitFeedback = async (selectedObject, selectedIssue) => {
+                if (!smartAnalyzer) return;
+
+                const correctedResult = {
+                    object: {
+                        name: selectedObject.name,
+                        category: selectedObject.category,
+                        icon: getCategoryIcon(selectedObject.category)
+                    },
+                    issue: selectedIssue
+                };
+
+                const result = await smartAnalyzer.submitFeedback(correctedResult);
+
+                if (result.success) {
+                    alert(result.message);
+                    setShowFeedbackModal(false);
+
+                    // Aktualizovat statistiky
+                    const stats = await smartAnalyzer.getStats();
+                    setAnalyzerStats(stats);
+                } else {
+                    alert('Chyba: ' + result.message);
+                }
+            };
 
             // Manual description & voice input
             const [showDescribeModal, setShowDescribeModal] = useState(false);
@@ -1999,6 +2031,140 @@
                         </div>
                     )}
 
+                    {/* Modal pro opravu špatné analýzy (Feedback) */}
+                    {showFeedbackModal && (
+                        <div className="translating-overlay" onClick={() => setShowFeedbackModal(false)}>
+                            <div className="translating-box" onClick={e => e.stopPropagation()} style={{maxHeight: '80vh', overflow: 'auto'}}>
+                                <h3 style={{fontSize: 'var(--text-xl)', fontWeight: 'var(--font-bold)', marginBottom: 'var(--space-4)', display: 'flex', alignItems: 'center', gap: 'var(--space-2)'}}>
+                                    <i className="fas fa-edit" style={{color: 'var(--color-warning)'}}></i>
+                                    Opravit analýzu
+                                </h3>
+
+                                <p style={{fontSize: 'var(--text-sm)', color: 'var(--color-text-secondary)', marginBottom: 'var(--space-4)'}}>
+                                    Vyberte správnou závadu z databáze. Vaše oprava pomůže zlepšit rozpoznávání pro všechny.
+                                </p>
+
+                                {/* Vyhledávání */}
+                                <div style={{marginBottom: 'var(--space-4)'}}>
+                                    <input
+                                        type="text"
+                                        placeholder="Hledat závadu..."
+                                        value={feedbackSearch}
+                                        onChange={(e) => setFeedbackSearch(e.target.value)}
+                                        style={{
+                                            width: '100%',
+                                            padding: 'var(--space-3)',
+                                            borderRadius: 'var(--radius-lg)',
+                                            border: '2px solid var(--color-border)',
+                                            fontSize: 'var(--text-sm)'
+                                        }}
+                                    />
+                                </div>
+
+                                {/* Filtry kategorií */}
+                                <div style={{display: 'flex', flexWrap: 'wrap', gap: 'var(--space-2)', marginBottom: 'var(--space-4)'}}>
+                                    <button
+                                        onClick={() => setFeedbackCategory('all')}
+                                        style={{
+                                            padding: 'var(--space-1) var(--space-2)',
+                                            borderRadius: 'var(--radius-full)',
+                                            border: 'none',
+                                            fontSize: 'var(--text-xs)',
+                                            background: feedbackCategory === 'all' ? 'var(--color-primary)' : 'var(--color-bg-tertiary)',
+                                            color: feedbackCategory === 'all' ? 'white' : 'var(--color-text-secondary)',
+                                            cursor: 'pointer'
+                                        }}
+                                    >
+                                        Vše
+                                    </button>
+                                    {categoriesData.map(cat => (
+                                        <button
+                                            key={cat.id}
+                                            onClick={() => setFeedbackCategory(cat.id)}
+                                            style={{
+                                                padding: 'var(--space-1) var(--space-2)',
+                                                borderRadius: 'var(--radius-full)',
+                                                border: 'none',
+                                                fontSize: 'var(--text-xs)',
+                                                background: feedbackCategory === cat.id ? 'var(--color-primary)' : 'var(--color-bg-tertiary)',
+                                                color: feedbackCategory === cat.id ? 'white' : 'var(--color-text-secondary)',
+                                                cursor: 'pointer'
+                                            }}
+                                        >
+                                            <i className={`fas ${cat.icon} mr-1`}></i>
+                                            {cat.name}
+                                        </button>
+                                    ))}
+                                </div>
+
+                                {/* Seznam závad */}
+                                <div style={{maxHeight: '300px', overflow: 'auto', marginBottom: 'var(--space-4)'}}>
+                                    {Object.entries(repairDatabase)
+                                        .filter(([key, obj]) => {
+                                            if (feedbackCategory !== 'all' && obj.category !== feedbackCategory) return false;
+                                            if (feedbackSearch) {
+                                                const search = feedbackSearch.toLowerCase();
+                                                return obj.name.toLowerCase().includes(search) ||
+                                                    obj.issues.some(i => i.name.toLowerCase().includes(search));
+                                            }
+                                            return true;
+                                        })
+                                        .map(([key, obj]) => (
+                                            <div key={key} style={{marginBottom: 'var(--space-3)'}}>
+                                                <div style={{
+                                                    fontSize: 'var(--text-sm)',
+                                                    fontWeight: 'var(--font-semibold)',
+                                                    color: 'var(--color-text-secondary)',
+                                                    marginBottom: 'var(--space-1)',
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    gap: 'var(--space-1)'
+                                                }}>
+                                                    <i className={`fas ${getCategoryIcon(obj.category)}`}></i>
+                                                    {obj.name}
+                                                </div>
+                                                {obj.issues
+                                                    .filter(issue => !feedbackSearch || issue.name.toLowerCase().includes(feedbackSearch.toLowerCase()))
+                                                    .map((issue, idx) => (
+                                                        <button
+                                                            key={idx}
+                                                            onClick={() => submitFeedback(obj, issue)}
+                                                            style={{
+                                                                width: '100%',
+                                                                padding: 'var(--space-2) var(--space-3)',
+                                                                marginBottom: 'var(--space-1)',
+                                                                borderRadius: 'var(--radius-md)',
+                                                                border: '1px solid var(--color-border)',
+                                                                background: 'var(--color-bg-primary)',
+                                                                textAlign: 'left',
+                                                                cursor: 'pointer',
+                                                                display: 'flex',
+                                                                alignItems: 'center',
+                                                                justifyContent: 'space-between',
+                                                                fontSize: 'var(--text-sm)'
+                                                            }}
+                                                        >
+                                                            <span>{issue.name}</span>
+                                                            <i className="fas fa-chevron-right" style={{color: 'var(--color-text-muted)', fontSize: 'var(--text-xs)'}}></i>
+                                                        </button>
+                                                    ))
+                                                }
+                                            </div>
+                                        ))
+                                    }
+                                </div>
+
+                                {/* Zavřít */}
+                                <button
+                                    onClick={() => setShowFeedbackModal(false)}
+                                    className="btn btn-secondary w-full"
+                                >
+                                    Zrušit
+                                </button>
+                            </div>
+                        </div>
+                    )}
+
                     {/* Před-opravní checklist modal - Compact */}
                     {showChecklist && pendingIssue && (
                         <div className="translating-overlay" onClick={cancelChecklist}>
@@ -2986,6 +3152,40 @@
                                                 <i className={`fas ${getCategoryIcon(analysisResult.issue.category)}`} style={{opacity: 0.9}}></i>
                                             </div>
                                         </div>
+                                    </div>
+
+                                    {/* Tlačítko pro opravu špatné analýzy */}
+                                    <div style={{
+                                        padding: 'var(--space-3) var(--space-4)',
+                                        background: 'var(--color-bg-secondary)',
+                                        borderBottom: '1px solid var(--color-border)',
+                                        display: 'flex',
+                                        justifyContent: 'space-between',
+                                        alignItems: 'center'
+                                    }}>
+                                        <span style={{fontSize: 'var(--text-sm)', color: 'var(--color-text-secondary)'}}>
+                                            <i className="fas fa-question-circle mr-2"></i>
+                                            Nesouhlasíte s výsledkem?
+                                        </span>
+                                        <button
+                                            onClick={() => setShowFeedbackModal(true)}
+                                            style={{
+                                                background: 'transparent',
+                                                border: '1px solid var(--color-warning)',
+                                                color: 'var(--color-warning)',
+                                                padding: 'var(--space-1) var(--space-3)',
+                                                borderRadius: 'var(--radius-full)',
+                                                fontSize: 'var(--text-sm)',
+                                                fontWeight: 'var(--font-medium)',
+                                                cursor: 'pointer',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                gap: 'var(--space-1)'
+                                            }}
+                                        >
+                                            <i className="fas fa-edit"></i>
+                                            Opravit
+                                        </button>
                                     </div>
 
                                     {/* Possible Issues Selection */}
@@ -4572,6 +4772,28 @@
                                                         {analyzerStats.apiCalls || 0}
                                                     </div>
                                                     <div style={{fontSize: 'var(--text-xs)', color: 'var(--color-text-secondary)'}}>Cloud AI</div>
+                                                </div>
+                                            </div>
+
+                                            {/* Statistiky uživatelského feedbacku */}
+                                            <div style={{display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 'var(--space-4)', marginBottom: 'var(--space-4)'}}>
+                                                <div style={{textAlign: 'center', padding: 'var(--space-3)', background: 'rgba(251, 146, 60, 0.1)', borderRadius: 'var(--radius-lg)'}}>
+                                                    <div style={{fontSize: 'var(--text-2xl)', fontWeight: 'var(--font-bold)', color: '#fb923c'}}>
+                                                        {analyzerStats.feedbackUsed || 0}
+                                                    </div>
+                                                    <div style={{fontSize: 'var(--text-xs)', color: 'var(--color-text-secondary)'}}>Z oprav uživatelů</div>
+                                                </div>
+                                                <div style={{textAlign: 'center', padding: 'var(--space-3)', background: 'rgba(244, 114, 182, 0.1)', borderRadius: 'var(--radius-lg)'}}>
+                                                    <div style={{fontSize: 'var(--text-2xl)', fontWeight: 'var(--font-bold)', color: '#f472b6'}}>
+                                                        {analyzerStats.feedbackSubmitted || 0}
+                                                    </div>
+                                                    <div style={{fontSize: 'var(--text-xs)', color: 'var(--color-text-secondary)'}}>Odesláno oprav</div>
+                                                </div>
+                                                <div style={{textAlign: 'center', padding: 'var(--space-3)', background: 'rgba(34, 211, 238, 0.1)', borderRadius: 'var(--radius-lg)'}}>
+                                                    <div style={{fontSize: 'var(--text-2xl)', fontWeight: 'var(--font-bold)', color: '#22d3ee'}}>
+                                                        {analyzerStats.feedback?.totalFeedbacks || 0}
+                                                    </div>
+                                                    <div style={{fontSize: 'var(--text-xs)', color: 'var(--color-text-secondary)'}}>Celkem feedbacků</div>
                                                 </div>
                                             </div>
                                             <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: 'var(--space-3)', background: 'var(--color-bg-secondary)', borderRadius: 'var(--radius-lg)'}}>
