@@ -692,19 +692,19 @@
             }
         })();
 
-        // Kategorie (fallback)
+        // Kategorie (fallback) - Font Awesome ikony
         const defaultCategories = [
-            { id: 'all', name: 'Vše', icon: '📋' },
-            { id: 'voda', name: 'Voda', icon: '🚰' },
-            { id: 'elektrina', name: 'Elektřina', icon: '⚡' },
-            { id: 'topeni', name: 'Topení', icon: '🌡️' },
-            { id: 'dvere_okna', name: 'Dveře & Okna', icon: '🚪' },
-            { id: 'nabytek', name: 'Nábytek', icon: '🪑' },
-            { id: 'spotrebice', name: 'Spotřebiče', icon: '🔌' },
-            { id: 'kuchyn', name: 'Kuchyň', icon: '🍳' },
-            { id: 'koupelna', name: 'Koupelna', icon: '🚿' },
-            { id: 'steny_podlahy', name: 'Stěny', icon: '🏠' },
-            { id: 'zahrada', name: 'Zahrada', icon: '🌱' }
+            { id: 'all', name: 'Vše', icon: 'fa-th-large' },
+            { id: 'voda', name: 'Voda', icon: 'fa-tint' },
+            { id: 'elektrina', name: 'Elektřina', icon: 'fa-bolt' },
+            { id: 'topeni', name: 'Topení', icon: 'fa-thermometer-half' },
+            { id: 'dvere_okna', name: 'Dveře & Okna', icon: 'fa-door-open' },
+            { id: 'nabytek', name: 'Nábytek', icon: 'fa-couch' },
+            { id: 'spotrebice', name: 'Spotřebiče', icon: 'fa-plug' },
+            { id: 'kuchyn', name: 'Kuchyň', icon: 'fa-utensils' },
+            { id: 'koupelna', name: 'Koupelna', icon: 'fa-shower' },
+            { id: 'steny_podlahy', name: 'Stěny', icon: 'fa-home' },
+            { id: 'zahrada', name: 'Zahrada', icon: 'fa-leaf' }
         ];
 
         // Getter pro databázi (používá načtená data nebo prázdný objekt)
@@ -1231,14 +1231,14 @@
                 setCurrentView('results');
             };
 
-            // Pomocná funkce pro získání ikony kategorie
+            // Pomocná funkce pro získání ikony kategorie (Font Awesome)
             const getCategoryIcon = (category) => {
                 const icons = {
-                    voda: '🚰', elektrina: '⚡', topeni: '🌡️',
-                    dvere_okna: '🚪', nabytek: '🪑', spotrebice: '🔌',
-                    kuchyn: '🍳', koupelna: '🚿', steny_podlahy: '🏠', zahrada: '🌱'
+                    voda: 'fa-tint', elektrina: 'fa-bolt', topeni: 'fa-thermometer-half',
+                    dvere_okna: 'fa-door-open', nabytek: 'fa-couch', spotrebice: 'fa-plug',
+                    kuchyn: 'fa-utensils', koupelna: 'fa-shower', steny_podlahy: 'fa-home', zahrada: 'fa-leaf'
                 };
-                return icons[category] || '🔧';
+                return icons[category] || 'fa-wrench';
             };
 
             // === KRESLENÍ NA FOTKU ===
@@ -2592,13 +2592,13 @@
                                     {/* Quick Examples */}
                                     <div className="grid grid-4 mt-6 gap-3">
                                             {[
-                                                { icon: '🚰', name: 'Kohoutek' },
-                                                { icon: '🚽', name: 'WC' },
-                                                { icon: '🔌', name: 'Zásuvka' },
-                                                { icon: '🚪', name: 'Dveře' }
+                                                { icon: 'fa-tint', name: 'Kohoutek' },
+                                                { icon: 'fa-toilet', name: 'WC' },
+                                                { icon: 'fa-plug', name: 'Zásuvka' },
+                                                { icon: 'fa-door-open', name: 'Dveře' }
                                             ].map((item, idx) => (
                                                 <div key={idx} className="example-card">
-                                                    <div style={{fontSize: 'var(--text-2xl)'}}>{ item.icon}</div>
+                                                    <i className={`fas ${item.icon}`} style={{fontSize: 'var(--text-2xl)', color: 'var(--color-primary)'}}></i>
                                                     <div style={{fontSize: 'var(--text-xs)', color: 'var(--color-text-secondary)'}}>{item.name}</div>
                                                 </div>
                                             ))}
@@ -2899,12 +2899,8 @@
                                                     {t('detectedWith')} {analysisResult.confidence}% {t('confidence')}
                                                 </p>
                                             </div>
-                                            <div style={{fontSize: 'var(--text-5xl)'}}>
-                                                {analysisResult.issue.id === 'leak' && '🚰'}
-                                                {analysisResult.issue.id === 'running' && '🚽'}
-                                                {analysisResult.issue.id === 'not-working' && '🔌'}
-                                                {analysisResult.issue.id === 'squeaking' && '🚪'}
-                                                {analysisResult.issue.id === 'cold' && '🌡️'}
+                                            <div style={{fontSize: 'var(--text-4xl)'}}>
+                                                <i className={`fas ${getCategoryIcon(analysisResult.issue.category)}`} style={{opacity: 0.9}}></i>
                                             </div>
                                         </div>
                                     </div>
@@ -3907,7 +3903,7 @@
                                             onClick={() => setSelectedCategory(cat.id)}
                                             className={`category-btn ${selectedCategory === cat.id ? 'active' : ''}`}
                                         >
-                                            <span style={{marginRight: 'var(--space-1)'}}>{cat.icon}</span>
+                                            <i className={`fas ${cat.icon}`} style={{marginRight: 'var(--space-1)'}}></i>
                                             {cat.name}
                                         </button>
                                     ))}
@@ -3924,7 +3920,7 @@
                                             <div className="knowledge-card-header">
                                                 <div className="flex-between items-center">
                                                     <h3 style={{fontWeight: 'var(--font-bold)', fontSize: 'var(--text-lg)'}}>{item.name}</h3>
-                                                    <span style={{fontSize: 'var(--text-2xl)'}}>{item.icon}</span>
+                                                    <i className={`fas ${getCategoryIcon(item.category)}`} style={{fontSize: 'var(--text-2xl)', opacity: 0.9}}></i>
                                                 </div>
                                             </div>
                                             <div className="p-4">
