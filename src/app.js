@@ -3207,77 +3207,76 @@
                                             </p>
                                         </div>
 
-                                            <input
-                                                ref={fileInputRef}
-                                                type="file"
-                                                accept="image/*"
-                                                onChange={handleImageUpload}
-                                                className="hidden"
-                                            />
+                                        <input
+                                            ref={fileInputRef}
+                                            type="file"
+                                            accept="image/*"
+                                            onChange={handleImageUpload}
+                                            className="hidden"
+                                        />
 
-                                            {/* Drag & Drop Zone */}
-                                            <div
-                                                ref={dropZoneRef}
-                                                className={`drop-zone p-6 ${isDragging ? 'drag-over' : ''}`}
-                                                onDragOver={handleDragOver}
-                                                onDragLeave={handleDragLeave}
-                                                onDrop={handleDrop}
-                                                onClick={() => fileInputRef.current.click()}
-                                            >
-                                                <div className="drop-zone-icon">
-                                                    {isDragging ? (
-                                                        <i className="fas fa-cloud-upload-alt"></i>
-                                                    ) : (
-                                                        <i className="fas fa-camera"></i>
-                                                    )}
-                                                </div>
-                                                <p className="text-base font-semibold mb-1 text-primary">
-                                                    {isDragging ? t('dropzoneDrop') : t('dropzoneText')}
-                                                </p>
-                                                <p className="text-secondary text-sm">
-                                                    {t('dropzoneHint')}
-                                                </p>
+                                        {/* Drag & Drop Zone */}
+                                        <div
+                                            ref={dropZoneRef}
+                                            className={`drop-zone p-6 ${isDragging ? 'drag-over' : ''}`}
+                                            onDragOver={handleDragOver}
+                                            onDragLeave={handleDragLeave}
+                                            onDrop={handleDrop}
+                                            onClick={() => fileInputRef.current.click()}
+                                        >
+                                            <div className="drop-zone-icon">
+                                                {isDragging ? (
+                                                    <i className="fas fa-cloud-upload-alt"></i>
+                                                ) : (
+                                                    <i className="fas fa-camera"></i>
+                                                )}
                                             </div>
+                                            <p className="text-base font-semibold mb-1 text-primary">
+                                                {isDragging ? t('dropzoneDrop') : t('dropzoneText')}
+                                            </p>
+                                            <p className="text-secondary text-sm">
+                                                {t('dropzoneHint')}
+                                            </p>
+                                        </div>
 
-                                            {/* Quick Examples - kompaktní */}
-                                            <div className="grid grid-6 grid-cols-6 mt-4 gap-2">
-                                                {[
-                                                    { icon: 'fa-tint', name: 'Kohoutek' },
-                                                    { icon: 'fa-toilet', name: 'WC' },
-                                                    { icon: 'fa-plug', name: 'Zásuvka' },
-                                                    { icon: 'fa-door-open', name: 'Dveře' },
-                                                    { icon: 'fa-lightbulb', name: 'Světlo' },
-                                                    { icon: 'fa-thermometer-half', name: 'Topení' }
-                                                ].map((item, idx) => (
-                                                    <div key={idx} className="example-card p-2">
-                                                        <i className={`fas ${item.icon} text-lg text-primary`}></i>
-                                                        <div className="text-xs text-secondary">{item.name}</div>
-                                                    </div>
-                                                ))}
-                                            </div>
-
-                                            {/* Nelze vyfotit? - integrováno */}
-                                            <div
-                                                onClick={() => {
-                                                    resetClarification();
-                                                    setShowDescribeModal(true);
-                                                }}
-                                                className="p-3 rounded-lg bg-primary-light cursor-pointer text-center"
-                                            >
-                                                <div className="flex items-center justify-center gap-2">
-                                                    <i className="fas fa-keyboard text-lg text-primary"></i>
-                                                    <span className="font-semibold text-primary-dark text-sm">
-                                                        Nelze vyfotit? Popište problém
-                                                    </span>
+                                        {/* Quick Examples - kompaktní */}
+                                        <div className="grid grid-6 grid-cols-6 mt-4 gap-2">
+                                            {[
+                                                { icon: 'fa-tint', name: 'Kohoutek' },
+                                                { icon: 'fa-toilet', name: 'WC' },
+                                                { icon: 'fa-plug', name: 'Zásuvka' },
+                                                { icon: 'fa-door-open', name: 'Dveře' },
+                                                { icon: 'fa-lightbulb', name: 'Světlo' },
+                                                { icon: 'fa-thermometer-half', name: 'Topení' }
+                                            ].map((item, idx) => (
+                                                <div key={idx} className="example-card p-2">
+                                                    <i className={`fas ${item.icon} text-lg text-primary`}></i>
+                                                    <div className="text-xs text-secondary">{item.name}</div>
                                                 </div>
+                                            ))}
+                                        </div>
+
+                                        {/* Nelze vyfotit? - integrováno */}
+                                        <div
+                                            onClick={() => {
+                                                resetClarification();
+                                                setShowDescribeModal(true);
+                                            }}
+                                            className="p-3 rounded-lg bg-primary-light cursor-pointer text-center"
+                                        >
+                                            <div className="flex items-center justify-center gap-2">
+                                                <i className="fas fa-keyboard text-lg text-primary"></i>
+                                                <span className="font-semibold text-primary-dark text-sm">
+                                                    Nelze vyfotit? Popište problém
+                                                </span>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
 
-                                {/* Pravy blok - INFORMATIVNI */}
-                                <div className="content-right">
-                                        {/* Jak to funguje */}
+                            {/* Pravy blok - INFORMATIVNI */}
+                            <div className="content-right">
+                                {/* Jak to funguje */}
                                         <div className="glass-card flex flex-col">
                                             <h3 className="section-title mb-4">
                                                 <i className="fas fa-magic"></i>
@@ -3350,7 +3349,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                </div>
+                            </div>
                             </div>
                         )}
 
@@ -3619,12 +3618,12 @@
                                                         {analysisResult._meta.cached && ` (${analysisResult._meta.duration}ms)`}
                                                     </span>
                                                 )}
-                                            </div>
+                                                    </div>
                                             <div className="text-5xl">
                                                 <i className={`fas ${getCategoryIcon(analysisResult.issue.category)} opacity-90`}></i>
                                             </div>
-                                        </div>
-                                    </div>
+                                                </div>
+                                            </div>
 
                                     {/* Tlačítko pro opravu špatné analýzy */}
                                     <div className="bg-secondary">
