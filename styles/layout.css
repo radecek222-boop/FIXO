@@ -587,12 +587,14 @@
     background-color: var(--color-bg-dark);
     color: var(--color-text-inverse);
     padding-block: var(--space-10);
+    text-align: center;
   }
 
   .footer-grid {
     display: grid;
-    grid-template-columns: 2fr repeat(3, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: var(--space-8);
+    text-align: center;
   }
 
   @media (max-width: 1024px) {
@@ -667,21 +669,29 @@
     font-size: var(--text-lg);
     font-weight: var(--font-bold);
     margin-block-end: var(--space-4);
+    color: white;
   }
 
   .footer-links {
     display: flex;
     flex-direction: column;
     gap: var(--space-3);
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .footer-links li {
+    color: rgba(255, 255, 255, 0.85);
   }
 
   .footer-link {
-    color: var(--color-text-light);
+    color: rgba(255, 255, 255, 0.85);
     transition: color var(--transition-fast);
   }
 
   .footer-link:hover {
-    color: var(--color-text-inverse);
+    color: white;
   }
 
   .footer-bottom {
