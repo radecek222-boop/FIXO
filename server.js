@@ -26,7 +26,13 @@ app.use(helmet({
             styleSrc: ["'self'", "'unsafe-inline'", "https://cdnjs.cloudflare.com", "https://fonts.googleapis.com"],
             fontSrc: ["'self'", "https://cdnjs.cloudflare.com", "https://fonts.gstatic.com"],
             imgSrc: ["'self'", "data:", "blob:", "https:"],
-            connectSrc: ["'self'", "http://localhost:3001", "http://localhost:3000"]
+            connectSrc: [
+                "'self'",
+                "http://localhost:3001",
+                "http://localhost:3000",
+                "https://fixo-api.onrender.com",
+                "https://radecek222-boop.github.io"
+            ]
         }
     }
 }));
@@ -46,6 +52,9 @@ const corsOptions = {
     credentials: true
 };
 app.use(cors(corsOptions));
+
+// Explicitně zpracovat OPTIONS requests pro preflight
+app.options('*', cors(corsOptions));
 
 app.use(express.json({ limit: '10mb' })); // Zvýšit limit pro base64 obrazy
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
