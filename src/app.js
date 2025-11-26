@@ -2639,7 +2639,6 @@
                                 <button
                                     className={`hamburger-btn ${menuOpen ? 'open' : ''}`}
                                     onClick={toggleMenu}
-                                    style={{display: 'none'}}
                                 >
                                     <span></span>
                                     <span></span>
