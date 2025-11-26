@@ -131,21 +131,27 @@ jobs:
             const fs = require('fs');
             const data = JSON.parse(fs.readFileSync('data/repairs.json', 'utf8'));
 
-            if (!Array.isArray(data)) {
-              console.error('❌ repairs.json must be an array');
+            if (typeof data !== 'object' || data === null) {
+              console.error('❌ repairs.json must be an object');
               process.exit(1);
             }
 
-            console.log(\`✅ repairs.json contains \${data.length} items\`);
-
-            // Check basic structure
-            const firstItem = data[0];
-            if (firstItem && typeof firstItem === 'object') {
-              console.log('✅ repairs.json structure looks valid');
-            } else {
-              console.error('❌ repairs.json structure is invalid');
+            if (!data.repairs || typeof data.repairs !== 'object') {
+              console.error('❌ repairs.json must contain repairs object');
               process.exit(1);
             }
+
+            if (!data.categories || !Array.isArray(data.categories)) {
+              console.error('❌ repairs.json must contain categories array');
+              process.exit(1);
+            }
+
+            const repairCount = Object.keys(data.repairs).length;
+            const categoryCount = data.categories.length;
+
+            console.log(\`✅ repairs.json contains \${repairCount} repair types\`);
+            console.log(\`✅ repairs.json contains \${categoryCount} categories\`);
+            console.log('✅ repairs.json structure is valid');
           "
 
       - name: Validate translations
