@@ -1,15 +1,17 @@
-// FIXO Service Worker - PWA Offline Support v2.0
-const CACHE_NAME = 'fixo-cache-v2';
-const DATA_CACHE_NAME = 'fixo-data-cache-v1';
+// FIXO Service Worker - PWA Offline Support v3.0
+const CACHE_NAME = 'fixo-cache-v3';
+const DATA_CACHE_NAME = 'fixo-data-cache-v2';
 
 // Static assets to cache
 const STATIC_ASSETS = [
     '/FIXO/',
     '/FIXO/index.html',
-    '/FIXO/public/css/styles.css',
-    '/FIXO/public/css/design-system.css',
-    '/FIXO/public/css/components.css',
-    '/FIXO/public/css/layout.css',
+    '/FIXO/styles/main.css',
+    '/FIXO/styles/design-system.css',
+    '/FIXO/styles/components.css',
+    '/FIXO/styles/layout.css',
+    '/FIXO/styles/app.css',
+    '/FIXO/src/app.js',
     '/FIXO/manifest.json'
 ];
 
@@ -27,7 +29,7 @@ const EXTERNAL_ASSETS = [
 
 // Install - cache all files
 self.addEventListener('install', (event) => {
-    console.log('FIXO SW: Installing v2.0...');
+    console.log('FIXO SW: Installing v3.0...');
     event.waitUntil(
         Promise.all([
             // Cache static assets
@@ -262,4 +264,4 @@ async function cacheRepairData(repair) {
     console.log('FIXO SW: Repair cached for offline:', repair.id);
 }
 
-console.log('FIXO SW: Service Worker loaded v2.0');
+console.log('FIXO SW: Service Worker loaded v3.0');
