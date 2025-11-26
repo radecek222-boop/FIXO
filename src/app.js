@@ -2475,12 +2475,12 @@
                                     <p className="text-sm text-secondary mb-3">
                                         Pokročilá umělá inteligence analyzuje vaše fotografie a identifikuje závady s vysokou přesností.
                                     </p>
-                                    <ul className="text-sm text-secondary m-0 p-0 pl-4 space-y-2">
-                                        <li>✓ Rozpoznávání 50+ typů spotřebičů a zařízení</li>
-                                        <li>✓ Detekce konkrétních závad a poruch</li>
-                                        <li>✓ Automatická kategorizace problémů</li>
-                                        <li>✓ Samoučící se systém - přesnost se neustále zlepšuje</li>
-                                        <li>✓ Okamžitá analýza - výsledky za sekundy</li>
+                                    <ul className="text-sm text-secondary m-0 p-0 pl-4 space-y-2 list-none">
+                                        <li><i className="fas fa-check text-success mr-2"></i>Rozpoznávání 50+ typů spotřebičů a zařízení</li>
+                                        <li><i className="fas fa-check text-success mr-2"></i>Detekce konkrétních závad a poruch</li>
+                                        <li><i className="fas fa-check text-success mr-2"></i>Automatická kategorizace problémů</li>
+                                        <li><i className="fas fa-check text-success mr-2"></i>Samoučící se systém - přesnost se neustále zlepšuje</li>
+                                        <li><i className="fas fa-check text-success mr-2"></i>Okamžitá analýza - výsledky za sekundy</li>
                                     </ul>
                                 </div>
 
@@ -2493,15 +2493,15 @@
                                     <p className="text-sm text-secondary mb-3">
                                         Rozsáhlá databáze krok za krokem návodů pro opravy domácích spotřebičů a zařízení.
                                     </p>
-                                    <ul className="text-sm text-secondary m-0 p-0 pl-4 space-y-2">
-                                        <li>✓ Kuchyňské spotřebiče (lednice, trouby, mikrovlnky, myčky...)</li>
-                                        <li>✓ Pračky, sušičky a praní</li>
-                                        <li>✓ Elektronika (TV, audio, počítače...)</li>
-                                        <li>✓ Topení, klimatizace a ventilace</li>
-                                        <li>✓ Voda, elektřina a instalace</li>
-                                        <li>✓ Podrobné kroky s ilustracemi</li>
-                                        <li>✓ Časové odhady a potřebné nářadí</li>
-                                        <li>✓ Tipy od zkušených techniků</li>
+                                    <ul className="text-sm text-secondary m-0 p-0 pl-4 space-y-2 list-none">
+                                        <li><i className="fas fa-check text-success mr-2"></i>Kuchyňské spotřebiče (lednice, trouby, mikrovlnky, myčky...)</li>
+                                        <li><i className="fas fa-check text-success mr-2"></i>Pračky, sušičky a praní</li>
+                                        <li><i className="fas fa-check text-success mr-2"></i>Elektronika (TV, audio, počítače...)</li>
+                                        <li><i className="fas fa-check text-success mr-2"></i>Topení, klimatizace a ventilace</li>
+                                        <li><i className="fas fa-check text-success mr-2"></i>Voda, elektřina a instalace</li>
+                                        <li><i className="fas fa-check text-success mr-2"></i>Podrobné kroky s ilustracemi</li>
+                                        <li><i className="fas fa-check text-success mr-2"></i>Časové odhady a potřebné nářadí</li>
+                                        <li><i className="fas fa-check text-success mr-2"></i>Tipy od zkušených techniků</li>
                                     </ul>
                                 </div>
 
@@ -2514,14 +2514,14 @@
                                     <p className="text-sm text-secondary mb-3">
                                         FIXO vás chrání před nebezpečnými situacemi a radí, kdy je nutné zavolat odborníka.
                                     </p>
-                                    <ul className="text-sm text-secondary m-0 p-0 pl-4 space-y-2">
-                                        <li>⚡ Varování při práci s elektřinou (vysoké napětí, zkraty)</li>
-                                        <li>🔥 Upozornění na riziko požáru nebo výbuchu</li>
-                                        <li>💧 Varování před únikem vody nebo plynu</li>
-                                        <li>☠️ Identifikace toxických látek (chladiva, azbestů...)</li>
-                                        <li>👨‍🔧 Doporučení, kdy je nutný certifikovaný technik</li>
-                                        <li>📋 Právní požadavky a záruční podmínky</li>
-                                        <li>🛡️ Ochranné pomůcky a bezpečnostní postupy</li>
+                                    <ul className="text-sm text-secondary m-0 p-0 pl-4 space-y-2 list-none">
+                                        <li><i className="fas fa-bolt text-warning mr-2"></i>Varování při práci s elektřinou (vysoké napětí, zkraty)</li>
+                                        <li><i className="fas fa-fire text-danger mr-2"></i>Upozornění na riziko požáru nebo výbuchu</li>
+                                        <li><i className="fas fa-tint text-info mr-2"></i>Varování před únikem vody nebo plynu</li>
+                                        <li><i className="fas fa-skull-crossbones text-danger mr-2"></i>Identifikace toxických látek (chladiva, azbestů...)</li>
+                                        <li><i className="fas fa-user-cog text-primary mr-2"></i>Doporučení, kdy je nutný certifikovaný technik</li>
+                                        <li><i className="fas fa-clipboard-list text-primary mr-2"></i>Právní požadavky a záruční podmínky</li>
+                                        <li><i className="fas fa-shield-alt text-primary mr-2"></i>Ochranné pomůcky a bezpečnostní postupy</li>
                                     </ul>
                                 </div>
 
@@ -3418,149 +3418,204 @@
 
                         {/* Preview View - Náhled s možností kreslení */}
                         {currentView === 'preview' && selectedImage && (
-                            <div className="app-container pt-4">
-                                <div className="upload-card glass-card">
-                                    <div className="text-center mb-4">
-                                        <h2 className="text-xl font-bold mb-2">
-                                            <i className="fas fa-edit mr-2"></i>
-                                            Označte problém na fotce
-                                        </h2>
-                                        <p className="text-secondary">
-                                            Nakreslete kruh nebo šipku k místu s problémem pro přesnější analýzu
-                                        </p>
-                                    </div>
-
-                                    {/* Canvas / Image container - Fixed for touch */}
-                                    <div className="drawing-container mb-4 bg-black rounded-lg overflow-hidden">
-                                        {isDrawingMode ? (
-                                            <>
-                                                <canvas
-                                                    ref={canvasRef}
-                                                    onMouseDown={(e) => { startDrawing(e); }}
-                                                    onMouseMove={(e) => { draw(e); }}
-                                                    onMouseUp={stopDrawing}
-                                                    onMouseLeave={stopDrawing}
-                                                    onTouchStart={(e) => { e.preventDefault(); startDrawing(e); }}
-                                                    onTouchMove={(e) => { e.preventDefault(); draw(e); }}
-                                                    onTouchEnd={(e) => { e.preventDefault(); stopDrawing(); }}
-                                                    onClick={placeMarker}
-                                                />
-                                            </>
-                                        ) : (
-                                            <img
-                                                src={annotatedImage || selectedImage}
-                                                alt="Nahraná fotka"
-                                                className="w-full block"
-                                            />
-                                        )}
-                                    </div>
-
-                                    {/* Kreslící nástroje */}
-                                    {isDrawingMode && (
-                                        <div className="card mb-4 p-3 bg-secondary">
-                                            <div className="flex-between flex-wrap gap-3">
-                                                <div className="flex items-center gap-3">
-                                                    <label className="text-sm">Barva:</label>
-                                                    <div className="flex gap-2">
-                                                        {['#00ffff', '#ff00ff', '#00ff00', '#ffff00', '#ff0000'].map(color => (
-                                                            <button
-                                                                key={color}
-                                                                onClick={() => setBrushColor(color)}
-                                                                style={{
-                                                                    width: '32px',
-                                                                    height: '32px',
-                                                                    borderRadius: '50%',
-                                                                    backgroundColor: color,
-                                                                    border: brushColor === color ? '3px solid #fff' : '2px solid rgba(255,255,255,0.3)',
-                                                                    cursor: 'pointer',
-                                                                    boxShadow: brushColor === color ? `0 0 10px ${color}, 0 0 20px ${color}` : 'none'
-                                                                }}
-                                                            />
-                                                        ))}
-                                                    </div>
-                                                </div>
-                                                <div className="flex items-center gap-3">
-                                                    <label className="text-sm">Velikost:</label>
-                                                    <input
-                                                        type="range"
-                                                        min="2"
-                                                        max="15"
-                                                        value={brushSize}
-                                                        onChange={(e) => setBrushSize(parseInt(e.target.value))}
-                                                        className="w-20"
+                            <div className="content-two-columns">
+                                {/* Blok A - Fotka a volby */}
+                                <div className="content-left">
+                                    <div className="glass-card">
+                                        {/* Komprimovaná fotka */}
+                                        <div className="mb-4">
+                                            <div className="drawing-container bg-black rounded-lg overflow-hidden" style={{maxHeight: '300px'}}>
+                                                {isDrawingMode ? (
+                                                    <canvas
+                                                        ref={canvasRef}
+                                                        onMouseDown={(e) => { startDrawing(e); }}
+                                                        onMouseMove={(e) => { draw(e); }}
+                                                        onMouseUp={stopDrawing}
+                                                        onMouseLeave={stopDrawing}
+                                                        onTouchStart={(e) => { e.preventDefault(); startDrawing(e); }}
+                                                        onTouchMove={(e) => { e.preventDefault(); draw(e); }}
+                                                        onTouchEnd={(e) => { e.preventDefault(); stopDrawing(); }}
+                                                        onClick={placeMarker}
                                                     />
-                                                </div>
-                                                <button onClick={clearCanvas} className="btn btn-secondary py-2 px-3">
-                                                    <i className="fas fa-eraser mr-1"></i> Smazat
-                                                </button>
+                                                ) : (
+                                                    <img
+                                                        src={annotatedImage || selectedImage}
+                                                        alt="Nahraná fotka"
+                                                        className="w-full block"
+                                                        style={{maxHeight: '300px', objectFit: 'contain'}}
+                                                    />
+                                                )}
                                             </div>
                                         </div>
-                                    )}
 
-                                    {/* Akční tlačítka */}
-                                    <div className="flex gap-3 flex-wrap">
-                                        {!isDrawingMode ? (
-                                            <>
-                                                <button
-                                                    onClick={() => setIsDrawingMode(true)}
-                                                    className="btn btn-secondary flex-1"
-                                                >
-                                                    <i className="fas fa-pencil-alt mr-2"></i>
-                                                    Označit problém
-                                                </button>
-                                                <button
-                                                    onClick={() => analyzeImage(annotatedImage || selectedImage)}
-                                                    className="btn btn-primary flex-1"
-                                                >
-                                                    <i className="fas fa-search mr-2"></i>
-                                                    Analyzovat
-                                                </button>
-                                            </>
-                                        ) : (
-                                            <>
-                                                <button
-                                                    onClick={() => {
-                                                        setIsDrawingMode(false);
-                                                        setAnnotatedImage(null);
-                                                    }}
-                                                    className="btn btn-secondary flex-1"
-                                                >
-                                                    <i className="fas fa-times mr-2"></i>
-                                                    Zrušit
-                                                </button>
-                                                <button
-                                                    onClick={analyzeWithAnnotation}
-                                                    className="btn btn-primary flex-1"
-                                                >
-                                                    <i className="fas fa-check mr-2"></i>
-                                                    Hotovo - Analyzovat
-                                                </button>
-                                            </>
+                                        {/* Kreslící nástroje */}
+                                        {isDrawingMode && (
+                                            <div className="card mb-4 p-3 bg-secondary">
+                                                <div className="flex flex-col gap-3">
+                                                    <div className="flex items-center gap-3">
+                                                        <label className="text-sm">Barva:</label>
+                                                        <div className="flex gap-2">
+                                                            {['#00ffff', '#ff00ff', '#00ff00', '#ffff00', '#ff0000'].map(color => (
+                                                                <button
+                                                                    key={color}
+                                                                    onClick={() => setBrushColor(color)}
+                                                                    style={{
+                                                                        width: '28px',
+                                                                        height: '28px',
+                                                                        borderRadius: '50%',
+                                                                        backgroundColor: color,
+                                                                        border: brushColor === color ? '3px solid #fff' : '2px solid rgba(255,255,255,0.3)',
+                                                                        cursor: 'pointer',
+                                                                        boxShadow: brushColor === color ? `0 0 8px ${color}` : 'none'
+                                                                    }}
+                                                                />
+                                                            ))}
+                                                        </div>
+                                                    </div>
+                                                    <div className="flex items-center gap-3">
+                                                        <label className="text-sm">Velikost:</label>
+                                                        <input
+                                                            type="range"
+                                                            min="2"
+                                                            max="15"
+                                                            value={brushSize}
+                                                            onChange={(e) => setBrushSize(parseInt(e.target.value))}
+                                                            className="flex-1"
+                                                        />
+                                                    </div>
+                                                    <button onClick={clearCanvas} className="btn btn-secondary py-2 px-3 w-full">
+                                                        <i className="fas fa-eraser mr-1"></i> Smazat
+                                                    </button>
+                                                </div>
+                                            </div>
                                         )}
+
+                                        {/* Akční tlačítka */}
+                                        <div className="flex gap-3 flex-col mb-3">
+                                            {!isDrawingMode ? (
+                                                <>
+                                                    <button
+                                                        onClick={() => setIsDrawingMode(true)}
+                                                        className="btn btn-secondary w-full"
+                                                    >
+                                                        <i className="fas fa-pencil-alt mr-2"></i>
+                                                        Označit problém
+                                                    </button>
+                                                    <button
+                                                        onClick={() => analyzeImage(annotatedImage || selectedImage)}
+                                                        className="btn btn-primary w-full"
+                                                    >
+                                                        <i className="fas fa-search mr-2"></i>
+                                                        Analyzovat
+                                                    </button>
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <button
+                                                        onClick={() => {
+                                                            setIsDrawingMode(false);
+                                                            setAnnotatedImage(null);
+                                                        }}
+                                                        className="btn btn-secondary w-full"
+                                                    >
+                                                        <i className="fas fa-times mr-2"></i>
+                                                        Zrušit
+                                                    </button>
+                                                    <button
+                                                        onClick={analyzeWithAnnotation}
+                                                        className="btn btn-primary w-full"
+                                                    >
+                                                        <i className="fas fa-check mr-2"></i>
+                                                        Hotovo - Analyzovat
+                                                    </button>
+                                                </>
+                                            )}
+                                        </div>
+
+                                        {/* Další volby */}
+                                        <div className="flex gap-2">
+                                            <button
+                                                onClick={() => {
+                                                    setSelectedImage(null);
+                                                    setAnnotatedImage(null);
+                                                    setIsDrawingMode(false);
+                                                    setCurrentView('home');
+                                                }}
+                                                className="btn btn-link flex-1 text-sm"
+                                            >
+                                                <i className="fas fa-camera mr-1"></i>
+                                                Jiná fotka
+                                            </button>
+                                            <button
+                                                onClick={() => setShowDescribeModal(true)}
+                                                className="btn btn-link flex-1 text-sm"
+                                            >
+                                                <i className="fas fa-comment-alt mr-1"></i>
+                                                Popsat problém
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Blok I - Informace a volby */}
+                                <div className="content-right">
+                                    {/* Horní box - Návod k použití */}
+                                    <div className="glass-card">
+                                        <h3 className="section-title mb-4">
+                                            <i className="fas fa-info-circle"></i>
+                                            Jak označit problém?
+                                        </h3>
+                                        <div className="flex flex-col gap-3">
+                                            <div className="flex items-start gap-3">
+                                                <div className="flex-none w-10 h-10 rounded-lg bg-primary-light flex items-center justify-center">
+                                                    <i className="fas fa-pencil-alt text-lg text-primary"></i>
+                                                </div>
+                                                <div className="flex-1">
+                                                    <h4 className="font-semibold text-base mb-1">Nakreslete značku</h4>
+                                                    <p className="text-sm text-secondary m-0">Označte problémové místo kruhem nebo šipkou</p>
+                                                </div>
+                                            </div>
+                                            <div className="flex items-start gap-3">
+                                                <div className="flex-none w-10 h-10 rounded-lg bg-success-light flex items-center justify-center">
+                                                    <i className="fas fa-crosshairs text-lg text-success"></i>
+                                                </div>
+                                                <div className="flex-1">
+                                                    <h4 className="font-semibold text-base mb-1">Přesná diagnostika</h4>
+                                                    <p className="text-sm text-secondary m-0">AI lépe identifikuje závadu podle označení</p>
+                                                </div>
+                                            </div>
+                                            <div className="flex items-start gap-3">
+                                                <div className="flex-none w-10 h-10 rounded-lg bg-warning-light flex items-center justify-center">
+                                                    <i className="fas fa-magic text-lg text-warning"></i>
+                                                </div>
+                                                <div className="flex-1">
+                                                    <h4 className="font-semibold text-base mb-1">Nebo rovnou analyzujte</h4>
+                                                    <p className="text-sm text-secondary m-0">Můžete přeskočit a nechat AI analyzovat celou fotku</p>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
 
-                                    {/* Nová fotka + Popsat problém */}
-                                    <div className="flex gap-2 mt-4">
-                                        <button
-                                            onClick={() => {
-                                                setSelectedImage(null);
-                                                setAnnotatedImage(null);
-                                                setIsDrawingMode(false);
-                                                setCurrentView('home');
-                                            }}
-                                            className="btn btn-link flex-1"
-                                        >
-                                            <i className="fas fa-camera mr-2"></i>
-                                            Jiná fotka
-                                        </button>
-                                        <button
-                                            onClick={() => setShowDescribeModal(true)}
-                                            className="btn btn-link flex-1"
-                                            className="text-warning"
-                                        >
-                                            <i className="fas fa-comment-alt mr-2"></i>
-                                            Popsat problém
-                                        </button>
+                                    {/* Spodní box - Další možnosti */}
+                                    <div className="glass-card">
+                                        <h3 className="section-title mb-4">
+                                            <i className="fas fa-ellipsis-h"></i>
+                                            Další možnosti
+                                        </h3>
+                                        <div className="flex flex-col gap-2">
+                                            <button className="btn btn-outline w-full text-left">
+                                                <i className="fas fa-phone mr-2"></i>
+                                                Zavolat odborníka
+                                            </button>
+                                            <button className="btn btn-outline w-full text-left">
+                                                <i className="fas fa-crown mr-2 text-warning"></i>
+                                                Koupit Premium
+                                            </button>
+                                            <button className="btn btn-outline w-full text-left">
+                                                <i className="fas fa-book mr-2"></i>
+                                                Procházet databázi
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -3605,41 +3660,38 @@
 
                         {/* Results View */}
                         {currentView === 'results' && analysisResult && (
-                            <div className="app-container pt-4">
-                                {/* Desktop: Obrazek vlevo, vysledky vpravo */}
-                                <div className="results-desktop-layout">
-                                    {/* Levy sloupec - analyzovany obrazek (pouze desktop) */}
+                            <div className="content-two-columns">
+                                {/* Blok A - Fotka */}
+                                <div className="content-left">
                                     {selectedImage && (
-                                        <div className="results-image-section hidden">
-                                            <div className="glass-card p-4 mb-4">
-                                                <h3 className="text-sm font-semibold mb-3 text-secondary">
-                                                    <i className="fas fa-image mr-2"></i>
-                                                    Analyzovaný obrázek
-                                                </h3>
-                                                <img
-                                                    src={selectedImage}
-                                                    alt="Analyzovaný obrázek"
-                                                    className="w-full rounded-lg bg-secondary"
-                                                />
-                                                <div className="mt-3 flex gap-2 justify-center">
-                                                    <button
-                                                        onClick={() => navigateTo('home')}
-                                                        className="btn btn-secondary"
-                                                        className="text-sm py-2 px-3"
-                                                    >
-                                                        <i className="fas fa-camera mr-1"></i>
-                                                        Nová fotka
-                                                    </button>
-                                                </div>
-                                            </div>
+                                        <div className="glass-card">
+                                            <h3 className="text-sm font-semibold mb-3 text-secondary">
+                                                <i className="fas fa-image mr-2"></i>
+                                                Analyzovaný obrázek
+                                            </h3>
+                                            <img
+                                                src={selectedImage}
+                                                alt="Analyzovaný obrázek"
+                                                className="w-full rounded-lg bg-secondary mb-4"
+                                                style={{maxHeight: '400px', objectFit: 'contain'}}
+                                            />
+                                            <button
+                                                onClick={() => navigateTo('home')}
+                                                className="btn btn-secondary w-full"
+                                            >
+                                                <i className="fas fa-camera mr-2"></i>
+                                                Nová fotka
+                                            </button>
                                         </div>
                                     )}
+                                </div>
 
-                                    {/* Pravy sloupec - vysledky analyzy */}
-                                    <div>
-                                        <div className="glass-card p-0 overflow-hidden">
-                                            {/* Detection Header */}
-                                            <div className="result-header">
+                                {/* Blok I - Výsledky a akce */}
+                                <div className="content-right">
+                                    {/* Horní box - Diagnostika */}
+                                    <div className="glass-card p-0 overflow-hidden">
+                                        {/* Detection Header */}
+                                        <div className="result-header">
                                                 <div className="flex-between">
                                                     <div>
                                                         <h2 className="text-xl font-bold mb-2">
@@ -3850,9 +3902,18 @@
                                                 </ul>
                                             </div>
                                         )}
+                                    </div>
+                                </div>
 
-                                        {/* Action Buttons - Nový obchodní model */}
-                                        <div className="flex flex-col gap-3">
+                                {/* Spodní box - Akce a volby */}
+                                <div className="glass-card">
+                                    <h3 className="section-title mb-4">
+                                        <i className="fas fa-toolbox"></i>
+                                        Co dál?
+                                    </h3>
+
+                                    {/* Action Buttons - Nový obchodní model */}
+                                    <div className="flex flex-col gap-3">
                                             {/* Základní návod - ZDARMA */}
                                             <button
                                                 onClick={() => startRepair(analysisResult.issue)}
@@ -3910,32 +3971,30 @@
                                             </button>
                                         </div>
 
-                                        {/* Affiliate odkazy na e-shopy */}
-                                        <div className="mt-4 p-3 bg-secondary rounded-lg">
-                                            <p className="text-xs text-secondary mb-2 text-center">
-                                                <i className="fas fa-shopping-cart mr-1"></i>
-                                                Nakupte potřebný materiál:
-                                            </p>
-                                            <div className="flex flex-wrap gap-2 justify-center">
-                                                {Object.entries(affiliateLinks).filter(([_, shop]) => shop.hasAffiliate).map(([key, shop]) => (
-                                                    <a
-                                                        key={key}
-                                                        href={shop.baseUrl + encodeURIComponent(analysisResult.issue.name)}
-                                                        target="_blank"
-                                                        rel="noopener noreferrer"
-                                                        className="rounded-md"
-                                                    >
-                                                        <i className={`fas ${shop.icon}`}></i>
-                                                        {shop.name}
-                                                    </a>
-                                                ))}
-                                            </div>
-                                        </div>
-                                    </div>
+                                    {/* Affiliate odkazy na e-shopy */}
+                                    <div className="mt-4 p-3 bg-secondary rounded-lg">
+                                        <p className="text-xs text-secondary mb-2 text-center">
+                                            <i className="fas fa-shopping-cart mr-1"></i>
+                                            Nakupte potřebný materiál:
+                                        </p>
+                                        <div className="flex flex-wrap gap-2 justify-center">
+                                            {Object.entries(affiliateLinks).filter(([_, shop]) => shop.hasAffiliate).map(([key, shop]) => (
+                                                <a
+                                                    key={key}
+                                                    href={shop.baseUrl + encodeURIComponent(analysisResult.issue.name)}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="rounded-md"
+                                                >
+                                                    <i className={`fas ${shop.icon}`}></i>
+                                                    {shop.name}
+                                                </a>
+                                            ))}
                                         </div>
                                     </div>
                                 </div>
                             </div>
+                        </div>
                         )}
 
                         {/* Repair Steps View */}
