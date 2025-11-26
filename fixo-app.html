@@ -86,8 +86,10 @@
     <script type="text/babel">
         const { useState, useEffect, useRef } = React;
 
-        // API Configuration
-        const API_BASE_URL = 'http://localhost:3000/api';
+        // API Configuration - detekce prostředí
+        const API_BASE_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+            ? 'http://localhost:3000'
+            : 'https://fixo-backend.onrender.com';
 
         // Simulovaná databáze závad a oprav (FALLBACK pro offline režim)
         const repairDatabase = {
@@ -252,7 +254,7 @@
                         const formData = new FormData();
                         formData.append('image', imageFile);
 
-                        const response = await fetch(`${API_BASE_URL}/analyze`, {
+                        const response = await fetch(`${API_BASE_URL}/api/analyze`, {
                             method: 'POST',
                             body: formData
                         });

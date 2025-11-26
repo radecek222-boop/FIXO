@@ -1357,7 +1357,7 @@
             // Backend API URL - Render.com pro produkci, localhost pro vývoj
             const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
                 ? 'http://localhost:3000'
-                : 'https://fixo.onrender.com'; // Render.com backend
+                : 'https://fixo-backend.onrender.com'; // Render.com backend
 
             // === JAZYKOVÝ SYSTÉM S CACHE (vlastní slovník překladů) ===
             const [currentLanguage, setCurrentLanguage] = useState(() => {
