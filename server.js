@@ -137,174 +137,254 @@ const upload = multer({
     }
 });
 
-// Databáze závad (v produkci by byla v samostatné DB)
-const repairDatabase = {
-    'faucet': {
-        id: 'faucet',
-        name: 'Kohoutek',
-        nameEN: 'Faucet',
-        category: 'water',
-        commonIssues: [
-            {
-                id: 'leak',
-                name: 'Kapající kohoutek',
-                nameEN: 'Leaking faucet',
-                description: 'Netěsnící těsnění nebo O-kroužek',
-                probability: 0.75,
-                severity: 'low',
-                riskScore: 2,
-                difficulty: 'easy',
-                timeEstimate: 15,
-                costEstimate: { min: 50, max: 200, currency: 'CZK' },
-                requiredTools: ['wrench', 'screwdriver', 'new_seal'],
-                steps: [
-                    { order: 1, action: 'shut_water', description: 'Zavřete hlavní přívod vody', duration: 1 },
-                    { order: 2, action: 'disassemble', description: 'Odšroubujte hlavici kohoutku', duration: 2 },
-                    { order: 3, action: 'replace_seal', description: 'Vyměňte těsnění nebo O-kroužek', duration: 5 },
-                    { order: 4, action: 'reassemble', description: 'Sestavte kohoutek zpět', duration: 3 },
-                    { order: 5, action: 'test', description: 'Pusťte vodu a zkontrolujte těsnost', duration: 2 }
-                ],
-                safetyWarnings: [
-                    'Vždy nejdříve zavřete hlavní přívod vody',
-                    'Mějte připravený kbelík na zachycení zbylé vody'
-                ],
-                professionalNeeded: false
+// Databáze závad organizovaná do sekcí
+const repairSections = {
+    bathroom: {
+        id: 'bathroom',
+        name: 'Koupelna',
+        icon: '🚿',
+        items: {
+            faucet: {
+                id: 'faucet',
+                name: 'Kohoutek',
+                issues: [{
+                    id: 'leak',
+                    name: 'Kapající kohoutek',
+                    description: 'Netěsnící těsnění',
+                    severity: 'low',
+                    difficulty: 'easy',
+                    timeEstimate: 15,
+                    cost: '50-200 Kč',
+                    tools: ['Klíč', 'Šroubovák', 'Těsnění'],
+                    steps: ['Zavřete vodu', 'Odšroubujte hlavici', 'Vyměňte těsnění', 'Sestavte zpět'],
+                    warnings: ['Zavřete hlavní přívod vody'],
+                    professionalNeeded: false
+                }]
+            },
+            toilet: {
+                id: 'toilet',
+                name: 'Toaleta',
+                issues: [{
+                    id: 'running',
+                    name: 'Protékající WC',
+                    description: 'Vadný plovák',
+                    severity: 'medium',
+                    difficulty: 'medium',
+                    timeEstimate: 20,
+                    cost: '100-500 Kč',
+                    tools: ['Klíč', 'Plovák'],
+                    steps: ['Zavřete vodu', 'Vyprázdněte nádrž', 'Zkontrolujte plovák', 'Vyměňte díly'],
+                    warnings: ['Použijte rukavice'],
+                    professionalNeeded: false
+                }]
             }
-        ]
+        }
     },
-    'toilet': {
-        id: 'toilet',
-        name: 'Toaleta',
-        nameEN: 'Toilet',
-        category: 'water',
-        commonIssues: [
-            {
-                id: 'running',
-                name: 'Protékající WC',
-                nameEN: 'Running toilet',
-                description: 'Vadný plovák nebo těsnění',
-                probability: 0.65,
-                severity: 'medium',
-                riskScore: 3,
-                difficulty: 'medium',
-                timeEstimate: 20,
-                costEstimate: { min: 100, max: 500, currency: 'CZK' },
-                requiredTools: ['wrench', 'new_flapper'],
-                steps: [
-                    { order: 1, action: 'shut_water', description: 'Zavřete přívod vody k WC', duration: 1 },
-                    { order: 2, action: 'drain_tank', description: 'Vyprázdněte nádržku splachováním', duration: 1 },
-                    { order: 3, action: 'inspect', description: 'Zkontrolujte plovák a ventil', duration: 5 },
-                    { order: 4, action: 'replace_parts', description: 'Vyměňte vadné díly', duration: 10 },
-                    { order: 5, action: 'test', description: 'Pusťte vodu a otestujte', duration: 3 }
-                ],
-                safetyWarnings: [
-                    'Použijte gumové rukavice',
-                    'Dbejte na hygienu'
-                ],
-                professionalNeeded: false
+    house: {
+        id: 'house',
+        name: 'Dům',
+        icon: '🏠',
+        items: {
+            door: {
+                id: 'door',
+                name: 'Dveře',
+                issues: [{
+                    id: 'squeaking',
+                    name: 'Vrzající dveře',
+                    description: 'Suché panty',
+                    severity: 'low',
+                    difficulty: 'very_easy',
+                    timeEstimate: 5,
+                    cost: '20-100 Kč',
+                    tools: ['WD-40', 'Hadřík'],
+                    steps: ['Otevřete dveře', 'Nastříkejte mazivo', 'Pohybujte dveřmi'],
+                    warnings: ['Větrejte při použití sprejů'],
+                    professionalNeeded: false
+                }]
+            },
+            window: {
+                id: 'window',
+                name: 'Okno',
+                issues: [{
+                    id: 'draft',
+                    name: 'Fouká od okna',
+                    description: 'Staré těsnění',
+                    severity: 'medium',
+                    difficulty: 'easy',
+                    timeEstimate: 30,
+                    cost: '100-300 Kč',
+                    tools: ['Těsnění', 'Nůž', 'Čistič'],
+                    steps: ['Odstraňte staré těsnění', 'Očistěte spáru', 'Nalepte nové těsnění'],
+                    warnings: ['Pracujte v suchu'],
+                    professionalNeeded: false
+                }]
             }
-        ]
+        }
     },
-    'outlet': {
-        id: 'outlet',
-        name: 'Elektrická zásuvka',
-        nameEN: 'Electrical outlet',
-        category: 'electrical',
-        commonIssues: [
-            {
-                id: 'not_working',
-                name: 'Nefunkční zásuvka',
-                nameEN: 'Non-working outlet',
-                description: 'Přerušený obvod nebo poškozený kontakt',
-                probability: 0.55,
-                severity: 'high',
-                riskScore: 8,
-                difficulty: 'hard',
-                timeEstimate: 30,
-                costEstimate: { min: 200, max: 1000, currency: 'CZK' },
-                requiredTools: ['voltage_tester', 'screwdriver', 'new_outlet'],
-                steps: [
-                    { order: 1, action: 'turn_off_breaker', description: '⚠️ VYPNĚTE JISTIČ!', duration: 1 },
-                    { order: 2, action: 'test_voltage', description: 'Ověřte testerem, že není napětí', duration: 2 },
-                    { order: 3, action: 'remove_cover', description: 'Demontujte kryt zásuvky', duration: 2 },
-                    { order: 4, action: 'inspect_wiring', description: 'Zkontrolujte zapojení vodičů', duration: 5 },
-                    { order: 5, action: 'replace_outlet', description: 'Vyměňte zásuvku nebo opravte spoje', duration: 15 }
-                ],
-                safetyWarnings: [
-                    '⚠️ POZOR! Práce s elektřinou může být životu nebezpečná!',
-                    'Pokud si nejste jisti, volejte elektrikáře!',
-                    'Vždy vypněte jistič před prací',
-                    'Použijte tester napětí'
-                ],
-                professionalNeeded: true
+    electrical: {
+        id: 'electrical',
+        name: 'Elektřina',
+        icon: '⚡',
+        items: {
+            outlet: {
+                id: 'outlet',
+                name: 'Zásuvka',
+                issues: [{
+                    id: 'not_working',
+                    name: 'Nefunkční zásuvka',
+                    description: 'Přerušený obvod',
+                    severity: 'high',
+                    difficulty: 'hard',
+                    timeEstimate: 30,
+                    cost: '200-1000 Kč',
+                    tools: ['Tester napětí', 'Šroubovák'],
+                    steps: ['⚠️ VYPNĚTE JISTIČ!', 'Ověřte testerem', 'Zkontrolujte zapojení'],
+                    warnings: ['⚠️ NEBEZPEČÍ! Volejte elektrikáře pokud si nejste jisti'],
+                    professionalNeeded: true
+                }]
+            },
+            lightbulb: {
+                id: 'lightbulb',
+                name: 'Žárovka',
+                issues: [{
+                    id: 'not_lighting',
+                    name: 'Žárovka nesvítí',
+                    description: 'Vybitá žárovka',
+                    severity: 'low',
+                    difficulty: 'very_easy',
+                    timeEstimate: 2,
+                    cost: '50-200 Kč',
+                    tools: ['Nová žárovka'],
+                    steps: ['Vypněte vypínač', 'Vyšroubujte starou', 'Zašroubujte novou'],
+                    warnings: ['Nechte vychladnout'],
+                    professionalNeeded: false
+                }]
             }
-        ]
+        }
     },
-    'door': {
-        id: 'door',
-        name: 'Dveře',
-        nameEN: 'Door',
-        category: 'mechanical',
-        commonIssues: [
-            {
-                id: 'squeaking',
-                name: 'Vrzající dveře',
-                nameEN: 'Squeaking door',
-                description: 'Suché panty potřebují namazání',
-                probability: 0.85,
-                severity: 'low',
-                riskScore: 1,
-                difficulty: 'very_easy',
-                timeEstimate: 5,
-                costEstimate: { min: 20, max: 100, currency: 'CZK' },
-                requiredTools: ['wd40', 'cloth'],
-                steps: [
-                    { order: 1, action: 'open_door', description: 'Otevřete dveře do poloviny', duration: 0.2 },
-                    { order: 2, action: 'apply_lubricant', description: 'Nastříkejte mazivo na panty', duration: 1 },
-                    { order: 3, action: 'work_hinges', description: 'Pohybujte dveřmi tam a zpět', duration: 1 },
-                    { order: 4, action: 'wipe_excess', description: 'Setřete přebytečné mazivo', duration: 1 }
-                ],
-                safetyWarnings: [
-                    'Větrejte při použití sprejů'
-                ],
-                professionalNeeded: false
+    heating: {
+        id: 'heating',
+        name: 'Topení',
+        icon: '🌡️',
+        items: {
+            radiator: {
+                id: 'radiator',
+                name: 'Radiátor',
+                issues: [{
+                    id: 'cold',
+                    name: 'Studený radiátor',
+                    description: 'Vzduch v systému',
+                    severity: 'low',
+                    difficulty: 'easy',
+                    timeEstimate: 10,
+                    cost: '0-50 Kč',
+                    tools: ['Odvzdušňovací klíč', 'Kbelík'],
+                    steps: ['Vypněte topení', 'Najděte ventil', 'Odvzdušněte'],
+                    warnings: ['Pozor na horkou vodu'],
+                    professionalNeeded: false
+                }]
             }
-        ]
+        }
     },
-    'radiator': {
-        id: 'radiator',
-        name: 'Radiátor',
-        nameEN: 'Radiator',
-        category: 'heating',
-        commonIssues: [
-            {
-                id: 'cold',
-                name: 'Studený radiátor',
-                nameEN: 'Cold radiator',
-                description: 'Vzduch v topném systému',
-                probability: 0.70,
-                severity: 'low',
-                riskScore: 2,
-                difficulty: 'easy',
-                timeEstimate: 10,
-                costEstimate: { min: 0, max: 50, currency: 'CZK' },
-                requiredTools: ['radiator_key', 'bucket', 'cloth'],
-                steps: [
-                    { order: 1, action: 'turn_off_heating', description: 'Vypněte topení a nechte vychladnout', duration: 15 },
-                    { order: 2, action: 'locate_valve', description: 'Najděte odvzdušňovací ventil', duration: 1 },
-                    { order: 3, action: 'place_bucket', description: 'Pod ventil umístěte nádobu', duration: 0.5 },
-                    { order: 4, action: 'open_valve', description: 'Pomalu otevřete ventil klíčem', duration: 2 },
-                    { order: 5, action: 'close_valve', description: 'Až poteče voda, ventil zavřete', duration: 2 }
-                ],
-                safetyWarnings: [
-                    'Pozor na horkou vodu',
-                    'Mějte připravený hadřík'
-                ],
-                professionalNeeded: false
+    kitchen: {
+        id: 'kitchen',
+        name: 'Kuchyň',
+        icon: '🍳',
+        items: {
+            sink: {
+                id: 'sink',
+                name: 'Dřez',
+                issues: [{
+                    id: 'clogged',
+                    name: 'Ucpaný odpad',
+                    description: 'Ucpaný sifon',
+                    severity: 'medium',
+                    difficulty: 'easy',
+                    timeEstimate: 15,
+                    cost: '50-200 Kč',
+                    tools: ['Kbelík', 'Klíč', 'Drátěnka'],
+                    steps: ['Pod sifon dejte kbelík', 'Odšroubujte sifon', 'Vyčistěte', 'Sestavte zpět'],
+                    warnings: ['Použijte rukavice'],
+                    professionalNeeded: false
+                }]
             }
-        ]
+        }
+    },
+    garden: {
+        id: 'garden',
+        name: 'Zahrada',
+        icon: '🌱',
+        items: {
+            lawnmower: {
+                id: 'lawnmower',
+                name: 'Sekačka',
+                issues: [{
+                    id: 'not_starting',
+                    name: 'Sekačka nenastartuje',
+                    description: 'Starý benzín nebo zanesená svíčka',
+                    severity: 'medium',
+                    difficulty: 'medium',
+                    timeEstimate: 20,
+                    cost: '100-500 Kč',
+                    tools: ['Nová svíčka', 'Čistič', 'Benzín'],
+                    steps: ['Zkontrolujte benzín', 'Vyčistěte/vyměňte svíčku', 'Zkontrolujte filtr'],
+                    warnings: ['Vypněte motor před prací'],
+                    professionalNeeded: false
+                }]
+            },
+            fence: {
+                id: 'fence',
+                name: 'Plot',
+                issues: [{
+                    id: 'loose',
+                    name: 'Uvolněný plot',
+                    description: 'Uvolněné sloupky',
+                    severity: 'low',
+                    difficulty: 'medium',
+                    timeEstimate: 60,
+                    cost: '200-1000 Kč',
+                    tools: ['Kladivo', 'Hřebíky', 'Beton'],
+                    steps: ['Zkontrolujte sloupky', 'Upevněte nebo zabetonujte', 'Dotáhněte spojení'],
+                    warnings: ['Práce s těžkým materiálem'],
+                    professionalNeeded: false
+                }]
+            }
+        }
     }
 };
+
+// Pomocná funkce pro zpětnou kompatibilitu - konverze nové struktury na starou
+function convertToOldFormat() {
+    const oldFormat = {};
+    Object.values(repairSections).forEach(section => {
+        Object.entries(section.items).forEach(([itemKey, item]) => {
+            oldFormat[itemKey] = {
+                id: item.id,
+                name: item.name,
+                category: section.id,
+                commonIssues: item.issues.map(issue => ({
+                    id: issue.id,
+                    name: issue.name,
+                    description: issue.description,
+                    severity: issue.severity,
+                    difficulty: issue.difficulty,
+                    timeEstimate: issue.timeEstimate,
+                    costEstimate: issue.cost,
+                    requiredTools: issue.tools,
+                    steps: issue.steps.map((step, idx) => ({
+                        order: idx + 1,
+                        description: step
+                    })),
+                    safetyWarnings: issue.warnings,
+                    professionalNeeded: issue.professionalNeeded
+                }))
+            };
+        });
+    });
+    return oldFormat;
+}
+
+const repairDatabase = convertToOldFormat();
 
 // API Endpoints
 
@@ -320,23 +400,50 @@ app.get('/api/health', (req, res) => {
     });
 });
 
-// Získat všechny kategorie závad
+// Získat všechny sekce oprav (NOVÉ API)
+app.get('/api/sections', (req, res) => {
+    const sections = {};
+    Object.entries(repairSections).forEach(([key, section]) => {
+        const itemCount = Object.keys(section.items).length;
+        const issueCount = Object.values(section.items).reduce(
+            (sum, item) => sum + item.issues.length, 0
+        );
+        sections[key] = {
+            id: section.id,
+            name: section.name,
+            icon: section.icon,
+            itemCount,
+            issueCount,
+            items: section.items
+        };
+    });
+    res.json({ sections });
+});
+
+// Získat konkrétní sekci
+app.get('/api/sections/:sectionId', (req, res) => {
+    const { sectionId } = req.params;
+    const section = repairSections[sectionId];
+
+    if (!section) {
+        return res.status(404).json({ error: 'Sekce nenalezena' });
+    }
+
+    res.json({ section });
+});
+
+// Získat všechny kategorie závad (DEPRECATED - použijte /api/sections)
 app.get('/api/categories', (req, res) => {
-    const categories = {
-        water: { name: 'Voda', icon: '🚰', count: 80 },
-        electrical: { name: 'Elektřina', icon: '⚡', count: 70 },
-        heating: { name: 'Topení', icon: '🌡️', count: 40 },
-        mechanical: { name: 'Mechanika', icon: '⚙️', count: 70 },
-        furniture: { name: 'Nábytek', icon: '🪑', count: 40 },
-        windows_doors: { name: 'Okna a dveře', icon: '🚪', count: 40 },
-        walls_floors: { name: 'Stěny a podlahy', icon: '🏠', count: 40 },
-        appliances: { name: 'Spotřebiče', icon: '🔌', count: 40 },
-        kitchen: { name: 'Kuchyň', icon: '🍳', count: 30 },
-        bathroom: { name: 'Koupelna', icon: '🚿', count: 30 },
-        garden: { name: 'Zahrada', icon: '🌱', count: 20 },
-        auto: { name: 'Auto/Moto', icon: '🚗', count: 20 }
-    };
-    
+    const categories = {};
+    Object.entries(repairSections).forEach(([key, section]) => {
+        const itemCount = Object.keys(section.items).length;
+        categories[key] = {
+            name: section.name,
+            icon: section.icon,
+            count: itemCount
+        };
+    });
+
     res.json({ categories });
 });
 
@@ -749,7 +856,8 @@ app.listen(PORT, () => {
     `);
     console.log('API Endpoints:');
     console.log('  GET  /api/health         - Health check');
-    console.log('  GET  /api/categories     - Seznam kategorií');
+    console.log('  GET  /api/sections       - 🆕 Sekce oprav (Koupelna, Dům, Zahrada...)');
+    console.log('  GET  /api/categories     - Seznam kategorií (deprecated)');
     console.log('  POST /api/analyze        - Analyzovat obrázek (multipart)');
     console.log('  POST /api/analyze-base64 - Analyzovat obrázek (base64)');
     console.log('  GET  /api/repair/:id/:id - Detail opravy');
